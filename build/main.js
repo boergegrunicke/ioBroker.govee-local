@@ -18,6 +18,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
+var dgram = __toESM(require("node:dgram"));
+const LOCAL_PORT = 4002;
+const SEND_SCAN_PORT = 4001;
+const M_CAST = "239.255.255.250";
+const server = dgram.createSocket("udp4");
+const client = dgram.createSocket("udp4");
+const scanMessage = { msg: { cmd: "scan", data: { account_topic: "reserved" } } };
+let searchInterval;
 class GoveeLocal extends utils.Adapter {
   constructor(options = {}) {
     super({
@@ -29,30 +37,34 @@ class GoveeLocal extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   async onReady() {
-    this.log.info("config option1: " + this.config.option1);
-    this.log.info("config option2: " + this.config.option2);
-    await this.setObjectNotExistsAsync("testVariable", {
-      type: "state",
-      common: {
-        name: "testVariable",
-        type: "boolean",
-        role: "indicator",
-        read: true,
-        write: true
-      },
-      native: {}
-    });
-    this.subscribeStates("testVariable");
-    await this.setStateAsync("testVariable", true);
-    await this.setStateAsync("testVariable", { val: true, ack: true });
-    await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-    let result = await this.checkPasswordAsync("admin", "iobroker");
-    this.log.info("check user admin pw iobroker: " + result);
-    result = await this.checkGroupAsync("admin", "admin");
-    this.log.info("check group user admin group admin: " + result);
+    server.on("message", this.onUdpMessage.bind(this));
+    server.bind(LOCAL_PORT, this.serverBound.bind(this));
+    this.log.info("called server.bind()");
+  }
+  async serverBound() {
+    server.setBroadcast(true);
+    server.setMulticastTTL(128);
+    server.addMembership(M_CAST);
+    this.log.info("UDP listening on " + server.address().address + ":" + server.address().port);
+    if (this.config.searchInterval == void 0) {
+      this.config.searchInterval = 1e3;
+    }
+    this.log.info("search interval is " + this.config.searchInterval);
+    searchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
+    this.log.info("registered interval for searching");
+  }
+  async onUdpMessage(message, remote) {
+    this.log.info("message from: " + remote.address + ":" + remote.port + " - " + message);
+  }
+  async sendScan() {
+    const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
+    client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
   }
   onUnload(callback) {
     try {
+      this.clearInterval(searchInterval);
+      client.close();
+      server.close();
       callback();
     } catch (e) {
       callback();

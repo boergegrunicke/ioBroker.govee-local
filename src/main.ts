@@ -12,13 +12,14 @@ import * as dgram from 'node:dgram';
 
 const LOCAL_PORT = 4002;
 const SEND_SCAN_PORT = 4001;
-//const CONTROL_PORT = 4003;
+const CONTROL_PORT = 4003;
 const M_CAST = '239.255.255.250';
 
 const server = dgram.createSocket('udp4');
 const client = dgram.createSocket('udp4');
 
 const scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } };
+const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
 
 let searchInterval: ioBroker.Interval;
 
@@ -39,29 +40,112 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	private async onReady(): Promise<void> {
+		this.setObjectNotExists('info.connection', {
+			type: 'state',
+			common: {
+				name: 'Device discovery running',
+				type: 'boolean',
+				role: 'indicator.connected',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
 		server.on('message', this.onUdpMessage.bind(this));
 
 		server.bind(LOCAL_PORT, this.serverBound.bind(this));
-		this.log.info('called server.bind()');
 	}
 
 	private async serverBound(): Promise<void> {
 		server.setBroadcast(true);
 		server.setMulticastTTL(128);
 		server.addMembership(M_CAST);
+		this.setState('info.connection', { val: true, ack: true });
 		this.log.info('UDP listening on ' + server.address().address + ':' + server.address().port);
 
 		if (this.config.searchInterval == undefined) {
-			this.config.searchInterval = 1000;
+			this.config.searchInterval = 10000;
 		}
-		this.log.info('search interval is ' + this.config.searchInterval);
 		searchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
-		this.log.info('registered interval for searching');
 		// this.sendScan();
 	}
 
 	private async onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): Promise<void> {
-		this.log.info('message from: ' + remote.address + ':' + remote.port + ' - ' + message);
+		const messageObject = JSON.parse(message.toString());
+		switch (messageObject.msg.cmd) {
+			case 'scan':
+				for (const key of Object.keys(messageObject.msg.data)) {
+					if (key != 'device') {
+						this.setObjectNotExists(`${messageObject.msg.data.device}.deviceInfo.${key}`, {
+							type: 'state',
+							common: {
+								name: getDatapointDescription(key),
+								type: 'string',
+								role: 'state',
+								read: true,
+								write: false,
+							},
+							native: {},
+						});
+						this.setState(`${messageObject.msg.data.device}.deviceInfo.${key}`, {
+							val: messageObject.msg.data[key],
+							ack: true,
+						});
+					}
+				}
+
+				this.requestDeviceStatus(remote.address);
+				break;
+			case 'devStatus':
+				const devices = await this.getStatesAsync(this.name + '.' + this.instance + '.*.deviceInfo.ip');
+				this.log.info('found ' + Object.values(devices).length.toString() + ' entries');
+				for (const key in devices) {
+					if (devices[key as keyof typeof devices].val == remote.address) {
+						const sendingDevice = key.split('.')[2];
+						const devStatusMessageObject = JSON.parse(message.toString());
+						this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
+							type: 'state',
+							common: {
+								name: 'On / Off state of the lamp',
+								type: 'boolean',
+								role: 'switch',
+								read: true,
+								write: true,
+							},
+							native: {},
+						});
+						this.setState(`${sendingDevice}.devStatus.onOff`, {
+							val: devStatusMessageObject.msg.data.onOff == 1,
+							ack: true,
+						});
+						this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
+							type: 'state',
+							common: {
+								name: 'Current brightness of the lamp',
+								type: 'number',
+								role: 'level.dimmer',
+								unit: '%',
+								read: true,
+								write: true,
+								min: 1,
+								max: 100,
+							},
+							native: {},
+						});
+						this.setState(`${sendingDevice}.devStatus.brightness`, {
+							val: devStatusMessageObject.msg.data.brightness,
+							ack: true,
+						});
+					}
+				}
+			default:
+				this.log.info('message from: ' + remote.address + ':' + remote.port + ' - ' + message);
+		}
+	}
+
+	private async requestDeviceStatus(receiver: string): Promise<void> {
+		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
+		client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
 	}
 
 	private async sendScan(): Promise<void> {
@@ -78,6 +162,7 @@ class GoveeLocal extends utils.Adapter {
 			this.clearInterval(searchInterval);
 			client.close();
 			server.close();
+			this.setState('info.connection', { val: false, ack: true });
 			callback();
 		} catch (e) {
 			callback();
@@ -104,4 +189,23 @@ if (require.main !== module) {
 } else {
 	// otherwise start the instance directly
 	(() => new GoveeLocal())();
+}
+
+function getDatapointDescription(name: string): string {
+	switch (name) {
+		case 'model':
+			return 'Specific model of the Lamp';
+		case 'ip':
+			return 'Specific model of the Lamp';
+		case 'bleVersionHard':
+			return 'Bluetooth Low Energy Hardware Version';
+		case 'bleVersionSoft':
+			return 'Bluetooth Low Energy Software Version';
+		case 'wifiVersionHard':
+			return 'WiFi Hardware Version';
+		case 'wifiVersionSoft':
+			return 'WiFi Software Version';
+		default:
+			return '';
+	}
 }

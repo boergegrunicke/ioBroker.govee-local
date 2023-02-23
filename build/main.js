@@ -52,6 +52,7 @@ class GoveeLocal extends utils.Adapter {
     });
     server.on("message", this.onUdpMessage.bind(this));
     server.bind(LOCAL_PORT, this.serverBound.bind(this));
+    this.subscribeStates("*.devStatus.*");
   }
   async serverBound() {
     server.setBroadcast(true);
@@ -70,6 +71,14 @@ class GoveeLocal extends utils.Adapter {
       case "scan":
         for (const key of Object.keys(messageObject.msg.data)) {
           if (key != "device") {
+            this.setObjectNotExists(messageObject.msg.data.device, {
+              type: "device",
+              common: {
+                name: messageObject.msg.data.sku,
+                role: "group"
+              },
+              native: {}
+            });
             this.setObjectNotExists(`${messageObject.msg.data.device}.deviceInfo.${key}`, {
               type: "state",
               common: {
@@ -91,7 +100,6 @@ class GoveeLocal extends utils.Adapter {
         break;
       case "devStatus":
         const devices = await this.getStatesAsync(this.name + "." + this.instance + ".*.deviceInfo.ip");
-        this.log.info("found " + Object.values(devices).length.toString() + " entries");
         for (const key in devices) {
           if (devices[key].val == remote.address) {
             const sendingDevice = key.split(".")[2];
@@ -114,14 +122,11 @@ class GoveeLocal extends utils.Adapter {
             this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
               type: "state",
               common: {
-                name: "Current brightness of the lamp",
+                name: "Brightness of the light",
                 type: "number",
                 role: "level.dimmer",
-                unit: "%",
                 read: true,
-                write: true,
-                min: 1,
-                max: 100
+                write: true
               },
               native: {}
             });
@@ -129,8 +134,39 @@ class GoveeLocal extends utils.Adapter {
               val: devStatusMessageObject.msg.data.brightness,
               ack: true
             });
+            this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
+              type: "state",
+              common: {
+                name: "Current showing color of the lamp",
+                type: "string",
+                role: "level.color.rgb",
+                read: true,
+                write: true
+              },
+              native: {}
+            });
+            this.setState(`${sendingDevice}.devStatus.color`, {
+              val: "#" + componentToHex(devStatusMessageObject.msg.data.color.r) + componentToHex(devStatusMessageObject.msg.data.color.g) + componentToHex(devStatusMessageObject.msg.data.color.b),
+              ack: true
+            });
+            this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
+              type: "state",
+              common: {
+                name: "If staying in white light, the color temperature",
+                type: "number",
+                role: "level.color.temperature",
+                read: true,
+                write: true
+              },
+              native: {}
+            });
+            this.setState(`${sendingDevice}.devStatus.colorTemInKelvin`, {
+              val: devStatusMessageObject.msg.data.colorTemInKelvin,
+              ack: true
+            });
           }
         }
+        break;
       default:
         this.log.info("message from: " + remote.address + ":" + remote.port + " - " + message);
     }
@@ -154,11 +190,34 @@ class GoveeLocal extends utils.Adapter {
       callback();
     }
   }
-  onStateChange(id, state) {
-    if (state) {
+  async onStateChange(id, state) {
+    var _a;
+    if (state && !state.ack) {
       this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-    } else {
-      this.log.info(`state ${id} deleted`);
+      const ipOfDevice = await this.getStateAsync(id.split(".")[2] + ".deviceInfo.ip");
+      if (ipOfDevice) {
+        this.log.info("should send to ip : " + ipOfDevice.val);
+        const receiver = (_a = ipOfDevice.val) == null ? void 0 : _a.toString();
+        switch (id.split(".")[4]) {
+          case "onOff":
+            const turnMessage = { msg: { cmd: "turn", data: { value: state.val ? 1 : 0 } } };
+            const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
+            client.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
+            break;
+          case "brightness":
+            const brightnessMessage = { msg: { cmd: "brightness", data: { value: state.val } } };
+            const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
+            client.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
+            break;
+          case "colorTemInKelvin":
+            const colorTempMessage = { msg: { cmd: "colorTemInKelvin", data: { value: state.val } } };
+            const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
+            client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+        }
+        client.send;
+      } else {
+        this.log.error("device not found");
+      }
     }
   }
 }
@@ -184,5 +243,9 @@ function getDatapointDescription(name) {
     default:
       return "";
   }
+}
+function componentToHex(c) {
+  const hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
 }
 //# sourceMappingURL=main.js.map

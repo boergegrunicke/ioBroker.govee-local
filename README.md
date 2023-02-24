@@ -2,6 +2,9 @@
 
 Control Govee devices via local access (no cloud)
 
+To be able to control govee deivce locally, the feature needs to be explicitely turne on in the settings of the govve application settings as described in their [documentation](<https://app-h5.govee.com/user-manual/wlan-guide#:~:text=Supported%20Product%20Models%20(continually%20updated)>)
+As I currently only have the H6051 lamp, this is the only device I can test with.
+
 ## Changelog
 
 <!--
@@ -9,9 +12,12 @@ Control Govee devices via local access (no cloud)
 	### **WORK IN PROGRESS**
 -->
 
+-   searching for devices is now working
+-   on / off state, brightness and and color temperature can be controlled
+
 ### **WORK IN PROGRESS**
 
--   (Børge Grunicke) initial release
+-   initial release
 
 ## License
 

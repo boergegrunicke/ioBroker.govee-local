@@ -58,6 +58,11 @@ class GoveeLocal extends utils.Adapter {
 		this.subscribeStates('*.devStatus.*');
 	}
 
+	/**
+	 * handles when udp socket is up
+	 * configure multicast membership
+	 * start periodic scan for devices
+	 */
 	private async serverBound(): Promise<void> {
 		server.setBroadcast(true);
 		server.setMulticastTTL(128);
@@ -72,6 +77,11 @@ class GoveeLocal extends utils.Adapter {
 		// this.sendScan();
 	}
 
+	/**
+	 * handle icoming messages on the udp socket
+	 * @param message the message itself
+	 * @param remote the sender of the message
+	 */
 	private async onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): Promise<void> {
 		const messageObject = JSON.parse(message.toString());
 		switch (messageObject.msg.cmd) {
@@ -184,11 +194,18 @@ class GoveeLocal extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * sends the device status request to one specific device
+	 * @param receiver the ip ( / hsotname ) of the device that should be queried
+	 */
 	private async requestDeviceStatus(receiver: string): Promise<void> {
 		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
 		client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
 	}
 
+	/**
+	 * send the scan message to the udp multicast address
+	 */
 	private async sendScan(): Promise<void> {
 		const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
 		client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
@@ -236,7 +253,6 @@ class GoveeLocal extends utils.Adapter {
 						const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
 						client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
 				}
-				client.send;
 			} else {
 				this.log.error('device not found');
 			}
@@ -252,6 +268,13 @@ if (require.main !== module) {
 	(() => new GoveeLocal())();
 }
 
+/**
+ * This method returns the description for device information datapoints
+ * to unbloat the upper methods.
+ * tanslations would be great here
+ * @param name the name of the parameter retrieved from the device
+ * @returns the description, that should be set to the datapoint
+ */
 function getDatapointDescription(name: string): string {
 	switch (name) {
 		case 'model':
@@ -271,6 +294,11 @@ function getDatapointDescription(name: string): string {
 	}
 }
 
+/**
+ * Convert number (<255) to two digit hex for colorcode
+ * @param the int value, should me < 255
+ * @returns the hex value as string
+ */
 function componentToHex(c: number): string {
 	const hex = c.toString(16);
 	return hex.length == 1 ? '0' + hex : hex;

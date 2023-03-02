@@ -5,6 +5,7 @@ declare global {
 	namespace ioBroker {
 		interface AdapterConfig {
 			searchInterval: number;
+			deviceStatusRefreshInterval: number;
 		}
 	}
 }

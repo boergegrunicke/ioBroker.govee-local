@@ -56,7 +56,7 @@
 		"compact": true,
 		"connectionType": "local",
 		"dataSource": "poll",
-		"adminUI": {},
+		"adminUI": { "config": "json" },
 		"dependencies": [
 			{
 				"js-controller": ">=3.3.22"

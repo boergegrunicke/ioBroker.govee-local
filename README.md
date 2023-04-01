@@ -9,6 +9,8 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 ### **WORK IN PROGRESS**
 
+-   update dependecies
+
 ### 0.0.2
 
 -   frequently searching for devices and requesting their specific state

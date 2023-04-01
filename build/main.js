@@ -214,7 +214,6 @@ class GoveeLocal extends utils.Adapter {
             const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
             client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
         }
-        client.send;
       } else {
         this.log.error("device not found");
       }

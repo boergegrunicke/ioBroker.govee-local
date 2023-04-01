@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "news": {
+      "0.0.3": {
+        "en": "update dependecies",
+        "de": "aktualisierung der abhängigkeiten",
+        "ru": "обновление зависимостей",
+        "pt": "atualizações",
+        "nl": "vertaling:",
+        "fr": "mettre à jour les dépendances",
+        "it": "dipendenze di aggiornamento",
+        "es": "dependencias de actualización",
+        "pl": "aktualizacja",
+        "uk": "оновлення залежності",
+        "zh-cn": "a. 最新依赖情况"
+      },
       "0.0.2": {
         "en": "initial release",
         "de": "erstausstrahlung",

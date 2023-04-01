@@ -7,10 +7,13 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 ## Changelog
 
+### **WORK IN PROGRESS**
+
 ### Version 0.0.1
 
 -   frequently searching for devices and requesting their specific state
 -   on / off state, brightness and and color temperature can be controlled
+
 ### 0.0.2 (2023-04-01)
 
 -   initial release

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "news": {
+      "0.0.5": {
+        "en": "make pipeline run",
+        "de": "pipeline laufen lassen",
+        "ru": "сделать пробег трубопровода",
+        "pt": "fazer a execução do pipeline",
+        "nl": "maak pijplijnen",
+        "fr": "faire fonctionner le pipeline",
+        "it": "rendere il processo di tubazione",
+        "es": "funcionamiento del gasoducto",
+        "pl": "rurociąg",
+        "uk": "зведення трубопроводів",
+        "zh-cn": "管道"
+      },
       "0.0.4": {
         "en": "make device status refresh invertal indepentent from device search interval",
         "de": "die gerätestatus erfrischen invertal indepentent von der gerätesuche intervall",

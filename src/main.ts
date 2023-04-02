@@ -23,7 +23,7 @@ const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
 
 let searchInterval: ioBroker.Interval;
 
-let intervals: { [device: string]: ioBroker.Interval } = {};
+const intervals: { [device: string]: ioBroker.Interval } = {};
 
 class GoveeLocal extends utils.Adapter {
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {

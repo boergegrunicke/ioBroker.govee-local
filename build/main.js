@@ -28,7 +28,7 @@ const client = dgram.createSocket("udp4");
 const scanMessage = { msg: { cmd: "scan", data: { account_topic: "reserved" } } };
 const requestStatusMessage = { msg: { cmd: "devStatus", data: {} } };
 let searchInterval;
-let intervals = {};
+const intervals = {};
 class GoveeLocal extends utils.Adapter {
   constructor(options = {}) {
     super({

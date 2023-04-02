@@ -1,3 +1,3 @@
-chore: release v0.0.2
+chore: release v0.0.4
 
--   initial release
+-   make device status refresh invertal indepentent from device search interval

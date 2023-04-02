@@ -6,6 +6,11 @@ To be able to control govee deivce locally, the feature needs to be explicitely 
 As I currently only have the H6051 lamp, this is the only device I can test with.
 
 ## Changelog
+
+### WORK IN PROGRESS
+
+-   make device status refresh invertal indepentent from device search interval
+
 ### 0.0.3 (2023-04-01)
 
 -   update dependecies

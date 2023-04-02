@@ -23,6 +23,8 @@ const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
 
 let searchInterval: ioBroker.Interval;
 
+let intervals: { [device: string]: ioBroker.Interval } = {};
+
 class GoveeLocal extends utils.Adapter {
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
@@ -52,6 +54,10 @@ class GoveeLocal extends utils.Adapter {
 			native: {},
 		});
 		server.on('message', this.onUdpMessage.bind(this));
+		server.on('error', (error) => {
+			this.log.error('server bind error : ' + error.message);
+			this.setState('info.connection', { val: false, ack: true });
+		});
 
 		server.bind(LOCAL_PORT, this.serverBound.bind(this));
 
@@ -72,6 +78,9 @@ class GoveeLocal extends utils.Adapter {
 
 		if (this.config.searchInterval == undefined) {
 			this.config.searchInterval = 10000;
+		}
+		if (this.config.deviceStatusRefreshInterval == undefined) {
+			this.config.deviceStatusRefreshInterval = 1000;
 		}
 		searchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
 		// this.sendScan();
@@ -113,8 +122,13 @@ class GoveeLocal extends utils.Adapter {
 						});
 					}
 				}
-
-				this.requestDeviceStatus(remote.address);
+				if (!(messageObject.msg.data.device in intervals)) {
+					intervals[messageObject.msg.data.device] = this.setInterval(
+						() => this.requestDeviceStatus(messageObject.msg.data.ip),
+						this.config.deviceStatusRefreshInterval,
+					);
+				}
+				// this.requestDeviceStatus(remote.address);
 				break;
 			case 'devStatus':
 				const devices = await this.getStatesAsync(this.name + '.' + this.instance + '.*.deviceInfo.ip');
@@ -198,7 +212,8 @@ class GoveeLocal extends utils.Adapter {
 	 * sends the device status request to one specific device
 	 * @param receiver the ip ( / hsotname ) of the device that should be queried
 	 */
-	private async requestDeviceStatus(receiver: string): Promise<void> {
+	private requestDeviceStatus(receiver: string): void {
+		console.log('request device status ' + receiver);
 		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
 		client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
 	}

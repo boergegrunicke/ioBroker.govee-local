@@ -28,6 +28,7 @@ const client = dgram.createSocket("udp4");
 const scanMessage = { msg: { cmd: "scan", data: { account_topic: "reserved" } } };
 const requestStatusMessage = { msg: { cmd: "devStatus", data: {} } };
 let searchInterval;
+let intervals = {};
 class GoveeLocal extends utils.Adapter {
   constructor(options = {}) {
     super({
@@ -51,6 +52,10 @@ class GoveeLocal extends utils.Adapter {
       native: {}
     });
     server.on("message", this.onUdpMessage.bind(this));
+    server.on("error", (error) => {
+      this.log.error("server bind error : " + error.message);
+      this.setState("info.connection", { val: false, ack: true });
+    });
     server.bind(LOCAL_PORT, this.serverBound.bind(this));
     this.subscribeStates("*.devStatus.*");
   }
@@ -62,6 +67,9 @@ class GoveeLocal extends utils.Adapter {
     this.log.info("UDP listening on " + server.address().address + ":" + server.address().port);
     if (this.config.searchInterval == void 0) {
       this.config.searchInterval = 1e4;
+    }
+    if (this.config.deviceStatusRefreshInterval == void 0) {
+      this.config.deviceStatusRefreshInterval = 1e3;
     }
     searchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
   }
@@ -96,7 +104,12 @@ class GoveeLocal extends utils.Adapter {
             });
           }
         }
-        this.requestDeviceStatus(remote.address);
+        if (!(messageObject.msg.data.device in intervals)) {
+          intervals[messageObject.msg.data.device] = this.setInterval(
+            () => this.requestDeviceStatus(messageObject.msg.data.ip),
+            this.config.deviceStatusRefreshInterval
+          );
+        }
         break;
       case "devStatus":
         const devices = await this.getStatesAsync(this.name + "." + this.instance + ".*.deviceInfo.ip");
@@ -171,7 +184,8 @@ class GoveeLocal extends utils.Adapter {
         this.log.info("message from: " + remote.address + ":" + remote.port + " - " + message);
     }
   }
-  async requestDeviceStatus(receiver) {
+  requestDeviceStatus(receiver) {
+    console.log("request device status " + receiver);
     const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
     client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
   }

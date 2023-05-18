@@ -6,6 +6,11 @@ To be able to control govee deivce locally, the feature needs to be explicitely 
 As I currently only have the H6051 lamp, this is the only device I can test with.
 
 ## Changelog
+
+### **WORK IN PROGRESS **
+
+-   update dependencies
+
 ### 0.0.5 (2023-04-02)
 
 -   make pipeline run

@@ -7,7 +7,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 ## Changelog
 
-### **WORK IN PROGRES**
+### **WORK IN PROGRESS**
 
 -   update dependencies
 

@@ -233,6 +233,7 @@ class GoveeLocal extends utils.Adapter {
 	private onUnload(callback: () => void): void {
 		try {
 			this.clearInterval(searchInterval);
+			Object.entries(intervals).forEach(([_, interval]) => this.clearInterval(interval));
 			client.close();
 			server.close();
 			this.setState('info.connection', { val: false, ack: true });
@@ -295,7 +296,7 @@ function getDatapointDescription(name: string): string {
 		case 'model':
 			return 'Specific model of the Lamp';
 		case 'ip':
-			return 'Specific model of the Lamp';
+			return 'IP address of the Lamp';
 		case 'bleVersionHard':
 			return 'Bluetooth Low Energy Hardware Version';
 		case 'bleVersionSoft':

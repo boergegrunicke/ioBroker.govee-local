@@ -6,6 +6,17 @@ To be able to control govee deivce locally, the feature needs to be explicitely 
 As I currently only have the H6051 lamp, this is the only device I can test with.
 
 ## Changelog
+
+<!--
+	Placeholder for the next version (at the beginning of the line):
+	### **WORK IN PROGRESS**
+-->
+
+### **WORK IN PROGRESS**
+
+-   clear all timeouts, when adapter is stopped
+-   update translations
+
 ### 0.0.6 (2023-05-18)
 
 -   update dependencies

@@ -83,17 +83,17 @@
 			}
 		},
 		"titleLang": {
-			"en": "Govee Local",
-			"de": "Govee Lokal",
+			"en": "Govee local",
+			"de": "Govee local",
 			"ru": "Govee местный",
 			"pt": "Govee local",
-			"nl": "Govee Lokaal",
+			"nl": "Govee lokaal",
 			"fr": "Govee local",
-			"it": "Govee Local",
+			"it": "Govee local",
 			"es": "Govee Local",
 			"pl": "Lokalny Govee",
 			"uk": "Govee місцевий",
-			"zh-cn": "当地政府"
+			"zh-cn": "Govee Local"
 		},
 		"desc": {
 			"en": "Control Govee devices via local access (no cloud)",

@@ -21,9 +21,9 @@ const client = dgram.createSocket('udp4');
 const scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } };
 const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
 
-let searchInterval: ioBroker.Interval;
+let searchInterval: NodeJS.Timeout;
 
-const intervals: { [device: string]: ioBroker.Interval } = {};
+const intervals: { [device: string]: NodeJS.Timeout } = {};
 
 class GoveeLocal extends utils.Adapter {
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -82,7 +82,11 @@ class GoveeLocal extends utils.Adapter {
 		if (this.config.deviceStatusRefreshInterval == undefined) {
 			this.config.deviceStatusRefreshInterval = 1000;
 		}
-		searchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
+
+		const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
+		if (result !== void 0) {
+			searchInterval = result;
+		}
 		// this.sendScan();
 	}
 
@@ -123,10 +127,13 @@ class GoveeLocal extends utils.Adapter {
 					}
 				}
 				if (!(messageObject.msg.data.device in intervals)) {
-					intervals[messageObject.msg.data.device] = this.setInterval(
+					const result = this.setInterval(
 						() => this.requestDeviceStatus(messageObject.msg.data.ip),
 						this.config.deviceStatusRefreshInterval,
 					);
+					if (result !== void 0) {
+						intervals[messageObject.msg.data.device] = result;
+					}
 				}
 				// this.requestDeviceStatus(remote.address);
 				break;

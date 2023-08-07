@@ -16,6 +16,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 -   clear all timeouts, when adapter is stopped
 -   update translations
+-   update dependecies
 
 ### 0.0.6 (2023-05-18)
 

@@ -42,6 +42,12 @@ module.exports = {
 		'no-var': 'error',
 		'prefer-const': 'error',
 		'no-trailing-spaces': 'error',
+		'prettier/prettier': [
+			'error',
+			{
+				endOfLine: 'auto',
+			},
+		],
 	},
 	overrides: [
 		{

@@ -65,13 +65,7 @@ class GoveeLocal extends utils.Adapter {
     server.addMembership(M_CAST);
     this.setState("info.connection", { val: true, ack: true });
     this.log.info("UDP listening on " + server.address().address + ":" + server.address().port);
-    if (this.config.searchInterval == void 0) {
-      this.config.searchInterval = 1e4;
-    }
-    if (this.config.deviceStatusRefreshInterval == void 0) {
-      this.config.deviceStatusRefreshInterval = 1e3;
-    }
-    const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
+    const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1e3);
     if (result !== void 0) {
       searchInterval = result;
     }
@@ -110,7 +104,7 @@ class GoveeLocal extends utils.Adapter {
         if (!(messageObject.msg.data.device in intervals)) {
           const result = this.setInterval(
             () => this.requestDeviceStatus(messageObject.msg.data.ip),
-            this.config.deviceStatusRefreshInterval
+            this.config.deviceStatusRefreshInterval * 1e3
           );
           if (result !== void 0) {
             intervals[messageObject.msg.data.device] = result;

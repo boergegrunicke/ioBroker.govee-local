@@ -1,5 +1,6 @@
 {
     "govee-local adapter settings": "govee-local的适配器设置",
     "_searchInterval": "搜索间隔",
-    "_deviceStatusRefreshInterval": "设备状态刷新间隔"
+    "_deviceStatusRefreshInterval": "设备状态刷新间隔",
+    "_configDescription": "没有什么必须配置的。仅当您确定这是您需要的时才更改间隔"
 }

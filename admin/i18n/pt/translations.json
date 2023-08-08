@@ -1,5 +1,6 @@
 {
     "govee-local adapter settings": "Configurações do adaptador para govee-local",
     "_searchInterval": "Intervalo de pesquisa",
-    "_deviceStatusRefreshInterval": "intervalo de atualização do status do dispositivo"
+    "_deviceStatusRefreshInterval": "intervalo de atualização do status do dispositivo",
+    "_configDescription": "Não há nada obrigatório para configurar. Por favor, altere os intervalos somente quando tiver certeza de que é isso que você precisa"
 }

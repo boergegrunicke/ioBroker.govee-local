@@ -1,5 +1,6 @@
 {
     "govee-local adapter settings": "Adapterinstellingen voor govee-local",
     "_searchInterval": "Zoek interval",
-    "_deviceStatusRefreshInterval": "vernieuwingsinterval apparaatstatus"
+    "_deviceStatusRefreshInterval": "vernieuwingsinterval apparaatstatus",
+    "_configDescription": "Er is niets verplicht om te configureren. Wijzig de intervallen alleen als u zeker weet dat dit is wat u nodig heeft"
 }

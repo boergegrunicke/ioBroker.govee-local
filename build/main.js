@@ -71,7 +71,10 @@ class GoveeLocal extends utils.Adapter {
     if (this.config.deviceStatusRefreshInterval == void 0) {
       this.config.deviceStatusRefreshInterval = 1e3;
     }
-    searchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
+    const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval);
+    if (result !== void 0) {
+      searchInterval = result;
+    }
   }
   async onUdpMessage(message, remote) {
     const messageObject = JSON.parse(message.toString());
@@ -105,10 +108,13 @@ class GoveeLocal extends utils.Adapter {
           }
         }
         if (!(messageObject.msg.data.device in intervals)) {
-          intervals[messageObject.msg.data.device] = this.setInterval(
+          const result = this.setInterval(
             () => this.requestDeviceStatus(messageObject.msg.data.ip),
             this.config.deviceStatusRefreshInterval
           );
+          if (result !== void 0) {
+            intervals[messageObject.msg.data.device] = result;
+          }
         }
         break;
       case "devStatus":
@@ -196,6 +202,7 @@ class GoveeLocal extends utils.Adapter {
   onUnload(callback) {
     try {
       this.clearInterval(searchInterval);
+      Object.entries(intervals).forEach(([_, interval]) => this.clearInterval(interval));
       client.close();
       server.close();
       this.setState("info.connection", { val: false, ack: true });
@@ -244,7 +251,7 @@ function getDatapointDescription(name) {
     case "model":
       return "Specific model of the Lamp";
     case "ip":
-      return "Specific model of the Lamp";
+      return "IP address of the Lamp";
     case "bleVersionHard":
       return "Bluetooth Low Energy Hardware Version";
     case "bleVersionSoft":

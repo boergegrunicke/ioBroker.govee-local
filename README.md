@@ -16,6 +16,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 -   make search intervals configurable
 -   clear all timeouts, when adapter is stopped
+-   replace forbidden characters in names
 -   update translations
 -   update dependecies
 

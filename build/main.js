@@ -76,7 +76,8 @@ class GoveeLocal extends utils.Adapter {
       case "scan":
         for (const key of Object.keys(messageObject.msg.data)) {
           if (key != "device") {
-            this.setObjectNotExists(messageObject.msg.data.device, {
+            const deviceName = messageObject.msg.data.device.replace(this.FORBIDDEN_CHARS, "_");
+            this.setObjectNotExists(deviceName, {
               type: "device",
               common: {
                 name: messageObject.msg.data.sku,
@@ -84,7 +85,7 @@ class GoveeLocal extends utils.Adapter {
               },
               native: {}
             });
-            this.setObjectNotExists(`${messageObject.msg.data.device}.deviceInfo.${key}`, {
+            this.setObjectNotExists(`${deviceName}.deviceInfo.${key}`, {
               type: "state",
               common: {
                 name: getDatapointDescription(key),
@@ -95,7 +96,7 @@ class GoveeLocal extends utils.Adapter {
               },
               native: {}
             });
-            this.setState(`${messageObject.msg.data.device}.deviceInfo.${key}`, {
+            this.setState(`${deviceName}.deviceInfo.${key}`, {
               val: messageObject.msg.data[key],
               ack: true
             });
@@ -115,7 +116,7 @@ class GoveeLocal extends utils.Adapter {
         const devices = await this.getStatesAsync(this.name + "." + this.instance + ".*.deviceInfo.ip");
         for (const key in devices) {
           if (devices[key].val == remote.address) {
-            const sendingDevice = key.split(".")[2];
+            const sendingDevice = key.split(".")[2].replace(this.FORBIDDEN_CHARS, "_");
             const devStatusMessageObject = JSON.parse(message.toString());
             this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
               type: "state",
@@ -260,5 +261,8 @@ function getDatapointDescription(name) {
 function componentToHex(c) {
   const hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
+}
+function name2id(pName) {
+  return (pName || "").replace(this.FORBIDDEN_CHARS, "_");
 }
 //# sourceMappingURL=main.js.map

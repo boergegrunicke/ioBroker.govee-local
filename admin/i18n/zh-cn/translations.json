@@ -1,3 +1,5 @@
 {
-    "govee-local adapter settings": "govee-local的适配器设置"
+    "govee-local adapter settings": "govee-local的适配器设置",
+    "_searchInterval": "搜索间隔",
+    "_deviceStatusRefreshInterval": "设备状态刷新间隔"
 }

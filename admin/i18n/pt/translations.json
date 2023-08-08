@@ -1,3 +1,5 @@
 {
-    "govee-local adapter settings": "Configurações do adaptador para govee-local"
+    "govee-local adapter settings": "Configurações do adaptador para govee-local",
+    "_searchInterval": "Intervalo de pesquisa",
+    "_deviceStatusRefreshInterval": "intervalo de atualização do status do dispositivo"
 }

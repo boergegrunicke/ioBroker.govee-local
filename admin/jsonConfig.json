@@ -1,5 +1,31 @@
 {
 	"i18n": true,
 	"type": "panel",
-	"items": {}
+	"items": {
+		"_description": {
+			"type": "staticText",
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"text": "There is nothing mandatory to configre. Please change the intervals only when you are sure that this is what you need"
+		},
+		"searchInterval": {
+			"type": "number",
+			"min": 1,
+			"max": 1000,
+			"sm": 3,
+			"md": 2,
+			"lg": 2,
+			"label": "_searchInterval"
+		},
+		"deviceStatusRefreshInterval": {
+			"type": "number",
+			"min": 1,
+			"max": 1000,
+			"sm": 3,
+			"md": 2,
+			"lg": 2,
+			"label": "_deviceStatusRefreshInterval"
+		}
+	}
 }

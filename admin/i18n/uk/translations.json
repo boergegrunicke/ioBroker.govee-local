@@ -1,3 +1,5 @@
 {
-    "govee-local adapter settings": "Adapter settings for govee-local"
+    "govee-local adapter settings": "Adapter settings for govee-local",
+    "_searchInterval": "Інтервал пошуку",
+    "_deviceStatusRefreshInterval": "інтервал оновлення стану пристрою"
 }

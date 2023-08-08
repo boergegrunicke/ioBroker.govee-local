@@ -74,7 +74,7 @@ class GoveeLocal extends utils.Adapter {
 		server.setMulticastTTL(128);
 		server.addMembership(M_CAST);
 		this.setState('info.connection', { val: true, ack: true });
-		this.log.info('UDP listening on ' + server.address().address + ':' + server.address().port);
+		this.log.debug('UDP listening on ' + server.address().address + ':' + server.address().port);
 
 		const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
 		if (result !== void 0) {
@@ -204,7 +204,7 @@ class GoveeLocal extends utils.Adapter {
 				}
 				break;
 			default:
-				this.log.info('message from: ' + remote.address + ':' + remote.port + ' - ' + message);
+				this.log.error('message from: ' + remote.address + ':' + remote.port + ' - ' + message);
 		}
 	}
 
@@ -224,7 +224,6 @@ class GoveeLocal extends utils.Adapter {
 	private async sendScan(): Promise<void> {
 		const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
 		client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
-		//this.log.info('send message ' + scanMessageBuffer);
 	}
 
 	/**
@@ -250,7 +249,6 @@ class GoveeLocal extends utils.Adapter {
 		if (state && !state.ack) {
 			const ipOfDevice = await this.getStateAsync(id.split('.')[2] + '.deviceInfo.ip');
 			if (ipOfDevice) {
-				this.log.info('should send to ip : ' + ipOfDevice.val);
 				const receiver = ipOfDevice.val?.toString();
 				switch (id.split('.')[4]) {
 					case 'onOff':

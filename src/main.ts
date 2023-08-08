@@ -255,7 +255,6 @@ class GoveeLocal extends utils.Adapter {
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
 		if (state && !state.ack) {
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			const ipOfDevice = await this.getStateAsync(id.split('.')[2] + '.deviceInfo.ip');
 			if (ipOfDevice) {
 				this.log.info('should send to ip : ' + ipOfDevice.val);

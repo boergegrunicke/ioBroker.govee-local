@@ -214,7 +214,6 @@ class GoveeLocal extends utils.Adapter {
   async onStateChange(id, state) {
     var _a;
     if (state && !state.ack) {
-      this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
       const ipOfDevice = await this.getStateAsync(id.split(".")[2] + ".deviceInfo.ip");
       if (ipOfDevice) {
         this.log.info("should send to ip : " + ipOfDevice.val);

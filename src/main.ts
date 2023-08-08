@@ -316,6 +316,3 @@ function componentToHex(c: number): string {
 	const hex = c.toString(16);
 	return hex.length == 1 ? '0' + hex : hex;
 }
-function name2id(pName): string {
-	return (pName || '').replace(this.FORBIDDEN_CHARS, '_');
-}

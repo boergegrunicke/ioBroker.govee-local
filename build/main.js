@@ -64,7 +64,7 @@ class GoveeLocal extends utils.Adapter {
     server.setMulticastTTL(128);
     server.addMembership(M_CAST);
     this.setState("info.connection", { val: true, ack: true });
-    this.log.info("UDP listening on " + server.address().address + ":" + server.address().port);
+    this.log.debug("UDP listening on " + server.address().address + ":" + server.address().port);
     const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1e3);
     if (result !== void 0) {
       searchInterval = result;
@@ -182,7 +182,7 @@ class GoveeLocal extends utils.Adapter {
         }
         break;
       default:
-        this.log.info("message from: " + remote.address + ":" + remote.port + " - " + message);
+        this.log.error("message from: " + remote.address + ":" + remote.port + " - " + message);
     }
   }
   requestDeviceStatus(receiver) {
@@ -211,7 +211,6 @@ class GoveeLocal extends utils.Adapter {
     if (state && !state.ack) {
       const ipOfDevice = await this.getStateAsync(id.split(".")[2] + ".deviceInfo.ip");
       if (ipOfDevice) {
-        this.log.info("should send to ip : " + ipOfDevice.val);
         const receiver = (_a = ipOfDevice.val) == null ? void 0 : _a.toString();
         switch (id.split(".")[4]) {
           case "onOff":
@@ -261,8 +260,5 @@ function getDatapointDescription(name) {
 function componentToHex(c) {
   const hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
-}
-function name2id(pName) {
-  return (pName || "").replace(this.FORBIDDEN_CHARS, "_");
 }
 //# sourceMappingURL=main.js.map

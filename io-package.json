@@ -1,152 +1,165 @@
 {
-    "common": {
-        "name": "govee-local",
-        "version": "0.0.6",
-        "news": {
-            "0.0.6": {
-                "en": "update dependencies",
-                "de": "aktualisierung der abhängigkeiten",
-                "ru": "обновление зависимостей",
-                "pt": "dependências",
-                "nl": "vertaling:",
-                "fr": "mettre à jour les dépendances",
-                "it": "aggiornamento dipendenze",
-                "es": "dependencias de actualización",
-                "pl": "zależności",
-                "uk": "оновлення залежності",
-                "zh-cn": "a. 最新受扶养人"
-            },
-            "0.0.5": {
-                "en": "make pipeline run",
-                "de": "pipeline laufen lassen",
-                "ru": "сделать пробег трубопровода",
-                "pt": "fazer a execução do pipeline",
-                "nl": "maak pijplijnen",
-                "fr": "faire fonctionner le pipeline",
-                "it": "rendere il processo di tubazione",
-                "es": "funcionamiento del gasoducto",
-                "pl": "rurociąg",
-                "uk": "зведення трубопроводів",
-                "zh-cn": "管道"
-            },
-            "0.0.4": {
-                "en": "make device status refresh invertal indepentent from device search interval",
-                "de": "die gerätestatus erfrischen invertal indepentent von der gerätesuche intervall",
-                "ru": "сделать статус устройства обновленный инвертальный непонятный с интервала поиска устройства",
-                "pt": "fazer o status do dispositivo atualizar indepente invertal do intervalo de pesquisa do dispositivo",
-                "nl": "maak de status verfrissend onafhankelijk van het apparaat",
-                "fr": "faire rafraîchir l'état de l'appareil indépentant de l'intervalle de recherche de l'appareil",
-                "it": "rendere lo stato del dispositivo aggiornare invertal indipendente dall'intervallo di ricerca del dispositivo",
-                "es": "hacer actualización del estado del dispositivo indepentente invertal del intervalo de búsqueda del dispositivo",
-                "pl": "status odświeżający",
-                "uk": "зробити стан пристрою, освіжаючи інверторний індикент з інтервалу пошуку пристрою",
-                "zh-cn": "利用装置搜寻装置进行喷雾装置的装置"
-            },
-            "0.0.3": {
-                "en": "update dependecies",
-                "de": "aktualisierung der abhängigkeiten",
-                "ru": "обновление зависимостей",
-                "pt": "atualizações",
-                "nl": "vertaling:",
-                "fr": "mettre à jour les dépendances",
-                "it": "dipendenze di aggiornamento",
-                "es": "dependencias de actualización",
-                "pl": "aktualizacja",
-                "uk": "оновлення залежності",
-                "zh-cn": "a. 最新依赖情况"
-            },
-            "0.0.2": {
-                "en": "initial release",
-                "de": "erstausstrahlung",
-                "ru": "начальный выпуск",
-                "pt": "lançamento inicial",
-                "nl": "niet",
-                "fr": "initial release",
-                "it": "rilascio iniziale",
-                "es": "liberación inicial",
-                "pl": "pierwsze wydanie",
-                "uk": "початковий реліз",
-                "zh-cn": "初步释放"
-            },
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "zh-cn": "首次出版",
-                "uk": "початковий випуск"
-            }
-        },
-        "titleLang": {
-            "en": "Govee local",
-            "de": "Govee local",
-            "ru": "Govee местный",
-            "pt": "Govee local",
-            "nl": "Govee lokaal",
-            "fr": "Govee local",
-            "it": "Govee local",
-            "es": "Govee Local",
-            "pl": "Lokalny Govee",
-            "uk": "Govee місцевий",
-            "zh-cn": "Govee Local"
-        },
-        "desc": {
-            "en": "Control Govee devices via local access (no cloud)",
-            "de": "Steuerung von Govee-Geräten über lokalen Zugriff (keine Cloud)",
-            "ru": "Управляйте устройствами Govee через локальный доступ (без облака)",
-            "pt": "Controle os dispositivos Govee via acesso local (sem nuvem)",
-            "nl": "Bedien Govee-apparaten via lokale toegang (geen cloud)",
-            "fr": "Contrôlez les appareils Govee via un accès local (pas de cloud)",
-            "it": "Controlla i dispositivi Govee tramite accesso locale (no cloud)",
-            "es": "Controle los dispositivos Govee a través del acceso local (sin nube)",
-            "pl": "Steruj urządzeniami Govee przez dostęp lokalny (bez chmury)",
-            "zh-cn": "通过本地访问控制 Govee 设备（无云）",
-            "uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
-        },
-        "authors": [
-            "Børge Grunicke <boerge@grunicke.de>"
-        ],
-        "keywords": [
-            "govee",
-            "light",
-            "local"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "build/main.js",
-        "icon": "govee-local.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",
-        "readme": "https://github.com/boergegrunicke/ioBroker.govee-local/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "lighting",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=4.0.0"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=6.0.0"
-            }
-        ]
+  "common": {
+    "name": "govee-local",
+    "version": "0.1.0",
+    "news": {
+      "0.1.0": {
+        "en": "make search intervals configurable\nclear all timeouts, when adapter is stopped\nreplace forbidden characters in names\nupdate translations\nupdate dependecies",
+        "de": "die suchintervalle konfigurierbar machen\nalle timeouts löschen, wenn der adapter gestoppt wird\nverbotene zeichen in namen ersetzen\nübersetzungen aktualisieren\naktualisierung der abhängigkeiten",
+        "ru": "сделать поисковые интервалы конфигурируемыми\nочистить все тайм-аут, когда адаптер остановлен\nзаменить запрещенные символы в именах\nобновление переводов\nобновление зависимостей",
+        "pt": "fazer intervalos de pesquisa configuráveis\nlimpar todos os prazos, quando o adaptador é parado\nsubstituir caracteres proibidos em nomes\ntraduções de atualização\natualizações",
+        "nl": "doorzoekingsbesprekingen beperkt\nmaak alle time-outs vrij wanneer de adapter stopt\nverboden personages in naam\nvertaling:\nvertaling:",
+        "fr": "faire des intervalles de recherche configurables\neffacer tous les timeouts, quand l'adaptateur est arrêté\nremplacer les caractères interdits dans les noms\nmise à jour des traductions\nmettre à jour les dépendances",
+        "it": "rendere configurabili gli intervalli di ricerca\nchiaro tutti i timeout, quando l'adattatore viene fermato\nsostituire i caratteri vietati in nomi\naggiornare le traduzioni\ndipendenze di aggiornamento",
+        "es": "hacer intervalos de búsqueda configurable\ndespejado todo el tiempo, cuando el adaptador es detenido\nreemplazar caracteres prohibidos en nombres\ntraducción actualizada\ndependencias de actualización",
+        "pl": "przeszukiwań konfigurowalnych\noczywiście cały czas, gdy adapter zostaje zatrzymany\nzastępowanie bohaterów nazw\ntłumaczenia aktualizacyjne\naktualizacja",
+        "uk": "зробіть інтервали пошуку налаштувати\nочистити всі маршрути, коли адаптер припиняється\nзамінити заборонені символи в іменах\nоновлення перекладів\nоновлення залежності",
+        "zh-cn": "定期探查\n所有时间都很清楚,当适应人员被停止时\n用名称取代禁止的特性\n更新翻译\na. 最新依赖情况"
+      },
+      "0.0.6": {
+        "en": "update dependencies",
+        "de": "aktualisierung der abhängigkeiten",
+        "ru": "обновление зависимостей",
+        "pt": "dependências",
+        "nl": "vertaling:",
+        "fr": "mettre à jour les dépendances",
+        "it": "aggiornamento dipendenze",
+        "es": "dependencias de actualización",
+        "pl": "zależności",
+        "uk": "оновлення залежності",
+        "zh-cn": "a. 最新受扶养人"
+      },
+      "0.0.5": {
+        "en": "make pipeline run",
+        "de": "pipeline laufen lassen",
+        "ru": "сделать пробег трубопровода",
+        "pt": "fazer a execução do pipeline",
+        "nl": "maak pijplijnen",
+        "fr": "faire fonctionner le pipeline",
+        "it": "rendere il processo di tubazione",
+        "es": "funcionamiento del gasoducto",
+        "pl": "rurociąg",
+        "uk": "зведення трубопроводів",
+        "zh-cn": "管道"
+      },
+      "0.0.4": {
+        "en": "make device status refresh invertal indepentent from device search interval",
+        "de": "die gerätestatus erfrischen invertal indepentent von der gerätesuche intervall",
+        "ru": "сделать статус устройства обновленный инвертальный непонятный с интервала поиска устройства",
+        "pt": "fazer o status do dispositivo atualizar indepente invertal do intervalo de pesquisa do dispositivo",
+        "nl": "maak de status verfrissend onafhankelijk van het apparaat",
+        "fr": "faire rafraîchir l'état de l'appareil indépentant de l'intervalle de recherche de l'appareil",
+        "it": "rendere lo stato del dispositivo aggiornare invertal indipendente dall'intervallo di ricerca del dispositivo",
+        "es": "hacer actualización del estado del dispositivo indepentente invertal del intervalo de búsqueda del dispositivo",
+        "pl": "status odświeżający",
+        "uk": "зробити стан пристрою, освіжаючи інверторний індикент з інтервалу пошуку пристрою",
+        "zh-cn": "利用装置搜寻装置进行喷雾装置的装置"
+      },
+      "0.0.3": {
+        "en": "update dependecies",
+        "de": "aktualisierung der abhängigkeiten",
+        "ru": "обновление зависимостей",
+        "pt": "atualizações",
+        "nl": "vertaling:",
+        "fr": "mettre à jour les dépendances",
+        "it": "dipendenze di aggiornamento",
+        "es": "dependencias de actualización",
+        "pl": "aktualizacja",
+        "uk": "оновлення залежності",
+        "zh-cn": "a. 最新依赖情况"
+      },
+      "0.0.2": {
+        "en": "initial release",
+        "de": "erstausstrahlung",
+        "ru": "начальный выпуск",
+        "pt": "lançamento inicial",
+        "nl": "niet",
+        "fr": "initial release",
+        "it": "rilascio iniziale",
+        "es": "liberación inicial",
+        "pl": "pierwsze wydanie",
+        "uk": "початковий реліз",
+        "zh-cn": "初步释放"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "zh-cn": "首次出版",
+        "uk": "початковий випуск"
+      }
     },
-    "native": {
-        "searchInterval": 10,
-        "deviceStatusRefreshInterval": 1
+    "titleLang": {
+      "en": "Govee local",
+      "de": "Govee local",
+      "ru": "Govee местный",
+      "pt": "Govee local",
+      "nl": "Govee lokaal",
+      "fr": "Govee local",
+      "it": "Govee local",
+      "es": "Govee Local",
+      "pl": "Lokalny Govee",
+      "uk": "Govee місцевий",
+      "zh-cn": "Govee Local"
     },
-    "objects": [],
-    "instanceObjects": []
+    "desc": {
+      "en": "Control Govee devices via local access (no cloud)",
+      "de": "Steuerung von Govee-Geräten über lokalen Zugriff (keine Cloud)",
+      "ru": "Управляйте устройствами Govee через локальный доступ (без облака)",
+      "pt": "Controle os dispositivos Govee via acesso local (sem nuvem)",
+      "nl": "Bedien Govee-apparaten via lokale toegang (geen cloud)",
+      "fr": "Contrôlez les appareils Govee via un accès local (pas de cloud)",
+      "it": "Controlla i dispositivi Govee tramite accesso locale (no cloud)",
+      "es": "Controle los dispositivos Govee a través del acceso local (sin nube)",
+      "pl": "Steruj urządzeniami Govee przez dostęp lokalny (bez chmury)",
+      "zh-cn": "通过本地访问控制 Govee 设备（无云）",
+      "uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
+    },
+    "authors": [
+      "Børge Grunicke <boerge@grunicke.de>"
+    ],
+    "keywords": [
+      "govee",
+      "light",
+      "local"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "build/main.js",
+    "icon": "govee-local.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",
+    "readme": "https://github.com/boergegrunicke/ioBroker.govee-local/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=6.0.0"
+      }
+    ]
+  },
+  "native": {
+    "searchInterval": 10,
+    "deviceStatusRefreshInterval": 1
+  },
+  "objects": [],
+  "instanceObjects": []
 }

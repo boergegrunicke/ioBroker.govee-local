@@ -14,6 +14,10 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+-   fix image
+
 ### 0.1.0 (2023-08-09)
 
 -   make search intervals configurable

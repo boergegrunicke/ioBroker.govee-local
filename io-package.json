@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "fix image",
+        "de": "das bild",
+        "ru": "исправить изображение",
+        "pt": "corrigir imagem",
+        "nl": "vertaling:",
+        "fr": "correction",
+        "it": "immagine di correzione",
+        "es": "imagen",
+        "pl": "zdjęcie",
+        "uk": "фіксувати зображення",
+        "zh-cn": "fix图像"
+      },
       "0.1.0": {
         "en": "make search intervals configurable\nclear all timeouts, when adapter is stopped\nreplace forbidden characters in names\nupdate translations\nupdate dependecies",
         "de": "die suchintervalle konfigurierbar machen\nalle timeouts löschen, wenn der adapter gestoppt wird\nverbotene zeichen in namen ersetzen\nübersetzungen aktualisieren\naktualisierung der abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "pierwsze wydanie",
         "uk": "початковий реліз",
         "zh-cn": "初步释放"
-      },
-      "0.0.1": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "zh-cn": "首次出版",
-        "uk": "початковий випуск"
       }
     },
     "titleLang": {

@@ -1,4 +1,4 @@
-![Logo](govee-local.png)
+![Logo](admin/govee-local.png)
 
 ## govee-local adapter for ioBroker
 

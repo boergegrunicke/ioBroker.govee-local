@@ -7,7 +7,6 @@
 import * as utils from '@iobroker/adapter-core';
 import * as dgram from 'node:dgram';
 
-export { componentToHex };
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";
@@ -318,3 +317,5 @@ function componentToHex(c: number): string {
 	const hex = c.toString(16);
 	return hex.length == 1 ? '0' + hex : hex;
 }
+
+export { componentToHex };

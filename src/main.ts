@@ -6,7 +6,7 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 import * as dgram from 'node:dgram';
- 
+
 // Load your modules here, e.g.:
 // import * as fs from "fs";
 

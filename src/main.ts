@@ -318,4 +318,3 @@ function componentToHex(c: number): string {
 }
 
 export { componentToHex };
-

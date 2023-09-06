@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "news": {
+      "0.1.2": {
+        "en": "change icon path and resolution",
+        "de": "icon pfad und auflösung ändern",
+        "ru": "изменить путь иконки и разрешение",
+        "pt": "mudar o caminho do ícone e resolução",
+        "nl": "verander icoon en resolutie",
+        "fr": "changer le chemin d'icône et la résolution",
+        "it": "cambiare percorso icona e risoluzione",
+        "es": "cambiar la ruta del icono y la resolución",
+        "pl": "ikonywana droga i rozdzielczość",
+        "uk": "зміна ікони шлях і роздільна здатність",
+        "zh-cn": "b. 改变道路和决议"
+      },
       "0.1.1": {
         "en": "fix image",
         "de": "das bild",
@@ -80,19 +93,6 @@
         "pl": "aktualizacja",
         "uk": "оновлення залежності",
         "zh-cn": "a. 最新依赖情况"
-      },
-      "0.0.2": {
-        "en": "initial release",
-        "de": "erstausstrahlung",
-        "ru": "начальный выпуск",
-        "pt": "lançamento inicial",
-        "nl": "niet",
-        "fr": "initial release",
-        "it": "rilascio iniziale",
-        "es": "liberación inicial",
-        "pl": "pierwsze wydanie",
-        "uk": "початковий реліз",
-        "zh-cn": "初步释放"
       }
     },
     "titleLang": {

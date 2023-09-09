@@ -80,7 +80,6 @@ class GoveeLocal extends utils.Adapter {
 		if (result !== void 0) {
 			searchInterval = result;
 		}
-		// this.sendScan();
 	}
 
 	/**

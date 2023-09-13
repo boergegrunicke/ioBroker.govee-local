@@ -8,7 +8,6 @@ import * as utils from '@iobroker/adapter-core';
 import * as dgram from 'node:dgram';
 
 // Load your modules here, e.g.:
-// import * as fs from "fs";
 
 const LOCAL_PORT = 4002;
 const SEND_SCAN_PORT = 4001;

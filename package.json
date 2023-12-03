@@ -32,6 +32,7 @@
     "@iobroker/testing": "^4.1.0",
     "@tsconfig/node14": "^14.1.0",
     "@tsconfig/node18": "^18.2.2",
+    "@tsconfig/node20": "^20.1.2",
     "@types/chai": "^4.3.11",
     "@types/chai-as-promised": "^7.1.7",
     "@types/mocha": "^10.0.1",

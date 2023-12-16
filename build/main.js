@@ -201,6 +201,7 @@ class GoveeLocal extends utils.Adapter {
     client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
   }
   async sendScan() {
+    this.log.info("send scan");
     const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
     client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
   }
@@ -217,8 +218,8 @@ class GoveeLocal extends utils.Adapter {
     }
   }
   async onStateChange(id, state) {
-    var _a;
-    if (state && !state.ack) {
+    var _a, _b;
+    if (state && !state.ack && state.val) {
       const ipOfDevice = await this.getStateAsync(id.split(".")[2] + ".deviceInfo.ip");
       if (ipOfDevice) {
         const receiver = (_a = ipOfDevice.val) == null ? void 0 : _a.toString();
@@ -237,6 +238,15 @@ class GoveeLocal extends utils.Adapter {
             const colorTempMessage = { msg: { cmd: "colorTemInKelvin", data: { value: state.val } } };
             const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
             client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+            break;
+          case "color":
+            const rgb = hexToRgb((_b = state.val) == null ? void 0 : _b.toString());
+            this.log.info(" rgb : " + JSON.stringify(rgb));
+            const colorMessage = { msg: { cmd: "colorwc", data: { value: state.val } } };
+            this.log.info(JSON.stringify(colorMessage));
+            const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+            client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+            break;
         }
       } else {
         this.log.error("device not found");
@@ -270,6 +280,16 @@ function getDatapointDescription(name) {
 function componentToHex(c) {
   const hex = c.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
+}
+function hexToRgb(hexString) {
+  if (!/^#[0-9a-f]{6}$/i.test(hexString)) {
+    throw new Error("Invalid hex string");
+  }
+  return {
+    r: parseInt(hexString.slice(1, 3), 16),
+    g: parseInt(hexString.slice(3, 5), 16),
+    b: parseInt(hexString.slice(5, 7), 16)
+  };
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

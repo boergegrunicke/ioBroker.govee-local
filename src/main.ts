@@ -220,6 +220,7 @@ class GoveeLocal extends utils.Adapter {
 	 * send the scan message to the udp multicast address
 	 */
 	private async sendScan(): Promise<void> {
+		this.log.info('send scan');
 		const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
 		client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
 	}
@@ -244,7 +245,7 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called if a subscribed state changes
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
-		if (state && !state.ack) {
+		if (state && !state.ack && state.val) {
 			const ipOfDevice = await this.getStateAsync(id.split('.')[2] + '.deviceInfo.ip');
 			if (ipOfDevice) {
 				const receiver = ipOfDevice.val?.toString();
@@ -263,6 +264,15 @@ class GoveeLocal extends utils.Adapter {
 						const colorTempMessage = { msg: { cmd: 'colorTemInKelvin', data: { value: state.val } } };
 						const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
 						client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+						break;
+					case 'color':
+						const rgb = hexToRgb(state.val?.toString());
+						this.log.info(' rgb : ' + JSON.stringify(rgb));
+						const colorMessage = { msg: { cmd: 'colorwc', data: { value: state.val } } };
+						this.log.info(JSON.stringify(colorMessage));
+						const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+						client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+						break;
 				}
 			} else {
 				this.log.error('device not found');
@@ -314,5 +324,24 @@ function componentToHex(c: number): string {
 	const hex = c.toString(16);
 	return hex.length == 1 ? '0' + hex : hex;
 }
+
+function hexToRgb(hexString: string): Color {
+	// Check if the hex string is valid
+	if (!/^#[0-9a-f]{6}$/i.test(hexString)) {
+		throw new Error('Invalid hex string');
+	}
+
+	return {
+		r: parseInt(hexString.slice(1, 3), 16),
+		g: parseInt(hexString.slice(3, 5), 16),
+		b: parseInt(hexString.slice(5, 7), 16),
+	};
+}
+
+type Color = {
+	r: number;
+	g: number;
+	b: number;
+};
 
 export { componentToHex };

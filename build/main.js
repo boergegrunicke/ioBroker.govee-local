@@ -241,9 +241,7 @@ class GoveeLocal extends utils.Adapter {
             break;
           case "color":
             const rgb = hexToRgb((_b = state.val) == null ? void 0 : _b.toString());
-            this.log.info(" rgb : " + JSON.stringify(rgb));
-            const colorMessage = { msg: { cmd: "colorwc", data: { value: state.val } } };
-            this.log.info(JSON.stringify(colorMessage));
+            const colorMessage = { msg: { cmd: "colorwc", data: { color: rgb } } };
             const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
             client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
             break;

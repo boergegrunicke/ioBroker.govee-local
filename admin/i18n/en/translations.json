@@ -2,5 +2,7 @@
 	"govee-local adapter settings": "Adapter settings for govee-local",
 	"_searchInterval": "Search interval",
 	"_deviceStatusRefreshInterval": "device status refresh interval",
-	"_configDescription": "There is nothing mandatory to configure. Please change the intervals only when you are sure that this is what you need"
+	"_configDescription": "There is nothing mandatory to configure. Please change the intervals only when you are sure that this is what you need",
+	"_extendedLoggingDescription": "Extended Logging prints all the data received by the device to the log  with level info. As this produces a huge log spamming it is recommended to turn this on, only when needed and turnoff again afterwards.",
+	"_extendedLogging": "Extended Logging enabled"
 }

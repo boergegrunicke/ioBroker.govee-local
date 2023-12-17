@@ -6,6 +6,7 @@ declare global {
 		interface AdapterConfig {
 			searchInterval: number;
 			deviceStatusRefreshInterval: number;
+			extendedLogging: boolean;
 		}
 	}
 }

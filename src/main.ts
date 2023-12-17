@@ -24,6 +24,8 @@ let searchInterval: NodeJS.Timeout;
 
 const intervals: { [device: string]: NodeJS.Timeout } = {};
 
+const loggedDevices = [] as string[];
+
 class GoveeLocal extends utils.Adapter {
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
@@ -129,7 +131,11 @@ class GoveeLocal extends utils.Adapter {
 				}
 				break;
 			case 'devStatus':
-				const devices = await this.getStatesAsync(this.name + '.' + this.instance + '.*.deviceInfo.ip');
+				const devices = await this.getStatesAsync(`${this.name}.${this.instance}.*.deviceInfo.ip`);
+				if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
+					this.log.info(`deivce status message data: ${JSON.stringify(messageObject.msg.data)}`);
+					loggedDevices.push(remote.address.toString());
+				}
 				for (const key in devices) {
 					if (devices[key as keyof typeof devices].val == remote.address) {
 						const sendingDevice = key.split('.')[2].replace(this.FORBIDDEN_CHARS, '_');

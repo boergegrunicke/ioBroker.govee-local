@@ -26,6 +26,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 ### **WORK IN PROGRESS**
 
 -   support controlling the color
+-   extended logging mode
 
 ### 0.1.2 (2023-09-06)
 

@@ -2,5 +2,7 @@
     "govee-local adapter settings": "govee-local的适配器设置",
     "_searchInterval": "搜索间隔",
     "_deviceStatusRefreshInterval": "设备状态刷新间隔",
-    "_configDescription": "没有什么必须配置的。仅当您确定这是您需要的时才更改间隔"
+    "_configDescription": "没有什么必须配置的。仅当您确定这是您需要的时才更改间隔",
+    "_extendedLoggingDescription": "扩展日志记录将设备接收到的所有数据打印到带有级别信息的日志中。由于这会产生大量日志垃圾邮件，因此建议仅在需要时打开此功能，然后再次关闭。",
+    "_extendedLogging": "启用扩展日志记录"
 }

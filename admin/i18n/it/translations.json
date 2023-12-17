@@ -2,5 +2,7 @@
     "govee-local adapter settings": "Impostazioni dell'adattatore per govee-local",
     "_searchInterval": "Intervallo di ricerca",
     "_deviceStatusRefreshInterval": "intervallo di aggiornamento dello stato del dispositivo",
-    "_configDescription": "Non c'è nulla di obbligatorio da configurare. Si prega di modificare gli intervalli solo quando si è sicuri che questo è ciò di cui si ha bisogno"
+    "_configDescription": "Non c'è nulla di obbligatorio da configurare. Si prega di modificare gli intervalli solo quando si è sicuri che questo è ciò di cui si ha bisogno",
+    "_extendedLoggingDescription": "La registrazione estesa stampa tutti i dati ricevuti dal dispositivo nel registro con le informazioni sul livello. Poiché ciò produce un enorme spam nei registri, si consiglia di attivarlo solo quando necessario e di disattivarlo nuovamente in seguito.",
+    "_extendedLogging": "Registrazione estesa abilitata"
 }

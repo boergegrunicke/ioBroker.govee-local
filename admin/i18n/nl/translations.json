@@ -2,5 +2,7 @@
     "govee-local adapter settings": "Adapterinstellingen voor govee-local",
     "_searchInterval": "Zoek interval",
     "_deviceStatusRefreshInterval": "vernieuwingsinterval apparaatstatus",
-    "_configDescription": "Er is niets verplicht om te configureren. Wijzig de intervallen alleen als u zeker weet dat dit is wat u nodig heeft"
+    "_configDescription": "Er is niets verplicht om te configureren. Wijzig de intervallen alleen als u zeker weet dat dit is wat u nodig heeft",
+    "_extendedLoggingDescription": "Uitgebreide logboekregistratie drukt alle door het apparaat ontvangen gegevens af naar het logboek met niveau-informatie. Omdat dit een enorme log-spam veroorzaakt, is het aan te raden dit alleen in te schakelen als dat nodig is en daarna weer uit te schakelen.",
+    "_extendedLogging": "Uitgebreide logboekregistratie ingeschakeld"
 }

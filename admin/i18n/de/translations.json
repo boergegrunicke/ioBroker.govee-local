@@ -1,6 +1,8 @@
 {
-	"govee-local adapter settings": "Adaptereinstellungen für govee-local",
-	"_searchInterval": "Suchintervall",
-	"_deviceStatusRefreshInterval": "Aktualisierungsintervall für den Gerätestatus",
-	"_configDescription": "Hier muss nichts konfiguriert werden. Bitte die Intervalle nur ändern, wenn dies explizit gewollt ist."
+    "govee-local adapter settings": "Adaptereinstellungen für govee-local",
+    "_searchInterval": "Suchintervall",
+    "_deviceStatusRefreshInterval": "Aktualisierungsintervall für den Gerätestatus",
+    "_configDescription": "Hier muss nichts konfiguriert werden. Bitte die Intervalle nur ändern, wenn dies explizit gewollt ist.",
+    "_extendedLoggingDescription": "Die erweiterte Protokollierung druckt alle vom Gerät empfangenen Daten mit Ebeneninformationen in das Protokoll. Da dies zu einem großen Log-Spam führt, wird empfohlen, die Funktion nur bei Bedarf einzuschalten und anschließend wieder auszuschalten.",
+    "_extendedLogging": "Erweiterte Protokollierung aktiviert"
 }

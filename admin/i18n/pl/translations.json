@@ -2,5 +2,7 @@
     "govee-local adapter settings": "Ustawienia adaptera dla govee-local",
     "_searchInterval": "Interwał wyszukiwania",
     "_deviceStatusRefreshInterval": "interwał odświeżania stanu urządzenia",
-    "_configDescription": "Nie ma nic obowiązkowego do skonfigurowania. Zmień interwały tylko wtedy, gdy jesteś pewien, że tego właśnie potrzebujesz"
+    "_configDescription": "Nie ma nic obowiązkowego do skonfigurowania. Zmień interwały tylko wtedy, gdy jesteś pewien, że tego właśnie potrzebujesz",
+    "_extendedLoggingDescription": "Rozszerzone rejestrowanie drukuje wszystkie dane otrzymane przez urządzenie w dzienniku z informacjami o poziomie. Ponieważ powoduje to powstawanie ogromnego spamu w dziennikach, zaleca się włączenie tej opcji tylko w razie potrzeby, a następnie wyłączenie jej ponownie.",
+    "_extendedLogging": "Włączono rozszerzone rejestrowanie"
 }

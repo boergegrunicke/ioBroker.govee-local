@@ -156,10 +156,5 @@
 		"extendedLogging": false
 	},
 	"objects": [],
-	"instanceObjects": [],
-	"plugins": {
-		"sentry": {
-			"dsn": "https://222b1aa851a787c9dc17443312c0bfea@o4506451613319168.ingest.sentry.io/4506451645300736"
-		}
-	}
+	"instanceObjects": []
 }

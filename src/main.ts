@@ -24,6 +24,8 @@ let searchInterval: NodeJS.Timeout;
 
 const intervals: { [device: string]: NodeJS.Timeout } = {};
 
+const devices: { [ip: string]: string } = {};
+
 const loggedDevices = [] as string[];
 
 class GoveeLocal extends utils.Adapter {
@@ -62,7 +64,7 @@ class GoveeLocal extends utils.Adapter {
 
 		server.bind(LOCAL_PORT, this.serverBound.bind(this));
 
-		this.subscribeStates('govee-local.*.devStatus.*');
+		this.subscribeStates('*.devStatus.*');
 	}
 
 	/**
@@ -95,6 +97,7 @@ class GoveeLocal extends utils.Adapter {
 				for (const key of Object.keys(messageObject.msg.data)) {
 					if (key != 'device') {
 						const deviceName = messageObject.msg.data.device.replace(this.FORBIDDEN_CHARS, '_');
+						devices[remote.address] = deviceName;
 						this.setObjectNotExists(deviceName, {
 							type: 'device',
 							common: {
@@ -131,83 +134,78 @@ class GoveeLocal extends utils.Adapter {
 				}
 				break;
 			case 'devStatus':
-				this.log.info('devStatus : ... from ' + remote.address);
-				this.log.info(`${this.name}.${this.instance}.*.deviceInfo.ip`);
-				const devices = await this.getStatesAsync(`${this.name}.${this.instance}.*.deviceInfo.ip`);
-				if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
-					this.log.info(`deivce status message data: ${JSON.stringify(messageObject)}`);
-					loggedDevices.push(remote.address.toString());
-				}
-				break;
-				for (const key in devices) {
-					if (devices[key as keyof typeof devices].val == remote.address) {
-						const sendingDevice = key.split('.')[2].replace(this.FORBIDDEN_CHARS, '_');
-						const devStatusMessageObject = JSON.parse(message.toString());
-						this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
-							type: 'state',
-							common: {
-								name: 'On / Off state of the lamp',
-								type: 'boolean',
-								role: 'switch',
-								read: true,
-								write: true,
-							},
-							native: {},
-						});
-						this.setState(`${sendingDevice}.devStatus.onOff`, {
-							val: devStatusMessageObject.msg.data.onOff == 1,
-							ack: true,
-						});
-						this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
-							type: 'state',
-							common: {
-								name: 'Brightness of the light',
-								type: 'number',
-								role: 'level.dimmer',
-								read: true,
-								write: true,
-							},
-							native: {},
-						});
-						this.setState(`${sendingDevice}.devStatus.brightness`, {
-							val: devStatusMessageObject.msg.data.brightness,
-							ack: true,
-						});
-						this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
-							type: 'state',
-							common: {
-								name: 'Current showing color of the lamp',
-								type: 'string',
-								role: 'level.color.rgb',
-								read: true,
-								write: true,
-							},
-							native: {},
-						});
-						this.setState(`${sendingDevice}.devStatus.color`, {
-							val:
-								'#' +
-								componentToHex(devStatusMessageObject.msg.data.color.r) +
-								componentToHex(devStatusMessageObject.msg.data.color.g) +
-								componentToHex(devStatusMessageObject.msg.data.color.b),
-							ack: true,
-						});
-						this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
-							type: 'state',
-							common: {
-								name: 'If staying in white light, the color temperature',
-								type: 'number',
-								role: 'level.color.temperature',
-								read: true,
-								write: true,
-							},
-							native: {},
-						});
-						this.setState(`${sendingDevice}.devStatus.colorTemInKelvin`, {
-							val: devStatusMessageObject.msg.data.colorTemInKelvin,
-							ack: true,
-						});
+				const sendingDevice = devices[remote.address];
+				if (sendingDevice) {
+					// const devices = await this.getStatesAsync(`${this.name}.${this.instance}.*.deviceInfo.ip`);
+					if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
+						this.log.info(`deivce status message data: ${JSON.stringify(messageObject)}`);
+						loggedDevices.push(remote.address.toString());
 					}
+					const devStatusMessageObject = JSON.parse(message.toString());
+					this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
+						type: 'state',
+						common: {
+							name: 'On / Off state of the lamp',
+							type: 'boolean',
+							role: 'switch',
+							read: true,
+							write: true,
+						},
+						native: {},
+					});
+					this.setState(`${sendingDevice}.devStatus.onOff`, {
+						val: devStatusMessageObject.msg.data.onOff == 1,
+						ack: true,
+					});
+					this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
+						type: 'state',
+						common: {
+							name: 'Brightness of the light',
+							type: 'number',
+							role: 'level.dimmer',
+							read: true,
+							write: true,
+						},
+						native: {},
+					});
+					this.setState(`${sendingDevice}.devStatus.brightness`, {
+						val: devStatusMessageObject.msg.data.brightness,
+						ack: true,
+					});
+					this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
+						type: 'state',
+						common: {
+							name: 'Current showing color of the lamp',
+							type: 'string',
+							role: 'level.color.rgb',
+							read: true,
+							write: true,
+						},
+						native: {},
+					});
+					this.setState(`${sendingDevice}.devStatus.color`, {
+						val:
+							'#' +
+							componentToHex(devStatusMessageObject.msg.data.color.r) +
+							componentToHex(devStatusMessageObject.msg.data.color.g) +
+							componentToHex(devStatusMessageObject.msg.data.color.b),
+						ack: true,
+					});
+					this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
+						type: 'state',
+						common: {
+							name: 'If staying in white light, the color temperature',
+							type: 'number',
+							role: 'level.color.temperature',
+							read: true,
+							write: true,
+						},
+						native: {},
+					});
+					this.setState(`${sendingDevice}.devStatus.colorTemInKelvin`, {
+						val: devStatusMessageObject.msg.data.colorTemInKelvin,
+						ack: true,
+					});
 				}
 				break;
 			default:
@@ -220,7 +218,6 @@ class GoveeLocal extends utils.Adapter {
 	 * @param receiver the ip ( / hsotname ) of the device that should be queried
 	 */
 	private requestDeviceStatus(receiver: string): void {
-		console.log('request device status ' + receiver);
 		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
 		client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
 	}
@@ -253,14 +250,14 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called if a subscribed state changes
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
-		this.log.info('state changed : ' + id + ' new state : ' + state?.val + ' ack? ' + state?.ack);
-		if (state && !state.ack && state.val) {
+		if (state && !state.ack) {
 			const ipOfDevice = await this.getStateAsync(id.split('.')[2] + '.deviceInfo.ip');
 			if (ipOfDevice) {
 				const receiver = ipOfDevice.val?.toString();
 				switch (id.split('.')[4]) {
 					case 'onOff':
 						const turnMessage = { msg: { cmd: 'turn', data: { value: state.val ? 1 : 0 } } };
+						this.log.info('turn message : ' + JSON.stringify(turnMessage));
 						const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
 						client.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
 						break;
@@ -275,10 +272,13 @@ class GoveeLocal extends utils.Adapter {
 						client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
 						break;
 					case 'color':
-						const rgb = hexToRgb(state.val?.toString());
-						const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
-						const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-						client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+						const colorValue = state.val?.toString();
+						if (colorValue) {
+							const rgb = hexToRgb(colorValue);
+							const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
+							const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+							client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+						}
 						break;
 				}
 			} else {

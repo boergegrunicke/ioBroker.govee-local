@@ -276,7 +276,7 @@ function componentToHex(c) {
   return hex.length == 1 ? "0" + hex : hex;
 }
 function hexToRgb(hexString) {
-  if (!/^#[0-9a-f]{6}$/i.test(hexString)) {
+  if (!/^#[0-9a-fA-F]{6}$/i.test(hexString)) {
     throw new Error("Invalid hex string");
   }
   return {

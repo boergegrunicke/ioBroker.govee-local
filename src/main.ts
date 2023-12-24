@@ -334,7 +334,7 @@ function componentToHex(c: number): string {
 
 function hexToRgb(hexString: string): Color {
 	// Check if the hex string is valid
-	if (!/^#[0-9a-f]{6}$/i.test(hexString)) {
+	if (!/^#[0-9a-fA-F]{6}$/i.test(hexString)) {
 		throw new Error('Invalid hex string');
 	}
 

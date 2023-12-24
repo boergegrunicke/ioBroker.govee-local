@@ -43,26 +43,26 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	private async onReady(): Promise<void> {
-		this.setObjectNotExists('info.connection', {
-			type: 'state',
-			common: {
-				name: 'Device discovery running',
-				type: 'boolean',
-				role: 'indicator.connected',
-				read: true,
-				write: false,
-			},
-			native: {},
-		});
+		// this.setObjectNotExists('info.connection', {
+		// 	type: 'state',
+		// 	common: {
+		// 		name: 'Device discovery running',
+		// 		type: 'boolean',
+		// 		role: 'indicator.connected',
+		// 		read: true,
+		// 		write: false,
+		// 	},
+		// 	native: {},
+		// });
 		server.on('message', this.onUdpMessage.bind(this));
 		server.on('error', (error) => {
 			this.log.error('server bind error : ' + error.message);
-			this.setState('info.connection', { val: false, ack: true });
+			this.setStateChanged('info.connection', { val: false, ack: true });
 		});
 
 		server.bind(LOCAL_PORT, this.serverBound.bind(this));
 
-		this.subscribeStates('*.devStatus.*');
+		this.subscribeStates('govee-local.*.devStatus.*');
 	}
 
 	/**
@@ -74,7 +74,7 @@ class GoveeLocal extends utils.Adapter {
 		server.setBroadcast(true);
 		server.setMulticastTTL(128);
 		server.addMembership(M_CAST);
-		this.setState('info.connection', { val: true, ack: true });
+		this.setStateChanged('info.connection', { val: true, ack: true });
 		this.log.debug('UDP listening on ' + server.address().address + ':' + server.address().port);
 
 		const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
@@ -131,11 +131,14 @@ class GoveeLocal extends utils.Adapter {
 				}
 				break;
 			case 'devStatus':
+				this.log.info('devStatus : ... from ' + remote.address);
+				this.log.info(`${this.name}.${this.instance}.*.deviceInfo.ip`);
 				const devices = await this.getStatesAsync(`${this.name}.${this.instance}.*.deviceInfo.ip`);
 				if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
-					this.log.info(`deivce status message data: ${JSON.stringify(messageObject.msg.data)}`);
+					this.log.info(`deivce status message data: ${JSON.stringify(messageObject)}`);
 					loggedDevices.push(remote.address.toString());
 				}
+				break;
 				for (const key in devices) {
 					if (devices[key as keyof typeof devices].val == remote.address) {
 						const sendingDevice = key.split('.')[2].replace(this.FORBIDDEN_CHARS, '_');
@@ -250,6 +253,7 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called if a subscribed state changes
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
+		this.log.info('state changed : ' + id + ' new state : ' + state?.val + ' ack? ' + state?.ack);
 		if (state && !state.ack && state.val) {
 			const ipOfDevice = await this.getStateAsync(id.split('.')[2] + '.deviceInfo.ip');
 			if (ipOfDevice) {

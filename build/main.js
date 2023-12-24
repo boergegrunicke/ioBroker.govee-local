@@ -24,7 +24,8 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var main_exports = {};
 __export(main_exports, {
-  componentToHex: () => componentToHex
+  componentToHex: () => componentToHex,
+  hexToRgb: () => hexToRgb
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
@@ -51,30 +52,19 @@ class GoveeLocal extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   async onReady() {
-    this.setObjectNotExists("info.connection", {
-      type: "state",
-      common: {
-        name: "Device discovery running",
-        type: "boolean",
-        role: "indicator.connected",
-        read: true,
-        write: false
-      },
-      native: {}
-    });
     server.on("message", this.onUdpMessage.bind(this));
     server.on("error", (error) => {
       this.log.error("server bind error : " + error.message);
-      this.setState("info.connection", { val: false, ack: true });
+      this.setStateChanged("info.connection", { val: false, ack: true });
     });
     server.bind(LOCAL_PORT, this.serverBound.bind(this));
-    this.subscribeStates("*.devStatus.*");
+    this.subscribeStates("govee-local.*.devStatus.*");
   }
   async serverBound() {
     server.setBroadcast(true);
     server.setMulticastTTL(128);
     server.addMembership(M_CAST);
-    this.setState("info.connection", { val: true, ack: true });
+    this.setStateChanged("info.connection", { val: true, ack: true });
     this.log.debug("UDP listening on " + server.address().address + ":" + server.address().port);
     const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1e3);
     if (result !== void 0) {
@@ -124,11 +114,14 @@ class GoveeLocal extends utils.Adapter {
         }
         break;
       case "devStatus":
+        this.log.info("devStatus : ... from " + remote.address);
+        this.log.info(`${this.name}.${this.instance}.*.deviceInfo.ip`);
         const devices = await this.getStatesAsync(`${this.name}.${this.instance}.*.deviceInfo.ip`);
         if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
-          this.log.info(`deivce status message data: ${JSON.stringify(messageObject.msg.data)}`);
+          this.log.info(`deivce status message data: ${JSON.stringify(messageObject)}`);
           loggedDevices.push(remote.address.toString());
         }
+        break;
         for (const key in devices) {
           if (devices[key].val == remote.address) {
             const sendingDevice = key.split(".")[2].replace(this.FORBIDDEN_CHARS, "_");
@@ -223,6 +216,7 @@ class GoveeLocal extends utils.Adapter {
   }
   async onStateChange(id, state) {
     var _a, _b;
+    this.log.info("state changed : " + id + " new state : " + (state == null ? void 0 : state.val) + " ack? " + (state == null ? void 0 : state.ack));
     if (state && !state.ack && state.val) {
       const ipOfDevice = await this.getStateAsync(id.split(".")[2] + ".deviceInfo.ip");
       if (ipOfDevice) {
@@ -295,6 +289,7 @@ function hexToRgb(hexString) {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  componentToHex
+  componentToHex,
+  hexToRgb
 });
 //# sourceMappingURL=main.js.map

@@ -347,4 +347,4 @@ type Color = {
 	b: number;
 };
 
-export { componentToHex };
+export { componentToHex, hexToRgb };

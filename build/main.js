@@ -206,7 +206,6 @@ class GoveeLocal extends utils.Adapter {
     client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
   }
   async sendScan() {
-    this.log.info("send scan");
     const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
     client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
   }

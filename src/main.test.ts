@@ -7,7 +7,7 @@
 
 import { expect } from 'chai';
 // import { functionToTest } from "./moduleToTest";
-import { componentToHex } from './main';
+import { componentToHex, hexToRgb } from './main';
 
 describe('module to test => function to test', () => {
 	// initializing logic
@@ -34,5 +34,11 @@ describe('test the hex converter', () => {
 	});
 	it('16 should be 10', () => {
 		expect(componentToHex(26).should.equal('F'));
+	});
+});
+
+describe('test the hex to rgb converter', () => {
+	it('#FFFFFF should be 255,255,255', () => {
+		expect(hexToRgb('#FFFFFF').should.equal({ r: 255, g: 255, b: 255 }));
 	});
 });

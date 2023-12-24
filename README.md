@@ -25,7 +25,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 ### **WORK IN PROGRESS**
 
--   repair onOff / all other actions
+-   repair onOff / all other actions Fixes: #65
 -   fix log spamming because of wildcard
 
 ### 0.2.0 (2023-12-17)

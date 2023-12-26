@@ -45,17 +45,17 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	private async onReady(): Promise<void> {
-		// this.setObjectNotExists('info.connection', {
-		// 	type: 'state',
-		// 	common: {
-		// 		name: 'Device discovery running',
-		// 		type: 'boolean',
-		// 		role: 'indicator.connected',
-		// 		read: true,
-		// 		write: false,
-		// 	},
-		// 	native: {},
-		// });
+		this.setObjectNotExists('info.connection', {
+			type: 'state',
+			common: {
+				name: 'Device discovery running',
+				type: 'boolean',
+				role: 'indicator.connected',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
 		server.on('message', this.onUdpMessage.bind(this));
 		server.on('error', (error) => {
 			this.log.error('server bind error : ' + error.message);

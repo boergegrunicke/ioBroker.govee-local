@@ -53,6 +53,17 @@ class GoveeLocal extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   async onReady() {
+    this.setObjectNotExists("info.connection", {
+      type: "state",
+      common: {
+        name: "Device discovery running",
+        type: "boolean",
+        role: "indicator.connected",
+        read: true,
+        write: false
+      },
+      native: {}
+    });
     server.on("message", this.onUdpMessage.bind(this));
     server.on("error", (error) => {
       this.log.error("server bind error : " + error.message);

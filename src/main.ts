@@ -21,8 +21,7 @@ const scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } 
 const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
 
 let searchInterval: NodeJS.Timeout;
-
-const intervals: { [device: string]: NodeJS.Timeout } = {};
+let refreshInterval: NodeJS.Timeout;
 
 const devices: { [ip: string]: string } = {};
 
@@ -83,6 +82,14 @@ class GoveeLocal extends utils.Adapter {
 		if (deviceSearchInterval) {
 			searchInterval = deviceSearchInterval;
 		}
+
+		const deviceRefreshInterval = this.setInterval(
+			this.refreshAllDevices.bind(this),
+			this.config.deviceStatusRefreshInterval * 1000,
+		);
+		if (deviceRefreshInterval) {
+			refreshInterval = deviceRefreshInterval;
+		}
 	}
 
 	/**
@@ -122,15 +129,6 @@ class GoveeLocal extends utils.Adapter {
 							val: messageObject.msg.data[key],
 							ack: true,
 						});
-					}
-				}
-				if (!(messageObject.msg.data.device in intervals)) {
-					const result = this.setInterval(
-						() => this.requestDeviceStatus(messageObject.msg.data.ip),
-						this.config.deviceStatusRefreshInterval * 1000,
-					);
-					if (result) {
-						intervals[messageObject.msg.data.device] = result;
 					}
 				}
 				break;
@@ -214,6 +212,13 @@ class GoveeLocal extends utils.Adapter {
 		}
 	}
 
+	private async refreshAllDevices(): Promise<void> {
+		for (const ip in devices) {
+			this.log.info('refresh status for ' + ip);
+			this.requestDeviceStatus(ip);
+		}
+	}
+
 	/**
 	 * sends the device status request to one specific device
 	 * @param receiver the ip ( / hsotname ) of the device that should be queried
@@ -237,7 +242,7 @@ class GoveeLocal extends utils.Adapter {
 	private onUnload(callback: () => void): void {
 		try {
 			this.clearInterval(searchInterval);
-			Object.entries(intervals).forEach(([_, interval]) => this.clearInterval(interval));
+			this.clearInterval(refreshInterval);
 			client.close();
 			server.close();
 			this.setState('info.connection', { val: false, ack: true });

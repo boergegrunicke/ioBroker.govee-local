@@ -39,7 +39,7 @@ const client = dgram.createSocket("udp4");
 const scanMessage = { msg: { cmd: "scan", data: { account_topic: "reserved" } } };
 const requestStatusMessage = { msg: { cmd: "devStatus", data: {} } };
 let searchInterval;
-const intervals = {};
+let refreshInterval;
 const devices = {};
 const loggedDevices = [];
 class GoveeLocal extends utils.Adapter {
@@ -82,6 +82,13 @@ class GoveeLocal extends utils.Adapter {
     if (deviceSearchInterval) {
       searchInterval = deviceSearchInterval;
     }
+    const deviceRefreshInterval = this.setInterval(
+      this.refreshAllDevices.bind(this),
+      this.config.deviceStatusRefreshInterval * 1e3
+    );
+    if (deviceRefreshInterval) {
+      refreshInterval = deviceRefreshInterval;
+    }
   }
   async onUdpMessage(message, remote) {
     this.log.info("on udp message");
@@ -115,15 +122,6 @@ class GoveeLocal extends utils.Adapter {
               val: messageObject.msg.data[key],
               ack: true
             });
-          }
-        }
-        if (!(messageObject.msg.data.device in intervals)) {
-          const result = this.setInterval(
-            () => this.requestDeviceStatus(messageObject.msg.data.ip),
-            this.config.deviceStatusRefreshInterval * 1e3
-          );
-          if (result) {
-            intervals[messageObject.msg.data.device] = result;
           }
         }
         break;
@@ -201,6 +199,12 @@ class GoveeLocal extends utils.Adapter {
         this.log.error("message from: " + remote.address + ":" + remote.port + " - " + message);
     }
   }
+  async refreshAllDevices() {
+    for (const ip in devices) {
+      this.log.info("refresh status for " + ip);
+      this.requestDeviceStatus(ip);
+    }
+  }
   requestDeviceStatus(receiver) {
     const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
     client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
@@ -212,7 +216,7 @@ class GoveeLocal extends utils.Adapter {
   onUnload(callback) {
     try {
       this.clearInterval(searchInterval);
-      Object.entries(intervals).forEach(([_, interval]) => this.clearInterval(interval));
+      this.clearInterval(refreshInterval);
       client.close();
       server.close();
       this.setState("info.connection", { val: false, ack: true });

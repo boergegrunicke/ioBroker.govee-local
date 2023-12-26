@@ -80,7 +80,7 @@ class GoveeLocal extends utils.Adapter {
 		this.log.debug('UDP listening on ' + server.address().address + ':' + server.address().port);
 
 		const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
-		if (result !== void 0) {
+		if (result) {
 			searchInterval = result;
 		}
 	}

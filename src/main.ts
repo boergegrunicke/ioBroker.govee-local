@@ -79,9 +79,9 @@ class GoveeLocal extends utils.Adapter {
 		this.setStateChanged('info.connection', { val: true, ack: true });
 		this.log.debug('UDP listening on ' + server.address().address + ':' + server.address().port);
 
-		const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
-		if (result) {
-			searchInterval = result;
+		const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
+		if (deviceSearchInterval) {
+			searchInterval = deviceSearchInterval;
 		}
 	}
 
@@ -91,6 +91,7 @@ class GoveeLocal extends utils.Adapter {
 	 * @param remote the sender of the message
 	 */
 	private async onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): Promise<void> {
+		this.log.info('on udp message');
 		const messageObject = JSON.parse(message.toString());
 		switch (messageObject.msg.cmd) {
 			case 'scan':
@@ -128,7 +129,7 @@ class GoveeLocal extends utils.Adapter {
 						() => this.requestDeviceStatus(messageObject.msg.data.ip),
 						this.config.deviceStatusRefreshInterval * 1000,
 					);
-					if (result !== void 0) {
+					if (result) {
 						intervals[messageObject.msg.data.device] = result;
 					}
 				}

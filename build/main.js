@@ -78,12 +78,13 @@ class GoveeLocal extends utils.Adapter {
     server.addMembership(M_CAST);
     this.setStateChanged("info.connection", { val: true, ack: true });
     this.log.debug("UDP listening on " + server.address().address + ":" + server.address().port);
-    const result = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1e3);
-    if (result) {
-      searchInterval = result;
+    const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1e3);
+    if (deviceSearchInterval) {
+      searchInterval = deviceSearchInterval;
     }
   }
   async onUdpMessage(message, remote) {
+    this.log.info("on udp message");
     const messageObject = JSON.parse(message.toString());
     switch (messageObject.msg.cmd) {
       case "scan":
@@ -121,7 +122,7 @@ class GoveeLocal extends utils.Adapter {
             () => this.requestDeviceStatus(messageObject.msg.data.ip),
             this.config.deviceStatusRefreshInterval * 1e3
           );
-          if (result !== void 0) {
+          if (result) {
             intervals[messageObject.msg.data.device] = result;
           }
         }

@@ -24,7 +24,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 -->
 ### 0.2.1 (2023-12-24)
 
--   repair onOff / all other actions Fixes: #65
+-   repair onOff / all other actions Fixes: [#65](https://github.com/boergegrunicke/ioBroker.govee-local/issues/65)
 -   fix log spamming because of wildcard
 
 ### 0.2.0 (2023-12-17)

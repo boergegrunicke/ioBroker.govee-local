@@ -232,17 +232,19 @@ class GoveeLocal extends utils.Adapter {
         switch (id.split(".")[4]) {
           case "onOff":
             const turnMessage = { msg: { cmd: "turn", data: { value: state.val ? 1 : 0 } } };
-            this.log.info("turn message : " + JSON.stringify(turnMessage));
+            this.log.debug("turn message : " + JSON.stringify(turnMessage));
             const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
             client.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
             break;
           case "brightness":
             const brightnessMessage = { msg: { cmd: "brightness", data: { value: state.val } } };
+			      this.log.debug("brightness message : " + JSON.stringify(brightnessMessage));
             const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
             client.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
             break;
           case "colorTemInKelvin":
-            const colorTempMessage = { msg: { cmd: "colorTemInKelvin", data: { value: state.val } } };
+            const colorTempMessage = { msg: { cmd: "colorwc", data: { color: { r: "0", g:"0", b:"0"}, colorTemInKelvin: state.val } } };
+		      	this.log.debug("kelvin message : " + JSON.stringify(colorTempMessage));
             const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
             client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
             break;
@@ -251,8 +253,9 @@ class GoveeLocal extends utils.Adapter {
             if (colorValue) {
               const rgb = hexToRgb(colorValue);
               const colorMessage = { msg: { cmd: "colorwc", data: { color: rgb } } };
+			        this.log.debug("color message : " + JSON.stringify(colorMessage));
               const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-              client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+              client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver
             }
             break;
         }

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "news": {
+      "0.2.3": {
+        "en": "fix access",
+        "de": "zugriff",
+        "ru": "исправить доступ",
+        "pt": "corrigir o acesso",
+        "nl": "fix toegang",
+        "fr": "fixer l'accès",
+        "it": "fissare l'accesso",
+        "es": "acceso fijo",
+        "pl": "naprawić dostęp",
+        "uk": "фіксувати доступ",
+        "zh-cn": "固定访问"
+      },
       "0.2.2": {
         "en": "fix color temperature messsage",
         "de": "fixe farbtemperatur message",
@@ -80,19 +93,6 @@
         "pl": "przeszukiwań konfigurowalnych\noczywiście cały czas, gdy adapter zostaje zatrzymany\nzastępowanie bohaterów nazw\ntłumaczenia aktualizacyjne\naktualizacja",
         "uk": "зробіть інтервали пошуку налаштувати\nочистити всі маршрути, коли адаптер припиняється\nзамінити заборонені символи в іменах\nоновлення перекладів\nоновлення залежності",
         "zh-cn": "定期探查\n所有时间都很清楚,当适应人员被停止时\n用名称取代禁止的特性\n更新翻译\na. 最新依赖情况"
-      },
-      "0.0.6": {
-        "en": "update dependencies",
-        "de": "aktualisierung der abhängigkeiten",
-        "ru": "обновление зависимостей",
-        "pt": "dependências",
-        "nl": "vertaling:",
-        "fr": "mettre à jour les dépendances",
-        "it": "aggiornamento dipendenze",
-        "es": "dependencias de actualización",
-        "pl": "zależności",
-        "uk": "оновлення залежності",
-        "zh-cn": "a. 最新受扶养人"
       }
     },
     "titleLang": {

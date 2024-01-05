@@ -22,6 +22,11 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   fix color temperature messsage
+
 ### 0.2.1 (2023-12-24)
 
 -   repair onOff / all other actions Fixes: [#65](https://github.com/boergegrunicke/ioBroker.govee-local/issues/65)

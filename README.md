@@ -78,7 +78,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 MIT License
 
-Copyright (c) 2023 Børge Grunicke
+Copyright (c) 2024 Børge Grunicke
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

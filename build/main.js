@@ -91,7 +91,6 @@ class GoveeLocal extends utils.Adapter {
     }
   }
   async onUdpMessage(message, remote) {
-    this.log.info("on udp message");
     const messageObject = JSON.parse(message.toString());
     switch (messageObject.msg.cmd) {
       case "scan":
@@ -201,7 +200,6 @@ class GoveeLocal extends utils.Adapter {
   }
   async refreshAllDevices() {
     for (const ip in devices) {
-      this.log.info("refresh status for " + ip);
       this.requestDeviceStatus(ip);
     }
   }

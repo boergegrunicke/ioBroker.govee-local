@@ -98,7 +98,6 @@ class GoveeLocal extends utils.Adapter {
 	 * @param remote the sender of the message
 	 */
 	private async onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): Promise<void> {
-		this.log.info('on udp message');
 		const messageObject = JSON.parse(message.toString());
 		switch (messageObject.msg.cmd) {
 			case 'scan':
@@ -214,7 +213,6 @@ class GoveeLocal extends utils.Adapter {
 
 	private async refreshAllDevices(): Promise<void> {
 		for (const ip in devices) {
-			this.log.info('refresh status for ' + ip);
 			this.requestDeviceStatus(ip);
 		}
 	}

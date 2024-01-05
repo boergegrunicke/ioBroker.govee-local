@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "news": {
+      "0.2.4": {
+        "en": "fix access",
+        "de": "zugriff",
+        "ru": "исправить доступ",
+        "pt": "corrigir o acesso",
+        "nl": "fix toegang",
+        "fr": "fixer l'accès",
+        "it": "fissare l'accesso",
+        "es": "acceso fijo",
+        "pl": "naprawić dostęp",
+        "uk": "фіксувати доступ",
+        "zh-cn": "固定访问"
+      },
       "0.2.3": {
         "en": "fix access",
         "de": "zugriff",
@@ -80,19 +93,6 @@
         "pl": "zdjęcie",
         "uk": "фіксувати зображення",
         "zh-cn": "fix图像"
-      },
-      "0.1.0": {
-        "en": "make search intervals configurable\nclear all timeouts, when adapter is stopped\nreplace forbidden characters in names\nupdate translations\nupdate dependecies",
-        "de": "die suchintervalle konfigurierbar machen\nalle timeouts löschen, wenn der adapter gestoppt wird\nverbotene zeichen in namen ersetzen\nübersetzungen aktualisieren\naktualisierung der abhängigkeiten",
-        "ru": "сделать поисковые интервалы конфигурируемыми\nочистить все тайм-аут, когда адаптер остановлен\nзаменить запрещенные символы в именах\nобновление переводов\nобновление зависимостей",
-        "pt": "fazer intervalos de pesquisa configuráveis\nlimpar todos os prazos, quando o adaptador é parado\nsubstituir caracteres proibidos em nomes\ntraduções de atualização\natualizações",
-        "nl": "doorzoekingsbesprekingen beperkt\nmaak alle time-outs vrij wanneer de adapter stopt\nverboden personages in naam\nvertaling:\nvertaling:",
-        "fr": "faire des intervalles de recherche configurables\neffacer tous les timeouts, quand l'adaptateur est arrêté\nremplacer les caractères interdits dans les noms\nmise à jour des traductions\nmettre à jour les dépendances",
-        "it": "rendere configurabili gli intervalli di ricerca\nchiaro tutti i timeout, quando l'adattatore viene fermato\nsostituire i caratteri vietati in nomi\naggiornare le traduzioni\ndipendenze di aggiornamento",
-        "es": "hacer intervalos de búsqueda configurable\ndespejado todo el tiempo, cuando el adaptador es detenido\nreemplazar caracteres prohibidos en nombres\ntraducción actualizada\ndependencias de actualización",
-        "pl": "przeszukiwań konfigurowalnych\noczywiście cały czas, gdy adapter zostaje zatrzymany\nzastępowanie bohaterów nazw\ntłumaczenia aktualizacyjne\naktualizacja",
-        "uk": "зробіть інтервали пошуку налаштувати\nочистити всі маршрути, коли адаптер припиняється\nзамінити заборонені символи в іменах\nоновлення перекладів\nоновлення залежності",
-        "zh-cn": "定期探查\n所有时间都很清楚,当适应人员被停止时\n用名称取代禁止的特性\n更新翻译\na. 最新依赖情况"
       }
     },
     "titleLang": {

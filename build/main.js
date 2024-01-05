@@ -244,7 +244,7 @@ class GoveeLocal extends utils.Adapter {
             const colorTempMessage = {
               msg: {
                 cmd: "colorwc",
-                data: { colorTemInKelvin: state.val }
+                data: { color: { r: "0", g: "0", b: "0" }, colorTemInKelvin: state.val }
               }
             };
             const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));

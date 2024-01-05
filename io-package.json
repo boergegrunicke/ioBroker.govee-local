@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "news": {
+      "0.2.2": {
+        "en": "fix color temperature messsage",
+        "de": "fixe farbtemperatur message",
+        "ru": "фиксация цветовой температуры",
+        "pt": "corrigir a confusão de temperatura de cor",
+        "nl": "fix kleur temperatuur message",
+        "fr": "fixer la température de couleur message",
+        "it": "correzione di di disordine della temperatura del colore",
+        "es": "arreglar el desorden de temperatura de color",
+        "pl": "naprawić mieszankę temperatury kolorów",
+        "uk": "фіксувати колір температури messsage",
+        "zh-cn": "校正颜色温度组合"
+      },
       "0.2.1": {
         "en": "repair onOff / all other actions Fixes: #65\nfix log spamming because of wildcard",
         "de": "reparatur onOff / alle anderen Aktionen Behebungen: #65\nprotokoll spamming wegen wildcard",
@@ -80,19 +93,6 @@
         "pl": "zależności",
         "uk": "оновлення залежності",
         "zh-cn": "a. 最新受扶养人"
-      },
-      "0.0.5": {
-        "en": "make pipeline run",
-        "de": "pipeline laufen lassen",
-        "ru": "сделать пробег трубопровода",
-        "pt": "fazer a execução do pipeline",
-        "nl": "maak pijplijnen",
-        "fr": "faire fonctionner le pipeline",
-        "it": "rendere il processo di tubazione",
-        "es": "funcionamiento del gasoducto",
-        "pl": "rurociąg",
-        "uk": "зведення трубопроводів",
-        "zh-cn": "管道"
       }
     },
     "titleLang": {

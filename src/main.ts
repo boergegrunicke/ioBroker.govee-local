@@ -61,6 +61,10 @@ class GoveeLocal extends utils.Adapter {
 			this.setStateChanged('info.connection', { val: false, ack: true });
 		});
 
+		if (this.config.extendedLogging) {
+			this.log.debug('running with extended logging');
+		}
+
 		server.bind(LOCAL_PORT, this.serverBound.bind(this));
 
 		this.subscribeStates('*.devStatus.*');

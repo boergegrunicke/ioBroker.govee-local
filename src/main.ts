@@ -14,8 +14,7 @@ const SEND_SCAN_PORT = 4001;
 const CONTROL_PORT = 4003;
 const M_CAST = '239.255.255.250';
 
-const server = dgram.createSocket('udp4');
-const client = dgram.createSocket('udp4');
+const socket = dgram.createSocket({ type: 'udp4' });
 
 const scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } };
 const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
@@ -55,8 +54,8 @@ class GoveeLocal extends utils.Adapter {
 			},
 			native: {},
 		});
-		server.on('message', this.onUdpMessage.bind(this));
-		server.on('error', (error) => {
+		socket.on('message', this.onUdpMessage.bind(this));
+		socket.on('error', (error) => {
 			this.log.error('server bind error : ' + error.message);
 			this.setStateChanged('info.connection', { val: false, ack: true });
 		});
@@ -65,7 +64,7 @@ class GoveeLocal extends utils.Adapter {
 			this.log.debug('running with extended logging');
 		}
 
-		server.bind(LOCAL_PORT, this.serverBound.bind(this));
+		socket.bind(LOCAL_PORT, this.serverBound.bind(this));
 
 		this.subscribeStates('*.devStatus.*');
 	}
@@ -76,11 +75,11 @@ class GoveeLocal extends utils.Adapter {
 	 * start periodic scan for devices
 	 */
 	private async serverBound(): Promise<void> {
-		server.setBroadcast(true);
-		server.setMulticastTTL(128);
-		server.addMembership(M_CAST);
+		socket.setBroadcast(true);
+		socket.setMulticastTTL(128);
+		socket.addMembership(M_CAST);
 		this.setStateChanged('info.connection', { val: true, ack: true });
-		this.log.debug('UDP listening on ' + server.address().address + ':' + server.address().port);
+		this.log.debug('UDP listening on ' + socket.address().address + ':' + socket.address().port);
 
 		const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
 		if (deviceSearchInterval) {
@@ -227,7 +226,7 @@ class GoveeLocal extends utils.Adapter {
 	 */
 	private requestDeviceStatus(receiver: string): void {
 		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
-		client.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
+		socket.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
 	}
 
 	/**
@@ -235,7 +234,7 @@ class GoveeLocal extends utils.Adapter {
 	 */
 	private async sendScan(): Promise<void> {
 		const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
-		client.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
+		socket.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
 	}
 
 	/**
@@ -245,8 +244,7 @@ class GoveeLocal extends utils.Adapter {
 		try {
 			this.clearInterval(searchInterval);
 			this.clearInterval(refreshInterval);
-			client.close();
-			server.close();
+			socket.close();
 			this.setState('info.connection', { val: false, ack: true });
 			callback();
 		} catch (e) {
@@ -266,22 +264,23 @@ class GoveeLocal extends utils.Adapter {
 					case 'onOff':
 						const turnMessage = { msg: { cmd: 'turn', data: { value: state.val ? 1 : 0 } } };
 						const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
-						client.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
+						socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
 						break;
 					case 'brightness':
 						const brightnessMessage = { msg: { cmd: 'brightness', data: { value: state.val } } };
 						const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
-						client.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
-						break;
+						socket.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
+						socket;
 					case 'colorTemInKelvin':
-						const colorTempMessage = {
-							msg: {
-								cmd: 'colorwc',
-								data: { color: { r: '0', g: '0', b: '0' }, colorTemInKelvin: state.val },
-							},
-						};
-						const colorTempMessageBuffer = Buffer.from(JSON.stringify(colorTempMessage));
-						client.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+						const colorTempMessageBuffer = Buffer.from(
+							JSON.stringify({
+								msg: {
+									cmd: 'colorwc',
+									data: { color: { r: '0', g: '0', b: '0' }, colorTemInKelvin: state.val },
+								},
+							}),
+						);
+						socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
 						break;
 					case 'color':
 						const colorValue = state.val?.toString();
@@ -289,7 +288,7 @@ class GoveeLocal extends utils.Adapter {
 							const rgb = hexToRgb(colorValue);
 							const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
 							const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-							client.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+							socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
 						}
 						break;
 				}

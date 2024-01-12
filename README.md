@@ -22,6 +22,11 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   create only one socket, as the second seems not to be necessary
+
 ### 0.2.4 (2024-01-05)
 
 -   fix access

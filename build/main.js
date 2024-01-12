@@ -5,10 +5,6 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -21,15 +17,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-var main_exports = {};
-__export(main_exports, {
-  componentToHex: () => componentToHex,
-  hexToRgb: () => hexToRgb
-});
-module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
 var dgram = __toESM(require("node:dgram"));
+var import_hexTool = require("./tools/hexTool");
 const LOCAL_PORT = 4002;
 const SEND_SCAN_PORT = 4001;
 const CONTROL_PORT = 4003;
@@ -176,7 +166,7 @@ class GoveeLocal extends utils.Adapter {
             native: {}
           });
           this.setState(`${sendingDevice}.devStatus.color`, {
-            val: "#" + componentToHex(devStatusMessageObject.msg.data.color.r) + componentToHex(devStatusMessageObject.msg.data.color.g) + componentToHex(devStatusMessageObject.msg.data.color.b),
+            val: "#" + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.r) + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.g) + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.b),
             ack: true
           });
           this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
@@ -255,7 +245,7 @@ class GoveeLocal extends utils.Adapter {
           case "color":
             const colorValue = (_b = state.val) == null ? void 0 : _b.toString();
             if (colorValue) {
-              const rgb = hexToRgb(colorValue);
+              const rgb = (0, import_hexTool.hexToRgb)(colorValue);
               const colorMessage = { msg: { cmd: "colorwc", data: { color: rgb } } };
               const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
               socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
@@ -291,23 +281,4 @@ function getDatapointDescription(name) {
       return "";
   }
 }
-function componentToHex(c) {
-  const hex = c.toString(16);
-  return hex.length == 1 ? "0" + hex : hex;
-}
-function hexToRgb(hexString) {
-  if (!/^#[0-9a-fA-F]{6}$/i.test(hexString)) {
-    throw new Error("Invalid hex string");
-  }
-  return {
-    r: parseInt(hexString.slice(1, 3), 16),
-    g: parseInt(hexString.slice(3, 5), 16),
-    b: parseInt(hexString.slice(5, 7), 16)
-  };
-}
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  componentToHex,
-  hexToRgb
-});
 //# sourceMappingURL=main.js.map

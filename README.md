@@ -26,6 +26,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 ### **WORK IN PROGRESS**
 
 -   create only one socket, as the second seems not to be necessary
+-   refactoring the code for better structure
 
 ### 0.2.4 (2024-01-05)
 

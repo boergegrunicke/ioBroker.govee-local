@@ -4,5 +4,6 @@
     "_deviceStatusRefreshInterval": "intervalo de actualización del estado del dispositivo",
     "_configDescription": "No hay nada obligatorio para configurar. Cambie los intervalos solo cuando esté seguro de que esto es lo que necesita",
     "_extendedLoggingDescription": "El registro extendido imprime todos los datos recibidos por el dispositivo en el registro con información de nivel. Como esto produce un enorme spam de registros, se recomienda activarlo sólo cuando sea necesario y desactivarlo nuevamente después.",
-    "_extendedLogging": "Registro extendido habilitado"
+    "_extendedLogging": "Registro extendido habilitado",
+    "_networkInterface": "Interfaz de red"
 }

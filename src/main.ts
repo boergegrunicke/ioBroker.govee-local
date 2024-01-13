@@ -65,7 +65,7 @@ class GoveeLocal extends utils.Adapter {
 			this.log.debug('running with extended logging');
 		}
 
-		socket.bind(LOCAL_PORT, this.serverBound.bind(this));
+		socket.bind({ address: this.config.interface, port: LOCAL_PORT }, this.serverBound.bind(this));
 
 		this.subscribeStates('*.devStatus.*');
 	}
@@ -78,6 +78,7 @@ class GoveeLocal extends utils.Adapter {
 	private async serverBound(): Promise<void> {
 		socket.setBroadcast(true);
 		socket.setMulticastTTL(128);
+		socket.setMulticastInterface(this.config.interface);
 		socket.addMembership(M_CAST);
 		this.setStateChanged('info.connection', { val: true, ack: true });
 		this.log.debug('UDP listening on ' + socket.address().address + ':' + socket.address().port);

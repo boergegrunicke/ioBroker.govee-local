@@ -7,6 +7,7 @@ declare global {
 			searchInterval: number;
 			deviceStatusRefreshInterval: number;
 			extendedLogging: boolean;
+			interface: string;
 		}
 	}
 }

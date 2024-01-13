@@ -27,6 +27,7 @@ As I currently only have the H6051 lamp, this is the only device I can test with
 
 -   create only one socket, as the second seems not to be necessary
 -   refactoring the code for better structure
+-   possibility to choose listen interface in settings
 
 ### 0.2.4 (2024-01-05)
 

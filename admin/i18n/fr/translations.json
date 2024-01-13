@@ -4,5 +4,6 @@
     "_deviceStatusRefreshInterval": "intervalle d'actualisation de l'état de l'appareil",
     "_configDescription": "Il n'y a rien d'obligatoire à configurer. Veuillez modifier les intervalles uniquement lorsque vous êtes sûr que c'est ce dont vous avez besoin",
     "_extendedLoggingDescription": "La journalisation étendue imprime toutes les données reçues par l'appareil dans le journal avec les informations de niveau. Comme cela produit un énorme spam de journaux, il est recommandé de l'activer uniquement lorsque cela est nécessaire et de le désactiver à nouveau par la suite.",
-    "_extendedLogging": "Journalisation étendue activée"
+    "_extendedLogging": "Journalisation étendue activée",
+    "_networkInterface": "Interface réseau"
 }

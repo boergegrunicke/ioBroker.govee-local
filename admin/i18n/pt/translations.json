@@ -4,5 +4,6 @@
     "_deviceStatusRefreshInterval": "intervalo de atualização do status do dispositivo",
     "_configDescription": "Não há nada obrigatório para configurar. Por favor, altere os intervalos somente quando tiver certeza de que é isso que você precisa",
     "_extendedLoggingDescription": "O Extended Logging imprime todos os dados recebidos pelo dispositivo no log com informações de nível. Como isso produz um grande spam de log, é recomendável ativá-lo somente quando necessário e desligá-lo novamente depois.",
-    "_extendedLogging": "Registro estendido ativado"
+    "_extendedLogging": "Registro estendido ativado",
+    "_networkInterface": "Interface de rede"
 }

@@ -1,167 +1,167 @@
 {
-    "common": {
-        "name": "govee-local",
-        "version": "0.2.4",
-        "news": {
-            "0.2.4": {
-                "en": "fix access",
-                "de": "zugriff",
-                "ru": "исправить доступ",
-                "pt": "corrigir o acesso",
-                "nl": "fix toegang",
-                "fr": "fixer l'accès",
-                "it": "fissare l'accesso",
-                "es": "acceso fijo",
-                "pl": "naprawić dostęp",
-                "uk": "фіксувати доступ",
-                "zh-cn": "固定访问"
-            },
-            "0.2.3": {
-                "en": "fix access",
-                "de": "zugriff",
-                "ru": "исправить доступ",
-                "pt": "corrigir o acesso",
-                "nl": "fix toegang",
-                "fr": "fixer l'accès",
-                "it": "fissare l'accesso",
-                "es": "acceso fijo",
-                "pl": "naprawić dostęp",
-                "uk": "фіксувати доступ",
-                "zh-cn": "固定访问"
-            },
-            "0.2.2": {
-                "en": "fix color temperature messsage",
-                "de": "fixe farbtemperatur message",
-                "ru": "фиксация цветовой температуры",
-                "pt": "corrigir a confusão de temperatura de cor",
-                "nl": "fix kleur temperatuur message",
-                "fr": "fixer la température de couleur message",
-                "it": "correzione di di disordine della temperatura del colore",
-                "es": "arreglar el desorden de temperatura de color",
-                "pl": "naprawić mieszankę temperatury kolorów",
-                "uk": "фіксувати колір температури messsage",
-                "zh-cn": "校正颜色温度组合"
-            },
-            "0.2.1": {
-                "en": "repair onOff / all other actions Fixes: #65\nfix log spamming because of wildcard",
-                "de": "reparatur onOff / alle anderen Aktionen Behebungen: #65\nprotokoll spamming wegen wildcard",
-                "ru": "ремонт onOff / все другие действия Исправления: #65\nисправить спамирование лога из-за дикой карты",
-                "pt": "reparação emOff / todas as outras ações Correções: #65 #\ncorrigir spam de log por causa do wildcard",
-                "nl": "vertaling: Vertaling: 65\nvertaling:",
-                "fr": "réparation onOff / toutes les autres actions Fixes: #65\ncorriger l'éblouissement du journal à cause de wildcard",
-                "it": "riparazione onOff / tutte le altre azioni Fissi: #65\nsistemare il log spamming a causa di jolly",
-                "es": "reparación onOff / todas las demás acciones Arreglos: #65\nfijar registro de spam debido a wildcard",
-                "pl": "remontowanie Off / wszystkie inne działania Fiksy #65\nusunąć z powodu dzikiej karty",
-                "uk": "ремонт наОфф / всі інші дії Виправлення: #65\nфіксація спамерування колод через дикийкарт",
-                "zh-cn": "b. 修理效率/所有其他行动 固定: #65\nfix 由于野生素卡的投机"
-            },
-            "0.2.0": {
-                "en": "support controlling the color\nextended logging mode",
-                "de": "unterstützung controlling der farbe\nerweiterter logging-modus",
-                "ru": "поддержка контролируя цвет\nрасширенный режим входа",
-                "pt": "suporte controlando a cor\nmodo de registro estendido",
-                "nl": "de kleur controleren\nverlengde logging mode",
-                "fr": "support de contrôle de la couleur\nmode d ' enregistrement élargi",
-                "it": "supporto che controlla il colore\nmodalità di registrazione estesa",
-                "es": "soporte controlando el color\nmodo de registro ampliado",
-                "pl": "kontrolować kolor\nrozszerzony tryb logowania",
-                "uk": "супровід управління кольором\nрозширений режим входу",
-                "zh-cn": "控制颜色的支助\n扩大的伐木模式"
-            },
-            "0.1.2": {
-                "en": "change icon path and resolution",
-                "de": "icon pfad und auflösung ändern",
-                "ru": "изменить путь иконки и разрешение",
-                "pt": "mudar o caminho do ícone e resolução",
-                "nl": "verander icoon en resolutie",
-                "fr": "changer le chemin d'icône et la résolution",
-                "it": "cambiare percorso icona e risoluzione",
-                "es": "cambiar la ruta del icono y la resolución",
-                "pl": "ikonywana droga i rozdzielczość",
-                "uk": "зміна ікони шлях і роздільна здатність",
-                "zh-cn": "b. 改变道路和决议"
-            },
-            "0.1.1": {
-                "en": "fix image",
-                "de": "das bild",
-                "ru": "исправить изображение",
-                "pt": "corrigir imagem",
-                "nl": "vertaling:",
-                "fr": "correction",
-                "it": "immagine di correzione",
-                "es": "imagen",
-                "pl": "zdjęcie",
-                "uk": "фіксувати зображення",
-                "zh-cn": "fix图像"
-            }
-        },
-        "titleLang": {
-            "en": "Govee local",
-            "de": "Govee local",
-            "ru": "Govee местный",
-            "pt": "Govee local",
-            "nl": "Govee lokaal",
-            "fr": "Govee local",
-            "it": "Govee local",
-            "es": "Govee Local",
-            "pl": "Lokalny Govee",
-            "uk": "Govee місцевий",
-            "zh-cn": "Govee Local"
-        },
-        "desc": {
-            "en": "Control Govee devices via local access (no cloud)",
-            "de": "Steuerung von Govee-Geräten über lokalen Zugriff (keine Cloud)",
-            "ru": "Управляйте устройствами Govee через локальный доступ (без облака)",
-            "pt": "Controle os dispositivos Govee via acesso local (sem nuvem)",
-            "nl": "Bedien Govee-apparaten via lokale toegang (geen cloud)",
-            "fr": "Contrôlez les appareils Govee via un accès local (pas de cloud)",
-            "it": "Controlla i dispositivi Govee tramite accesso locale (no cloud)",
-            "es": "Controle los dispositivos Govee a través del acceso local (sin nube)",
-            "pl": "Steruj urządzeniami Govee przez dostęp lokalny (bez chmury)",
-            "zh-cn": "通过本地访问控制 Govee 设备（无云）",
-            "uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
-        },
-        "authors": [
-            "Børge Grunicke <boerge@grunicke.de>"
-        ],
-        "keywords": [
-            "govee",
-            "light",
-            "local"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "build/main.js",
-        "icon": "govee-local.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",
-        "readme": "https://github.com/boergegrunicke/ioBroker.govee-local/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "lighting",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=4.0.0"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=6.0.0"
-            }
-        ]
+  "common": {
+    "name": "govee-local",
+    "version": "0.2.5",
+    "news": {
+      "0.2.5": {
+        "en": "create only one socket, as the second seems not to be necessary\nrefactoring the code for better structure\npossibility to choose listen interface in settings",
+        "de": "nur eine steckdose erstellen, da die zweite scheinbar nicht notwendig ist\nrefactoring des codes für bessere struktur\nmöglichkeit, die hörschnittstelle in einstellungen zu wählen",
+        "ru": "создать только один розеток, так как второй кажется не нужным\nрефакторинг кода для лучшей структуры\nвозможность выбора интерфейса прослушивания в настройках",
+        "pt": "criar apenas um soquete, como o segundo parece não ser necessário\nrefatorando o código para melhor estrutura\npossibilidade de escolher a interface de escuta em configurações",
+        "nl": "maken slechts een socket, omdat de tweede lijkt niet nodig\nrefactoring van de code voor betere structuur\nmogelijkheid om luisterinterface in instellingen te kiezen",
+        "fr": "créer une seule prise, car la seconde ne semble pas nécessaire\nrefactorer le code pour une meilleure structure\npossibilité de choisir l'interface d'écoute dans les paramètres",
+        "it": "creare solo una presa, come il secondo sembra non essere necessario\nrefactoring il codice per una migliore struttura\npossibilità di scegliere l'interfaccia di ascolto nelle impostazioni",
+        "es": "crear sólo una toma, ya que el segundo parece no ser necesario\nrefactorización del código para una mejor estructura\nposibilidad de elegir la interfaz de escucha en los ajustes",
+        "pl": "utworzyć tylko jedno gniazdo, ponieważ drugie wydaje się nie być konieczne\nrefaktoring kodu dla lepszej struktury\nmożliwość wyboru interfejsu słuchania w ustawieniach",
+        "uk": "створити тільки одну розетку, так як другий здається не потрібно\nрефакторинг коду для кращої структури\nможливість вибору інтерфейсу прослуховування в налаштуваннях",
+        "zh-cn": "只创建一个套接字, 因为第二个似乎没有必要\n为更好的结构重构代码\n在设置中选择监听界面的可能性"
+      },
+      "0.2.4": {
+        "en": "fix access",
+        "de": "zugriff",
+        "ru": "исправить доступ",
+        "pt": "corrigir o acesso",
+        "nl": "fix toegang",
+        "fr": "fixer l'accès",
+        "it": "fissare l'accesso",
+        "es": "acceso fijo",
+        "pl": "naprawić dostęp",
+        "uk": "фіксувати доступ",
+        "zh-cn": "固定访问"
+      },
+      "0.2.3": {
+        "en": "fix access",
+        "de": "zugriff",
+        "ru": "исправить доступ",
+        "pt": "corrigir o acesso",
+        "nl": "fix toegang",
+        "fr": "fixer l'accès",
+        "it": "fissare l'accesso",
+        "es": "acceso fijo",
+        "pl": "naprawić dostęp",
+        "uk": "фіксувати доступ",
+        "zh-cn": "固定访问"
+      },
+      "0.2.2": {
+        "en": "fix color temperature messsage",
+        "de": "fixe farbtemperatur message",
+        "ru": "фиксация цветовой температуры",
+        "pt": "corrigir a confusão de temperatura de cor",
+        "nl": "fix kleur temperatuur message",
+        "fr": "fixer la température de couleur message",
+        "it": "correzione di di disordine della temperatura del colore",
+        "es": "arreglar el desorden de temperatura de color",
+        "pl": "naprawić mieszankę temperatury kolorów",
+        "uk": "фіксувати колір температури messsage",
+        "zh-cn": "校正颜色温度组合"
+      },
+      "0.2.1": {
+        "en": "repair onOff / all other actions Fixes: #65\nfix log spamming because of wildcard",
+        "de": "reparatur onOff / alle anderen Aktionen Behebungen: #65\nprotokoll spamming wegen wildcard",
+        "ru": "ремонт onOff / все другие действия Исправления: #65\nисправить спамирование лога из-за дикой карты",
+        "pt": "reparação emOff / todas as outras ações Correções: #65 #\ncorrigir spam de log por causa do wildcard",
+        "nl": "vertaling: Vertaling: 65\nvertaling:",
+        "fr": "réparation onOff / toutes les autres actions Fixes: #65\ncorriger l'éblouissement du journal à cause de wildcard",
+        "it": "riparazione onOff / tutte le altre azioni Fissi: #65\nsistemare il log spamming a causa di jolly",
+        "es": "reparación onOff / todas las demás acciones Arreglos: #65\nfijar registro de spam debido a wildcard",
+        "pl": "remontowanie Off / wszystkie inne działania Fiksy #65\nusunąć z powodu dzikiej karty",
+        "uk": "ремонт наОфф / всі інші дії Виправлення: #65\nфіксація спамерування колод через дикийкарт",
+        "zh-cn": "b. 修理效率/所有其他行动 固定: #65\nfix 由于野生素卡的投机"
+      },
+      "0.2.0": {
+        "en": "support controlling the color\nextended logging mode",
+        "de": "unterstützung controlling der farbe\nerweiterter logging-modus",
+        "ru": "поддержка контролируя цвет\nрасширенный режим входа",
+        "pt": "suporte controlando a cor\nmodo de registro estendido",
+        "nl": "de kleur controleren\nverlengde logging mode",
+        "fr": "support de contrôle de la couleur\nmode d ' enregistrement élargi",
+        "it": "supporto che controlla il colore\nmodalità di registrazione estesa",
+        "es": "soporte controlando el color\nmodo de registro ampliado",
+        "pl": "kontrolować kolor\nrozszerzony tryb logowania",
+        "uk": "супровід управління кольором\nрозширений режим входу",
+        "zh-cn": "控制颜色的支助\n扩大的伐木模式"
+      },
+      "0.1.2": {
+        "en": "change icon path and resolution",
+        "de": "icon pfad und auflösung ändern",
+        "ru": "изменить путь иконки и разрешение",
+        "pt": "mudar o caminho do ícone e resolução",
+        "nl": "verander icoon en resolutie",
+        "fr": "changer le chemin d'icône et la résolution",
+        "it": "cambiare percorso icona e risoluzione",
+        "es": "cambiar la ruta del icono y la resolución",
+        "pl": "ikonywana droga i rozdzielczość",
+        "uk": "зміна ікони шлях і роздільна здатність",
+        "zh-cn": "b. 改变道路和决议"
+      }
     },
-    "native": {
-        "searchInterval": 10,
-        "deviceStatusRefreshInterval": 1,
-        "extendedLogging": false,
-        "interface": "0.0.0.0"
+    "titleLang": {
+      "en": "Govee local",
+      "de": "Govee local",
+      "ru": "Govee местный",
+      "pt": "Govee local",
+      "nl": "Govee lokaal",
+      "fr": "Govee local",
+      "it": "Govee local",
+      "es": "Govee Local",
+      "pl": "Lokalny Govee",
+      "uk": "Govee місцевий",
+      "zh-cn": "Govee Local"
     },
-    "objects": [],
-    "instanceObjects": []
+    "desc": {
+      "en": "Control Govee devices via local access (no cloud)",
+      "de": "Steuerung von Govee-Geräten über lokalen Zugriff (keine Cloud)",
+      "ru": "Управляйте устройствами Govee через локальный доступ (без облака)",
+      "pt": "Controle os dispositivos Govee via acesso local (sem nuvem)",
+      "nl": "Bedien Govee-apparaten via lokale toegang (geen cloud)",
+      "fr": "Contrôlez les appareils Govee via un accès local (pas de cloud)",
+      "it": "Controlla i dispositivi Govee tramite accesso locale (no cloud)",
+      "es": "Controle los dispositivos Govee a través del acceso local (sin nube)",
+      "pl": "Steruj urządzeniami Govee przez dostęp lokalny (bez chmury)",
+      "zh-cn": "通过本地访问控制 Govee 设备（无云）",
+      "uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
+    },
+    "authors": [
+      "Børge Grunicke <boerge@grunicke.de>"
+    ],
+    "keywords": [
+      "govee",
+      "light",
+      "local"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "build/main.js",
+    "icon": "govee-local.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",
+    "readme": "https://github.com/boergegrunicke/ioBroker.govee-local/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "lighting",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=6.0.0"
+      }
+    ]
+  },
+  "native": {
+    "searchInterval": 10,
+    "deviceStatusRefreshInterval": 1,
+    "extendedLogging": false,
+    "interface": "0.0.0.0"
+  },
+  "objects": [],
+  "instanceObjects": []
 }

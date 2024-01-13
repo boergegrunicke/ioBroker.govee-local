@@ -24,8 +24,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.5 (2024-01-13)
 
 -   create only one socket, as the second seems not to be necessary
 -   refactoring the code for better structure

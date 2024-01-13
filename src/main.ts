@@ -66,7 +66,6 @@ class GoveeLocal extends utils.Adapter {
 		}
 
 		socket.bind({ address: this.config.interface, port: LOCAL_PORT }, this.serverBound.bind(this));
-
 		this.subscribeStates('*.devStatus.*');
 	}
 

@@ -16,6 +16,8 @@ Control Govee devices via local access (no cloud)
 To be able to control govee deivce locally, the feature needs to be explicitely turned on in the settings of the govve application settings as described in their [documentation](<https://app-h5.govee.com/user-manual/wlan-guide#:~:text=Supported%20Product%20Models%20(continually%20updated)>)
 As I currently only have the H6051 lamp, this is the only device I can test with.
 
+For **Windows** Users: Please go to the settings and make sure you choose the correct network interface, otherwise the adapter will not receive any response from Govee Devices.
+
 ## Changelog
 
 <!--

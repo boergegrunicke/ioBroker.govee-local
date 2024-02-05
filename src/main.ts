@@ -271,7 +271,7 @@ class GoveeLocal extends utils.Adapter {
 						const brightnessMessage = { msg: { cmd: 'brightness', data: { value: state.val } } };
 						const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
 						socket.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
-						socket;
+						break;
 					case 'colorTemInKelvin':
 						const colorTempMessageBuffer = Buffer.from(
 							JSON.stringify({

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "news": {
+      "0.2.6": {
+        "en": "fix brightness change also changing white tmperature",
+        "de": "helligkeitsänderung auch ändern weiße tmperatur",
+        "ru": "исправить яркость изменения также изменение белое tmperature",
+        "pt": "corrigir a mudança de brilho também mudando a tintura branca",
+        "nl": "fix helderheid verandering ook het veranderen van witte tmperatuur",
+        "fr": "fixer le changement de luminosité aussi changer la morphologie blanche",
+        "it": "correzione cambiamento di luminosità anche cambiando la serratura bianca",
+        "es": "arreglar el cambio de brillo también cambiar la tmperatura blanca",
+        "pl": "naprawić zmianę jasności również zmieniając biały tmperature",
+        "uk": "зафіксувати яскравість зміни також змінюють білу мпературу",
+        "zh-cn": "固定亮度改变, 也改变白色温度"
+      },
       "0.2.5": {
         "en": "create only one socket, as the second seems not to be necessary\nrefactoring the code for better structure\npossibility to choose listen interface in settings",
         "de": "nur eine steckdose erstellen, da die zweite scheinbar nicht notwendig ist\nrefactoring des codes für bessere struktur\nmöglichkeit, die hörschnittstelle in einstellungen zu wählen",
@@ -80,19 +93,6 @@
         "pl": "kontrolować kolor\nrozszerzony tryb logowania",
         "uk": "супровід управління кольором\nрозширений режим входу",
         "zh-cn": "控制颜色的支助\n扩大的伐木模式"
-      },
-      "0.1.2": {
-        "en": "change icon path and resolution",
-        "de": "icon pfad und auflösung ändern",
-        "ru": "изменить путь иконки и разрешение",
-        "pt": "mudar o caminho do ícone e resolução",
-        "nl": "verander icoon en resolutie",
-        "fr": "changer le chemin d'icône et la résolution",
-        "it": "cambiare percorso icona e risoluzione",
-        "es": "cambiar la ruta del icono y la resolución",
-        "pl": "ikonywana droga i rozdzielczość",
-        "uk": "зміна ікони шлях і роздільна здатність",
-        "zh-cn": "b. 改变道路和决议"
       }
     },
     "titleLang": {

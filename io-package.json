@@ -123,6 +123,7 @@
 		},
 		"authors": ["Børge Grunicke <boerge@grunicke.de>"],
 		"keywords": ["govee", "light", "local"],
+		"license": "MIT",
 		"licenseInformation": {
 			"type": "free",
 			"license": "MIT"

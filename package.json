@@ -7,6 +7,7 @@
     "email": "boerge@grunicke.de"
   },
   "homepage": "https://github.com/boergegrunicke/ioBroker.govee-local",
+  "license": "MIT",
   "licenseInformation": "MIT",
   "keywords": [
     "govee",

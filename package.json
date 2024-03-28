@@ -7,7 +7,7 @@
     "email": "boerge@grunicke.de"
   },
   "homepage": "https://github.com/boergegrunicke/ioBroker.govee-local",
-  "license": "MIT",
+  "licenseInformation": "MIT",
   "keywords": [
     "govee",
     "light",
@@ -18,10 +18,10 @@
     "url": "git@github.com:boergegrunicke/ioBroker.govee-local.git"
   },
   "engines": {
-    "node": ">= 16.0"
+    "node": ">= 18.0"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.0.4"
+    "@iobroker/adapter-core": "^3.0.6"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.7.0",

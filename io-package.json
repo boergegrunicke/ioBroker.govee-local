@@ -123,8 +123,10 @@
 		},
 		"authors": ["Børge Grunicke <boerge@grunicke.de>"],
 		"keywords": ["govee", "light", "local"],
-		"license": "MIT",
-		"licenseInformation": "MIT",
+		"licenseInformation": {
+			"type": "free",
+			"license": "MIT"
+		},
 		"platform": "Javascript/Node.js",
 		"main": "build/main.js",
 		"icon": "govee-local.png",

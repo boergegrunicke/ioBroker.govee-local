@@ -20,8 +20,8 @@ const socket = dgram.createSocket({ type: 'udp4' });
 const scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } };
 const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
 
-let searchInterval: NodeJS.Timeout;
-let refreshInterval: NodeJS.Timeout;
+let searchInterval: ioBroker.Interval;
+let refreshInterval: ioBroker.Interval;
 
 const devices: { [ip: string]: string } = {};
 

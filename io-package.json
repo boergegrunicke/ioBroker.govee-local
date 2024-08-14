@@ -42,32 +42,6 @@
 				"uk": "фіксувати доступ",
 				"zh-cn": "固定访问"
 			},
-			"0.2.3": {
-				"en": "fix access",
-				"de": "zugriff",
-				"ru": "исправить доступ",
-				"pt": "corrigir o acesso",
-				"nl": "fix toegang",
-				"fr": "fixer l'accès",
-				"it": "fissare l'accesso",
-				"es": "acceso fijo",
-				"pl": "naprawić dostęp",
-				"uk": "фіксувати доступ",
-				"zh-cn": "固定访问"
-			},
-			"0.2.2": {
-				"en": "fix color temperature messsage",
-				"de": "fixe farbtemperatur message",
-				"ru": "фиксация цветовой температуры",
-				"pt": "corrigir a confusão de temperatura de cor",
-				"nl": "fix kleur temperatuur message",
-				"fr": "fixer la température de couleur message",
-				"it": "correzione di di disordine della temperatura del colore",
-				"es": "arreglar el desorden de temperatura de color",
-				"pl": "naprawić mieszankę temperatury kolorów",
-				"uk": "фіксувати колір температури messsage",
-				"zh-cn": "校正颜色温度组合"
-			},
 			"0.2.1": {
 				"en": "repair onOff / all other actions Fixes: #65\nfix log spamming because of wildcard",
 				"de": "reparatur onOff / alle anderen Aktionen Behebungen: #65\nprotokoll spamming wegen wildcard",

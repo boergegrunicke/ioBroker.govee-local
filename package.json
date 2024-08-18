@@ -9,6 +9,7 @@
   "homepage": "https://github.com/boergegrunicke/ioBroker.govee-local",
   "license": "MIT",
   "keywords": [
+    "ioBroker",
     "govee",
     "light",
     "local"

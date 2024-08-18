@@ -102,7 +102,6 @@
 			"license": "MIT"
 		},
 		"platform": "Javascript/Node.js",
-		"main": "build/main.js",
 		"icon": "govee-local.png",
 		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",

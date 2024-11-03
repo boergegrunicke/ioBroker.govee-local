@@ -248,7 +248,8 @@ class GoveeLocal extends utils.Adapter {
 			socket.close();
 			this.setState('info.connection', { val: false, ack: true });
 			callback();
-		} catch (e) {
+		} catch (e: any) {
+			this.log.error(e.message);
 			callback();
 		}
 	}

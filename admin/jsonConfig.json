@@ -4,27 +4,33 @@
 	"items": {
 		"_description": {
 			"type": "staticText",
+			"xs": 12,
 			"sm": 12,
 			"md": 12,
 			"lg": 12,
+			"xl": 12,
 			"text": "_configDescription"
 		},
 		"searchInterval": {
 			"type": "number",
 			"min": 1,
 			"max": 1000,
+			"xs": 6,
 			"sm": 6,
 			"md": 3,
 			"lg": 2,
+			"xl": 2,
 			"label": "_searchInterval"
 		},
 		"deviceStatusRefreshInterval": {
 			"type": "number",
 			"min": 1,
 			"max": 1000,
+			"xs": 6,
 			"sm": 6,
 			"md": 3,
 			"lg": 2,
+			"xl": 2,
 			"label": "_deviceStatusRefreshInterval"
 		},
 		"interface": {
@@ -33,22 +39,28 @@
 			"onlyIp4": true,
 			"label": "_networkInterface",
 			"newLine": true,
+			"xs": 12,
 			"sm": 12,
 			"md": 6,
-			"lg": 4
+			"lg": 4,
+			"xl": 4
 		},
 		"_descriptionExtendedLogging": {
 			"type": "staticText",
+			"xs": 12,
 			"sm": 12,
 			"md": 12,
 			"lg": 12,
+			"xl": 12,
 			"text": "_extendedLoggingDescription"
 		},
 		"extendedLogging": {
 			"type": "checkbox",
+			"xs": 12,
 			"sm": 12,
 			"md": 6,
 			"lg": 3,
+			"xl": 3,
 			"label": "_extendedLogging"
 		}
 	}

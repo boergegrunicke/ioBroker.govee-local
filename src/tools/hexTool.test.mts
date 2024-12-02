@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { componentToHex, hexToRgb } from './hexTool';
+import { componentToHex, hexToRgb } from './hexTool.js';
 
 describe('test the hex converter', () => {
 	it('1 should be 1', () => {

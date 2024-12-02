@@ -1,24 +1,26 @@
+import { eslintPlugin } from '@typescript-eslint/eslint-plugin';
+import { parser } from '@typescript-eslint/parser';
+
 export default [
 	{
 		ignores: ['build/', '.prettierrc.js', '**/.eslintrc.js', 'dist/**', 'node_modules/**'], // Replace with your ignore patterns
 		files: ['**/*.ts', '**/*.tsx'],
 		languageOptions: {
-			parser: '@typescript-eslint/parser',
+			parser,
 			parserOptions: {
 				ecmaVersion: 'latest',
 				sourceType: 'module',
 				ecmaFeatures: {
 					jsx: true,
 				},
-				project: './tsconfig.json',
+				project: './tsconfig.json', // Adjust this to match your tsconfig location
 			},
 		},
 		plugins: {
-			'@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+			'@typescript-eslint': eslintPlugin,
 		},
 		rules: {
-			// Your ESLint rules here
+			// Add your rules here
 		},
 	},
 ];
-1;

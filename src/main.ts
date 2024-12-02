@@ -6,7 +6,7 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 import * as dgram from 'node:dgram';
-import { componentToHex, hexToRgb } from './tools/hexTool';
+import { componentToHex, hexToRgb } from './tools/hexTool.js';
 
 // Load your modules here, e.g.:
 

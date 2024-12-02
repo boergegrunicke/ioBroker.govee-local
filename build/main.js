@@ -14,10 +14,6 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
@@ -45,9 +41,6 @@ class GoveeLocal extends utils.Adapter {
     this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
-  /**
-   * Is called when databases are connected and adapter received configuration.
-   */
   async onReady() {
     this.setObjectNotExists("info.connection", {
       type: "state",
@@ -71,11 +64,6 @@ class GoveeLocal extends utils.Adapter {
     socket.bind({ address: this.config.interface, port: LOCAL_PORT }, this.serverBound.bind(this));
     this.subscribeStates("*.devStatus.*");
   }
-  /**
-   * handles when udp socket is up
-   * configure multicast membership
-   * start periodic scan for devices
-   */
   async serverBound() {
     socket.setBroadcast(true);
     socket.setMulticastTTL(128);
@@ -95,11 +83,6 @@ class GoveeLocal extends utils.Adapter {
       refreshInterval = deviceRefreshInterval;
     }
   }
-  /**
-   * handle icoming messages on the udp socket
-   * @param message the message itself
-   * @param remote the sender of the message
-   */
   async onUdpMessage(message, remote) {
     const messageObject = JSON.parse(message.toString());
     switch (messageObject.msg.cmd) {
@@ -213,24 +196,14 @@ class GoveeLocal extends utils.Adapter {
       this.requestDeviceStatus(ip);
     }
   }
-  /**
-   * sends the device status request to one specific device
-   * @param receiver the ip ( / hsotname ) of the device that should be queried
-   */
   requestDeviceStatus(receiver) {
     const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
     socket.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
   }
-  /**
-   * send the scan message to the udp multicast address
-   */
   async sendScan() {
     const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
     socket.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
   }
-  /**
-   * Is called when adapter shuts down - callback has to be called under any circumstances!
-   */
   onUnload(callback) {
     try {
       this.clearInterval(searchInterval);
@@ -239,12 +212,10 @@ class GoveeLocal extends utils.Adapter {
       this.setState("info.connection", { val: false, ack: true });
       callback();
     } catch (e) {
+      this.log.error(e.message);
       callback();
     }
   }
-  /**
-   * Is called if a subscribed state changes
-   */
   async onStateChange(id, state) {
     var _a, _b;
     if (state && !state.ack) {

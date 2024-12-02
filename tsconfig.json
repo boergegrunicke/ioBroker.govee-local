@@ -34,6 +34,6 @@
 		"sourceMap": true,
 		"inlineSourceMap": false
 	},
-	"include": ["src/**/*.ts"],
+	"include": ["src/**/*.ts", "src/tools/hexTool.test.mts", "src/main.test.mts"],
 	"exclude": ["build/**", "node_modules/**", "widgets/**"]
 }

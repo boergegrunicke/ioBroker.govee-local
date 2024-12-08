@@ -310,13 +310,15 @@ class GoveeLocal extends utils.Adapter {
         }
     }
 }
+// Use a function to export the constructor
+export function createInstance(options: Partial<utils.AdapterOptions<undefined, undefined>> | undefined) {
+    return new GoveeLocal(options);
+}
 
-if (require.main !== module) {
-    // Export the constructor in compact mode
-    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
-} else {
-    // otherwise start the instance directly
-    (() => new GoveeLocal())();
+// Directly start the instance if the module is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+    // Run the instance directly
+    new GoveeLocal();
 }
 
 /**

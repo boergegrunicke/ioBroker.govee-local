@@ -310,7 +310,12 @@ class GoveeLocal extends utils.Adapter {
         }
     }
 }
-// Use a function to export the constructor
+/**
+ * Create an instance
+ *
+ * @param options options or empty
+ * @returns the instance
+ */
 export function createInstance(options: Partial<utils.AdapterOptions<undefined, undefined>> | undefined): GoveeLocal {
     return new GoveeLocal(options);
 }

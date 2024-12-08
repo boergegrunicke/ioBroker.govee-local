@@ -310,21 +310,9 @@ class GoveeLocal extends utils.Adapter {
         }
     }
 }
-/**
- * Create an instance
- *
- * @param options options or empty
- * @returns the instance
- */
-export function createInstance(options: Partial<utils.AdapterOptions<undefined, undefined>> | undefined): GoveeLocal {
-    return new GoveeLocal(options);
-}
 
-// Directly start the instance if the module is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-    // Run the instance directly
-    new GoveeLocal();
-}
+// Export the class as default
+export default GoveeLocal;
 
 /**
  * This method returns the description for device information datapoints

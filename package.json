@@ -1,7 +1,6 @@
 {
     "name": "iobroker.govee-local",
     "version": "0.2.7",
-    "type": "module",
     "description": "Control Govee devices via local access (no cloud)",
     "author": {
         "name": "Børge Grunicke",

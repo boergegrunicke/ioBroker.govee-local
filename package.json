@@ -75,7 +75,7 @@
     "test": "npm run test:ts && npm run test:package",
     "check": "tsc --noEmit",
     "coverage": "nyc npm run test:ts",
-    "lint": "eslint -c .ts src/",
+    "lint": "eslint --ext .ts src/",
     "translate": "translate-adapter",
     "release": "release-script"
   },

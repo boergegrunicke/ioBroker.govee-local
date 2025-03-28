@@ -102,7 +102,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 
 MIT License
 
-Copyright (c) 2024 Børge Grunicke
+Copyright (c) 2025 Børge Grunicke
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

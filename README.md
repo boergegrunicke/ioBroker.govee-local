@@ -27,6 +27,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 ### 0.2.8 (2025-03-28)
 
 -   update dependencies
+-   avoid repeated overriding of states
 
 ### 0.2.7 (2024-08-18)
 

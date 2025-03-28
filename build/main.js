@@ -127,10 +127,7 @@ class GoveeLocal extends utils.Adapter {
               },
               native: {}
             });
-            this.setState(`${deviceName}.deviceInfo.${key}`, {
-              val: messageObject.msg.data[key],
-              ack: true
-            });
+            this.updateState(`${deviceName}.deviceInfo.${key}`, messageObject.msg.data[key]);
           }
         }
         break;
@@ -153,10 +150,7 @@ class GoveeLocal extends utils.Adapter {
             },
             native: {}
           });
-          this.setState(`${sendingDevice}.devStatus.onOff`, {
-            val: devStatusMessageObject.msg.data.onOff == 1,
-            ack: true
-          });
+          this.updateState(`${sendingDevice}.devStatus.onOff`, devStatusMessageObject.msg.data.onOff == 1);
           this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
             type: "state",
             common: {
@@ -168,10 +162,10 @@ class GoveeLocal extends utils.Adapter {
             },
             native: {}
           });
-          this.setState(`${sendingDevice}.devStatus.brightness`, {
-            val: devStatusMessageObject.msg.data.brightness,
-            ack: true
-          });
+          this.updateState(
+            `${sendingDevice}.devStatus.brightness`,
+            devStatusMessageObject.msg.data.brightness
+          );
           this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
             type: "state",
             common: {
@@ -187,6 +181,10 @@ class GoveeLocal extends utils.Adapter {
             val: "#" + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.r) + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.g) + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.b),
             ack: true
           });
+          this.updateState(
+            `${sendingDevice}.devStatus.color`,
+            `#${(0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.r)}${(0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.g)}${(0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.b)}`
+          );
           this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
             type: "state",
             common: {
@@ -198,10 +196,10 @@ class GoveeLocal extends utils.Adapter {
             },
             native: {}
           });
-          this.setState(`${sendingDevice}.devStatus.colorTemInKelvin`, {
-            val: devStatusMessageObject.msg.data.colorTemInKelvin,
-            ack: true
-          });
+          this.updateState(
+            `${sendingDevice}.devStatus.colorTemInKelvin`,
+            devStatusMessageObject.msg.data.colorTemInKelvin
+          );
         }
         break;
       default:
@@ -236,9 +234,10 @@ class GoveeLocal extends utils.Adapter {
       this.clearInterval(searchInterval);
       this.clearInterval(refreshInterval);
       socket.close();
-      this.setState("info.connection", { val: false, ack: true });
+      this.updateState("info.connection", false);
       callback();
     } catch (e) {
+      this.log.error(e.message);
       callback();
     }
   }
@@ -286,6 +285,15 @@ class GoveeLocal extends utils.Adapter {
       } else {
         this.log.error("device not found");
       }
+    }
+  }
+  async updateState(fullName, state, acknowledged = true) {
+    const currentState = await this.getStateAsync(fullName);
+    if (currentState != state) {
+      this.setState(fullName, {
+        val: state,
+        ack: acknowledged
+      });
     }
   }
 }

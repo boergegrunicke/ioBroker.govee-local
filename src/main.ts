@@ -128,7 +128,7 @@ class GoveeLocal extends utils.Adapter {
 							},
 							native: {},
 						});
-						this.updateState(`${deviceName}.deviceInfo.${key}`, messageObject.msg.data[key]);
+						await this.updateStateAsync(`${deviceName}.deviceInfo.${key}`, messageObject.msg.data[key]);
 					}
 				}
 				break;
@@ -152,7 +152,10 @@ class GoveeLocal extends utils.Adapter {
 						},
 						native: {},
 					});
-					this.updateState(`${sendingDevice}.devStatus.onOff`, devStatusMessageObject.msg.data.onOff == 1);
+					await this.updateStateAsync(
+						`${sendingDevice}.devStatus.onOff`,
+						devStatusMessageObject.msg.data.onOff == 1,
+					);
 					this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
 						type: 'state',
 						common: {
@@ -164,7 +167,7 @@ class GoveeLocal extends utils.Adapter {
 						},
 						native: {},
 					});
-					this.updateState(
+					await this.updateStateAsync(
 						`${sendingDevice}.devStatus.brightness`,
 						devStatusMessageObject.msg.data.brightness,
 					);
@@ -187,7 +190,7 @@ class GoveeLocal extends utils.Adapter {
 							componentToHex(devStatusMessageObject.msg.data.color.b),
 						ack: true,
 					});
-					this.updateState(
+					await this.updateStateAsync(
 						`${sendingDevice}.devStatus.color`,
 						`#${componentToHex(devStatusMessageObject.msg.data.color.r)}${componentToHex(devStatusMessageObject.msg.data.color.g)}${componentToHex(devStatusMessageObject.msg.data.color.b)}`,
 					);
@@ -202,7 +205,7 @@ class GoveeLocal extends utils.Adapter {
 						},
 						native: {},
 					});
-					this.updateState(
+					await this.updateStateAsync(
 						`${sendingDevice}.devStatus.colorTemInKelvin`,
 						devStatusMessageObject.msg.data.colorTemInKelvin,
 					);
@@ -244,7 +247,7 @@ class GoveeLocal extends utils.Adapter {
 			this.clearInterval(searchInterval);
 			this.clearInterval(refreshInterval);
 			socket.close();
-			this.updateState('info.connection', false);
+			this.updateStateAsync('info.connection', false);
 			callback();
 		} catch (e: any) {
 			this.log.error(e.message);
@@ -298,7 +301,7 @@ class GoveeLocal extends utils.Adapter {
 		}
 	}
 
-	private async updateState(fullName: string, state: any, acknowledged = true) {
+	private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
 		const currentState = await this.getStateAsync(fullName);
 		if (currentState != state) {
 			this.setState(fullName, {

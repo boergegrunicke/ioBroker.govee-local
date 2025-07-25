@@ -57,7 +57,7 @@ class GoveeLocal extends utils.Adapter {
 		});
 		socket.on('message', this.onUdpMessage.bind(this));
 		socket.on('error', (error) => {
-			this.log.error('server bind error : ' + error.message);
+			this.log.error(`server bind error : ${error.message}`);
 			this.setStateChanged('info.connection', { val: false, ack: true });
 		});
 
@@ -80,7 +80,7 @@ class GoveeLocal extends utils.Adapter {
 		socket.setMulticastInterface(this.config.interface);
 		socket.addMembership(M_CAST);
 		this.setStateChanged('info.connection', { val: true, ack: true });
-		this.log.debug('UDP listening on ' + socket.address().address + ':' + socket.address().port);
+		this.log.debug(`UDP listening on ${socket.address().address}:${socket.address().port}`);
 
 		const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
 		if (deviceSearchInterval) {
@@ -98,6 +98,7 @@ class GoveeLocal extends utils.Adapter {
 
 	/**
 	 * handle icoming messages on the udp socket
+	 *
 	 * @param message the message itself
 	 * @param remote the sender of the message
 	 */
@@ -183,11 +184,9 @@ class GoveeLocal extends utils.Adapter {
 						native: {},
 					});
 					this.setState(`${sendingDevice}.devStatus.color`, {
-						val:
-							'#' +
-							componentToHex(devStatusMessageObject.msg.data.color.r) +
-							componentToHex(devStatusMessageObject.msg.data.color.g) +
-							componentToHex(devStatusMessageObject.msg.data.color.b),
+						val: `#${componentToHex(devStatusMessageObject.msg.data.color.r)}${componentToHex(
+							devStatusMessageObject.msg.data.color.g,
+						)}${componentToHex(devStatusMessageObject.msg.data.color.b)}`,
 						ack: true,
 					});
 					await this.updateStateAsync(
@@ -212,7 +211,7 @@ class GoveeLocal extends utils.Adapter {
 				}
 				break;
 			default:
-				this.log.error('message from: ' + remote.address + ':' + remote.port + ' - ' + message);
+				this.log.error(`message from: ${remote.address}:${remote.port} - ${message}`);
 		}
 	}
 
@@ -224,6 +223,7 @@ class GoveeLocal extends utils.Adapter {
 
 	/**
 	 * sends the device status request to one specific device
+	 *
 	 * @param receiver the ip ( / hsotname ) of the device that should be queried
 	 */
 	private requestDeviceStatus(receiver: string): void {
@@ -241,6 +241,8 @@ class GoveeLocal extends utils.Adapter {
 
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
+	 *
+	 * @param callback
 	 */
 	private onUnload(callback: () => void): void {
 		try {
@@ -257,10 +259,13 @@ class GoveeLocal extends utils.Adapter {
 
 	/**
 	 * Is called if a subscribed state changes
+	 *
+	 * @param id
+	 * @param state
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
 		if (state && !state.ack) {
-			const ipOfDevice = await this.getStateAsync(id.split('.')[2] + '.deviceInfo.ip');
+			const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
 			if (ipOfDevice) {
 				const receiver = ipOfDevice.val?.toString();
 				switch (id.split('.')[4]) {
@@ -324,6 +329,7 @@ if (require.main !== module) {
  * This method returns the description for device information datapoints
  * to unbloat the upper methods.
  * tanslations would be great here
+ *
  * @param name the name of the parameter retrieved from the device
  * @returns the description, that should be set to the datapoint
  */

@@ -1,11 +1,13 @@
 /**
  * Convert number (<255) to two digit hex for colorcode
+ *
  * @param the int value, should me < 255
+ * @param c
  * @returns the hex value as string
  */
 export function componentToHex(c: number): string {
 	const hex = c.toString(16);
-	return hex.length == 1 ? '0' + hex : hex;
+	return hex.length == 1 ? `0${hex}` : hex;
 }
 
 export function hexToRgb(hexString: string): Color {

@@ -190,10 +190,7 @@ class GoveeLocal extends utils.Adapter {
 						val: colorString,
 						ack: true,
 					});
-					await this.updateStateAsync(
-						`${sendingDevice}.devStatus.color`,
-						colorString,
-					);
+					await this.updateStateAsync(`${sendingDevice}.devStatus.color`, colorString);
 					this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
 						type: 'state',
 						common: {

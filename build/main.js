@@ -7,9 +7,11 @@ var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    for (let key of __getOwnPropNames(from)) {
+if (!__hasOwnProp.call(to, key) && key !== except) {
+__defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+}
+}
   }
   return to;
 };
@@ -62,7 +64,7 @@ class GoveeLocal extends utils.Adapter {
     });
     socket.on("message", this.onUdpMessage.bind(this));
     socket.on("error", (error) => {
-      this.log.error("server bind error : " + error.message);
+      this.log.error(`server bind error : ${  error.message}`);
       this.setStateChanged("info.connection", { val: false, ack: true });
     });
     if (this.config.extendedLogging) {
@@ -82,7 +84,7 @@ class GoveeLocal extends utils.Adapter {
     socket.setMulticastInterface(this.config.interface);
     socket.addMembership(M_CAST);
     this.setStateChanged("info.connection", { val: true, ack: true });
-    this.log.debug("UDP listening on " + socket.address().address + ":" + socket.address().port);
+    this.log.debug(`UDP listening on ${  socket.address().address  }:${  socket.address().port}`);
     const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1e3);
     if (deviceSearchInterval) {
       searchInterval = deviceSearchInterval;
@@ -97,6 +99,7 @@ class GoveeLocal extends utils.Adapter {
   }
   /**
    * handle icoming messages on the udp socket
+   *
    * @param message the message itself
    * @param remote the sender of the message
    */
@@ -131,7 +134,7 @@ class GoveeLocal extends utils.Adapter {
           }
         }
         break;
-      case "devStatus":
+      case "devStatus": {
         const sendingDevice = devices[remote.address];
         if (sendingDevice) {
           if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
@@ -181,7 +184,7 @@ class GoveeLocal extends utils.Adapter {
             native: {}
           });
           this.setState(`${sendingDevice}.devStatus.color`, {
-            val: "#" + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.r) + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.g) + (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.b),
+            val: `#${  (0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.r)  }${(0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.g)  }${(0, import_hexTool.componentToHex)(devStatusMessageObject.msg.data.color.b)}`,
             ack: true
           });
           await this.updateStateAsync(
@@ -205,8 +208,9 @@ class GoveeLocal extends utils.Adapter {
           );
         }
         break;
+      }
       default:
-        this.log.error("message from: " + remote.address + ":" + remote.port + " - " + message);
+        this.log.error(`message from: ${  remote.address  }:${  remote.port  } - ${  message}`);
     }
   }
   async refreshAllDevices() {
@@ -216,6 +220,7 @@ class GoveeLocal extends utils.Adapter {
   }
   /**
    * sends the device status request to one specific device
+   *
    * @param receiver the ip ( / hsotname ) of the device that should be queried
    */
   requestDeviceStatus(receiver) {
@@ -230,7 +235,9 @@ class GoveeLocal extends utils.Adapter {
     socket.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
   }
   /**
-   * Is called when adapter shuts down - callback has to be called under any circumstances!
+   * Wird aufgerufen, wenn der Adapter herunterfährt - der Callback muss unter allen Umständen aufgerufen werden!
+   *
+   * @param callback Funktion, die nach Abschluss des Unload-Prozesses aufgerufen wird
    */
   onUnload(callback) {
     try {
@@ -245,43 +252,54 @@ class GoveeLocal extends utils.Adapter {
     }
   }
   /**
-   * Is called if a subscribed state changes
+   * Wird aufgerufen, wenn sich ein abonnierter State ändert
+   *
+   * @param id Die ID des geänderten States
+   * @param state Das neue State-Objekt
    */
   async onStateChange(id, state) {
     var _a, _b;
     if (state && !state.ack) {
-      const ipOfDevice = await this.getStateAsync(id.split(".")[2] + ".deviceInfo.ip");
+      const ipOfDevice = await this.getStateAsync(`${id.split(".")[2]  }.deviceInfo.ip`);
       if (ipOfDevice) {
         const receiver = (_a = ipOfDevice.val) == null ? void 0 : _a.toString();
         switch (id.split(".")[4]) {
           case "onOff":
-            const turnMessage = { msg: { cmd: "turn", data: { value: state.val ? 1 : 0 } } };
-            const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
-            socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
+            {
+              const turnMessage = { msg: { cmd: "turn", data: { value: state.val ? 1 : 0 } } };
+              const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
+              socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
+            }
             break;
           case "brightness":
-            const brightnessMessage = { msg: { cmd: "brightness", data: { value: state.val } } };
-            const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
-            socket.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
+            {
+              const brightnessMessage = { msg: { cmd: "brightness", data: { value: state.val } } };
+              const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
+              socket.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
+            }
             break;
           case "colorTemInKelvin":
-            const colorTempMessageBuffer = Buffer.from(
-              JSON.stringify({
-                msg: {
-                  cmd: "colorwc",
-                  data: { color: { r: "0", g: "0", b: "0" }, colorTemInKelvin: state.val }
-                }
-              })
-            );
-            socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+            {
+              const colorTempMessageBuffer = Buffer.from(
+                JSON.stringify({
+                  msg: {
+                    cmd: "colorwc",
+                    data: { color: { r: "0", g: "0", b: "0" }, colorTemInKelvin: state.val }
+                  }
+                })
+              );
+              socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+            }
             break;
           case "color":
-            const colorValue = (_b = state.val) == null ? void 0 : _b.toString();
-            if (colorValue) {
-              const rgb = (0, import_hexTool.hexToRgb)(colorValue);
-              const colorMessage = { msg: { cmd: "colorwc", data: { color: rgb } } };
-              const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-              socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+            {
+              const colorValue = (_b = state.val) == null ? void 0 : _b.toString();
+              if (colorValue) {
+                const rgb = (0, import_hexTool.hexToRgb)(colorValue);
+                const colorMessage = { msg: { cmd: "colorwc", data: { color: rgb } } };
+                const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+                socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+              }
             }
             break;
         }

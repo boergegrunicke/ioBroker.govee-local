@@ -1,4 +1,4 @@
 module.exports = {
-  root: true,
-  extends: ["@iobroker/eslint-config"],
+	root: true,
+	extends: ['@iobroker/eslint-config'],
 };

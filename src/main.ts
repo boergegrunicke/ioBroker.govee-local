@@ -112,7 +112,7 @@ class GoveeLocal extends utils.Adapter {
 					if (key != 'device') {
 						const deviceName = messageObject.msg.data.device.replace(this.FORBIDDEN_CHARS, '_');
 						devices[remote.address] = deviceName;
-						this.setObjectNotExists(deviceName, {
+						void this.setObjectNotExists(deviceName, {
 							type: 'device',
 							common: {
 								name: messageObject.msg.data.sku,
@@ -120,7 +120,7 @@ class GoveeLocal extends utils.Adapter {
 							},
 							native: {},
 						});
-						this.setObjectNotExists(`${deviceName}.deviceInfo.${key}`, {
+						void this.setObjectNotExists(`${deviceName}.deviceInfo.${key}`, {
 							type: 'state',
 							common: {
 								name: getDatapointDescription(key),
@@ -131,7 +131,7 @@ class GoveeLocal extends utils.Adapter {
 							},
 							native: {},
 						});
-						await this.updateStateAsync(`${deviceName}.deviceInfo.${key}`, messageObject.msg.data[key]);
+						void this.updateStateAsync(`${deviceName}.deviceInfo.${key}`, messageObject.msg.data[key]);
 					}
 				}
 				break;
@@ -155,7 +155,7 @@ class GoveeLocal extends utils.Adapter {
 						},
 						native: {},
 					});
-					await this.updateStateAsync(
+					void this.updateStateAsync(
 						`${sendingDevice}.devStatus.onOff`,
 						devStatusMessageObject.msg.data.onOff == 1,
 					);
@@ -170,7 +170,7 @@ class GoveeLocal extends utils.Adapter {
 						},
 						native: {},
 					});
-					await this.updateStateAsync(
+					void this.updateStateAsync(
 						`${sendingDevice}.devStatus.brightness`,
 						devStatusMessageObject.msg.data.brightness,
 					);
@@ -186,11 +186,11 @@ class GoveeLocal extends utils.Adapter {
 						native: {},
 					});
 					const colorString = `#${componentToHex(devStatusMessageObject.msg.data.color.r)}${componentToHex(devStatusMessageObject.msg.data.color.g)}${componentToHex(devStatusMessageObject.msg.data.color.b)}`;
-					this.setState(`${sendingDevice}.devStatus.color`, {
+					void this.setState(`${sendingDevice}.devStatus.color`, {
 						val: colorString,
 						ack: true,
 					});
-					await this.updateStateAsync(`${sendingDevice}.devStatus.color`, colorString);
+					void this.updateStateAsync(`${sendingDevice}.devStatus.color`, colorString);
 					this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
 						type: 'state',
 						common: {
@@ -202,7 +202,7 @@ class GoveeLocal extends utils.Adapter {
 						},
 						native: {},
 					});
-					await this.updateStateAsync(
+					void this.updateStateAsync(
 						`${sendingDevice}.devStatus.colorTemInKelvin`,
 						devStatusMessageObject.msg.data.colorTemInKelvin,
 					);
@@ -230,7 +230,7 @@ class GoveeLocal extends utils.Adapter {
 	 */
 	private requestDeviceStatus(receiver: string): void {
 		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
-		socket.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
+		void socket.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class GoveeLocal extends utils.Adapter {
 	 */
 	private async sendScan(): Promise<void> {
 		const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
-		socket.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
+		void socket.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
 		return Promise.resolve();
 	}
 
@@ -252,7 +252,7 @@ class GoveeLocal extends utils.Adapter {
 			this.clearInterval(searchInterval);
 			this.clearInterval(refreshInterval);
 			socket.close();
-			this.updateStateAsync('info.connection', false);
+			void this.updateStateAsync('info.connection', false);
 			callback();
 		} catch (e: any) {
 			this.log.error(e.message);
@@ -275,13 +275,19 @@ class GoveeLocal extends utils.Adapter {
 					case 'onOff': {
 						const turnMessage = { msg: { cmd: 'turn', data: { value: state.val ? 1 : 0 } } };
 						const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
-						socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
+						void socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
 						break;
 					}
 					case 'brightness': {
 						const brightnessMessage = { msg: { cmd: 'brightness', data: { value: state.val } } };
 						const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
-						socket.send(brightnessMessageBuffer, 0, brightnessMessageBuffer.length, CONTROL_PORT, receiver);
+						void socket.send(
+							brightnessMessageBuffer,
+							0,
+							brightnessMessageBuffer.length,
+							CONTROL_PORT,
+							receiver,
+						);
 						break;
 					}
 					case 'colorTemInKelvin': {
@@ -293,7 +299,13 @@ class GoveeLocal extends utils.Adapter {
 								},
 							}),
 						);
-						socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, CONTROL_PORT, receiver);
+						void socket.send(
+							colorTempMessageBuffer,
+							0,
+							colorTempMessageBuffer.length,
+							CONTROL_PORT,
+							receiver,
+						);
 						break;
 					}
 					case 'color': {
@@ -302,7 +314,7 @@ class GoveeLocal extends utils.Adapter {
 							const rgb = hexToRgb(colorValue);
 							const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
 							const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-							socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
+							void socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
 						}
 						break;
 					}
@@ -317,7 +329,7 @@ class GoveeLocal extends utils.Adapter {
 	private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
 		const currentState = await this.getStateAsync(fullName);
 		if (currentState != state) {
-			this.setState(fullName, {
+			void this.setState(fullName, {
 				val: state,
 				ack: acknowledged,
 			});

@@ -10,7 +10,7 @@ nbproject
 
 
 # Build output
-build/
+build/**
 # npm package files
 iobroker.*.tgz
 

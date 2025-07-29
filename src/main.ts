@@ -44,7 +44,7 @@ class GoveeLocal extends utils.Adapter {
 	 * Is called when databases are connected and adapter received configuration.
 	 */
 	private async onReady(): Promise<void> {
-		this.setObjectNotExists('info.connection', {
+		void this.setObjectNotExists('info.connection', {
 			type: 'state',
 			common: {
 				name: 'Device discovery running',
@@ -58,15 +58,15 @@ class GoveeLocal extends utils.Adapter {
 		socket.on('message', this.onUdpMessage.bind(this));
 		socket.on('error', (error) => {
 			this.log.error(`server bind error : ${error.message}`);
-			this.setStateChanged('info.connection', { val: false, ack: true });
+			void this.setStateChanged('info.connection', { val: false, ack: true });
 		});
 
 		if (this.config.extendedLogging) {
 			this.log.debug('running with extended logging');
 		}
 
-		socket.bind({ address: this.config.interface, port: LOCAL_PORT }, this.serverBound.bind(this));
-		this.subscribeStates('*.devStatus.*');
+		void socket.bind({ address: this.config.interface, port: LOCAL_PORT }, this.serverBound.bind(this));
+		void this.subscribeStates('*.devStatus.*');
 		return Promise.resolve();
 	}
 
@@ -80,7 +80,7 @@ class GoveeLocal extends utils.Adapter {
 		socket.setMulticastTTL(128);
 		socket.setMulticastInterface(this.config.interface);
 		socket.addMembership(M_CAST);
-		this.setStateChanged('info.connection', { val: true, ack: true });
+		void this.setStateChanged('info.connection', { val: true, ack: true });
 		this.log.debug(`UDP listening on ${(socket.address() as any).address}:${(socket.address() as any).port}`);
 
 		const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
@@ -144,7 +144,7 @@ class GoveeLocal extends utils.Adapter {
 						loggedDevices.push(remote.address.toString());
 					}
 					const devStatusMessageObject = JSON.parse(message.toString());
-					this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
+					void this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
 						type: 'state',
 						common: {
 							name: 'On / Off state of the lamp',
@@ -159,7 +159,7 @@ class GoveeLocal extends utils.Adapter {
 						`${sendingDevice}.devStatus.onOff`,
 						devStatusMessageObject.msg.data.onOff == 1,
 					);
-					this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
+					void this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
 						type: 'state',
 						common: {
 							name: 'Brightness of the light',
@@ -174,7 +174,7 @@ class GoveeLocal extends utils.Adapter {
 						`${sendingDevice}.devStatus.brightness`,
 						devStatusMessageObject.msg.data.brightness,
 					);
-					this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
+					void this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
 						type: 'state',
 						common: {
 							name: 'Current showing color of the lamp',
@@ -191,7 +191,7 @@ class GoveeLocal extends utils.Adapter {
 						ack: true,
 					});
 					void this.updateStateAsync(`${sendingDevice}.devStatus.color`, colorString);
-					this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
+					void this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
 						type: 'state',
 						common: {
 							name: 'If staying in white light, the color temperature',
@@ -245,7 +245,7 @@ class GoveeLocal extends utils.Adapter {
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 *
-	 * @param callback
+	 * @param callback Callback-Funktion, die nach Abschluss des Unload-Prozesses aufgerufen wird.
 	 */
 	private onUnload(callback: () => void): void {
 		try {
@@ -263,8 +263,8 @@ class GoveeLocal extends utils.Adapter {
 	/**
 	 * Is called if a subscribed state changes
 	 *
-	 * @param id
-	 * @param state
+	 * @param id Die ID des geänderten States.
+	 * @param state Das neue State-Objekt oder null/undefined.
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
 		if (state && !state.ack) {

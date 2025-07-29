@@ -105,7 +105,15 @@ class GoveeLocal extends utils.Adapter {
 	 * @param remote the sender of the message
 	 */
 	private async onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): Promise<void> {
-		const messageObject = JSON.parse(message.toString());
+		let messageObject: any;
+		try {
+			messageObject = JSON.parse(message.toString());
+		} catch (err) {
+			this.log.warn(
+				`Invalid UDP message from ${remote.address}:${remote.port}: ${message.toString()} - (${err instanceof Error ? err.message : String(err)})`,
+			);
+			return;
+		}
 		switch (messageObject.msg.cmd) {
 			case 'scan': {
 				for (const key of Object.keys(messageObject.msg.data)) {
@@ -140,7 +148,7 @@ class GoveeLocal extends utils.Adapter {
 				const sendingDevice = devices[remote.address];
 				if (sendingDevice) {
 					if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
-						this.log.info(`deivce status message data: ${JSON.stringify(messageObject)}`);
+						this.log.info(`Device status message data: ${JSON.stringify(messageObject)}`);
 						loggedDevices.push(remote.address.toString());
 					}
 					const devStatusMessageObject = JSON.parse(message.toString());
@@ -320,7 +328,7 @@ class GoveeLocal extends utils.Adapter {
 					}
 				}
 			} else {
-				this.log.error('device not found');
+				this.log.error('Device not found');
 			}
 		}
 		return Promise.resolve();

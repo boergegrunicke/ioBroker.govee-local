@@ -1,19 +1,18 @@
 /**
- * Konvertiert eine Zahl (<255) in einen zweistelligen Hex-String für Farbwerte.
+ * Converts a number (<255) to a two-digit hex string for color values.
  *
- * @param c Die Zahl, die konvertiert werden soll (0-255)
- * @returns Der Hex-Wert als String
+ * @param c The number to convert (0-255)
+ * @returns The hex value as a string
  */
 export function componentToHex(c: number): string {
-	const hex = c.toString(16);
-	return hex.length == 1 ? `0${hex}` : hex;
+	return c.toString(16).padStart(2, '0');
 }
 
 /**
- * Wandelt einen Hex-Farbstring (#RRGGBB) in ein Color-Objekt um.
+ * Converts a hex color string (#RRGGBB) to a Color object.
  *
- * @param hexString Hex-Farbwert als String (Format: #RRGGBB)
- * @returns Ein Objekt mit den Farbwerten r, g und b
+ * @param hexString Hex color value as string (format: #RRGGBB)
+ * @returns An object with the color values r, g, and b
  */
 export function hexToRgb(hexString: string): Color {
 	if (!/^#[0-9a-fA-F]{6}$/i.test(hexString)) {
@@ -27,7 +26,7 @@ export function hexToRgb(hexString: string): Color {
 }
 
 /**
- * Farbobjekt mit Werten für Rot, Grün und Blau
+ * Color object with values for red, green, and blue
  */
 type Color = {
 	r: number;

@@ -1,9 +1,9 @@
 # Codecov Badge
 
-Füge das folgende Badge in dein README.md ein (am besten direkt unter die anderen Badges):
+Add the following badge to your README.md (preferably directly below the other badges):
 
 ```
 [![codecov](https://codecov.io/gh/boergegrunicke/ioBroker.govee-local/branch/main/graph/badge.svg)](https://codecov.io/gh/boergegrunicke/ioBroker.govee-local)
 ```
 
-Passe ggf. den Branch-Namen an, falls du einen anderen Standard-Branch verwendest.
+Adjust the branch name if you use a different default branch.

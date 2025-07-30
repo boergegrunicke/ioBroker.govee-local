@@ -1,7 +1,9 @@
-    # Run coverage and upload to Codecov
+    # Run coverage and generate a local badge
     coverage:
         if: contains(github.event.head_commit.message, '[skip ci]') == false
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
             - uses: actions/checkout@v4
             - name: Use Node.js 20.x
@@ -12,13 +14,17 @@
               run: npm ci
             - name: Run coverage
               run: npm run coverage
-            - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v4
+            - name: Generate coverage badge
+              uses: tj-actions/coverage-badge-js@v2
               with:
-                token: ${{ secrets.CODECOV_TOKEN }}
-                files: ./coverage/lcov.info
-                fail_ci_if_error: true
-                verbose: true
+                output: ./coverage/badge.svg
+            - name: Commit and push badge
+              run: |
+                git config --global user.name "github-actions[bot]"
+                git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                git add ./coverage/badge.svg
+                git commit -m "chore: update coverage badge [skip ci]" || echo "No changes to commit"
+                git push
 name: Test and Release
 
 # Run this job on all pushes and pull requests

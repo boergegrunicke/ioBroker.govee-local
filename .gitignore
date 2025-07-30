@@ -1,3 +1,5 @@
+# Ignore coverage output
+coverage/
 # No dot-directories except github/vscode
 .*/
 !.vscode/

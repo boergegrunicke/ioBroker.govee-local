@@ -1,3 +1,24 @@
+    # Run coverage and upload to Codecov
+    coverage:
+        if: contains(github.event.head_commit.message, '[skip ci]') == false
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Node.js 20.x
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20.x
+            - name: Install dependencies
+              run: npm ci
+            - name: Run coverage
+              run: npm run coverage
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v4
+              with:
+                token: ${{ secrets.CODECOV_TOKEN }}
+                files: ./coverage/lcov.info
+                fail_ci_if_error: true
+                verbose: true
 name: Test and Release
 
 # Run this job on all pushes and pull requests
@@ -52,7 +73,11 @@ jobs:
                   # Uncomment the following line if your adapter cannot be installed using 'npm ci'
                   # install-command: 'npm install'
                   build: true
-            # Coverage nur auf Ubuntu und Node 20.x hochladen, um Duplikate zu vermeiden
+            # Only upload coverage on Ubuntu and Node 20.x to avoid duplicates
+            - name: Generate lcov report
+              if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20.x'
+              run: npx nyc report --reporter=lcov
+
             - name: Upload coverage to Codecov
               if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20.x'
               uses: codecov/codecov-action@v4
@@ -89,7 +114,7 @@ jobs:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
 
                   # When using Sentry for error reporting, Sentry can be informed about new releases
-                  # To enable create a API-Token in Sentry (User settings, API keys)
+                  # To enable, create an API token in Sentry (User settings, API keys)
                   # Enter this token as a GitHub secret (with name SENTRY_AUTH_TOKEN) in the repository options
                   # Then uncomment and customize the following block:
                   #  sentry: true

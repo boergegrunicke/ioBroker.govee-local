@@ -1,20 +1,37 @@
 import { expect } from 'chai';
 import { componentToHex, hexToRgb } from './hexTool';
 
-describe('test the hex converter', () => {
-	it('1 should be 1', () => {
-		expect(componentToHex(1).should.equal('1'));
+describe('componentToHex', () => {
+	it('should convert 1 to "01"', () => {
+		expect(componentToHex(1)).to.equal('01');
 	});
-	it('15 should be F', () => {
-		expect(componentToHex(26).should.equal('F'));
+	it('should convert 15 to "0f"', () => {
+		expect(componentToHex(15)).to.equal('0f');
 	});
-	it('16 should be 10', () => {
-		expect(componentToHex(26).should.equal('F'));
+	it('should convert 16 to "10"', () => {
+		expect(componentToHex(16)).to.equal('10');
+	});
+	it('should convert 255 to "ff"', () => {
+		expect(componentToHex(255)).to.equal('ff');
+	});
+	it('should convert 0 to "00"', () => {
+		expect(componentToHex(0)).to.equal('00');
 	});
 });
 
-describe('test the hex to rgb converter', () => {
-	it('#FFFFFF should be 255,255,255', () => {
-		expect(hexToRgb('#FFFFFF').should.equal({ r: 255, g: 255, b: 255 }));
+describe('hexToRgb', () => {
+	it('should convert #FFFFFF to { r: 255, g: 255, b: 255 }', () => {
+		expect(hexToRgb('#FFFFFF')).to.deep.equal({ r: 255, g: 255, b: 255 });
+	});
+	it('should convert #000000 to { r: 0, g: 0, b: 0 }', () => {
+		expect(hexToRgb('#000000')).to.deep.equal({ r: 0, g: 0, b: 0 });
+	});
+	it('should convert #123456 to { r: 18, g: 52, b: 86 }', () => {
+		expect(hexToRgb('#123456')).to.deep.equal({ r: 18, g: 52, b: 86 });
+	});
+	it('should throw for invalid hex string', () => {
+		expect(() => hexToRgb('123456')).to.throw('Invalid hex string');
+		expect(() => hexToRgb('#FFF')).to.throw('Invalid hex string');
+		expect(() => hexToRgb('#GGGGGG')).to.throw('Invalid hex string');
 	});
 });

@@ -7,6 +7,8 @@
 ![Number of Installations](https://iobroker.live/badges/govee-local-installed.svg)
 ![Current version in stable repository](https://iobroker.live/badges/govee-local-stable.svg)
 
+[![codecov](https://codecov.io/gh/boergegrunicke/ioBroker.govee-local/branch/main/graph/badge.svg)](https://codecov.io/gh/boergegrunicke/ioBroker.govee-local)
+
 [![NPM](https://nodei.co/npm/iobroker.govee-local.png?downloads=true)](https://nodei.co/npm/iobroker.govee-local/)
 
 **Tests:** ![Test and Release](https://github.com/boergegrunicke/ioBroker.govee-local/workflows/Test%20and%20Release/badge.svg)

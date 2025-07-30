@@ -12,12 +12,7 @@ process.on('unhandledRejection', (e) => {
 	throw e;
 });
 
-// enable the should interface with sinon
-// and load chai-as-promised and sinon-chai by default
-const sinonChai = require('sinon-chai');
-const chaiAsPromised = require('chai-as-promised');
-const { should, use } = require('chai');
-
-should();
-use(sinonChai);
-use(chaiAsPromised);
+// Lade chai-as-promised und sinon-chai für expect-Assertions
+const chai = require('chai');
+chai.use(require('sinon-chai'));
+chai.use(require('chai-as-promised').default);

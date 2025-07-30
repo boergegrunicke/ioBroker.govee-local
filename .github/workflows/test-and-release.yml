@@ -52,6 +52,15 @@ jobs:
                   # Uncomment the following line if your adapter cannot be installed using 'npm ci'
                   # install-command: 'npm install'
                   build: true
+            # Coverage nur auf Ubuntu und Node 20.x hochladen, um Duplikate zu vermeiden
+            - name: Upload coverage to Codecov
+              if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20.x'
+              uses: codecov/codecov-action@v4
+              with:
+                token: ${{ secrets.CODECOV_TOKEN }}
+                files: ./coverage/lcov.info
+                fail_ci_if_error: true
+                verbose: true
 
     # Deploys the final package to NPM
     deploy:

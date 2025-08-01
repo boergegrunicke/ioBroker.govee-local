@@ -6,20 +6,35 @@
  */
 
 import { expect } from 'chai';
-// import { functionToTest } from "./moduleToTest";
+import { getDatapointDescription, GoveeLocal } from './main';
 
-describe('module to test => function to test', () => {
-	// initializing logic
-	const expected = 5;
-
-	it(`should return ${expected}`, () => {
-		const result = 5;
-		// assign result a value from functionToTest
-		expect(result).to.equal(expected);
-		// or using the should() syntax
-		result.should.equal(expected);
+describe('getDatapointDescription', () => {
+	it('should return correct descriptions for known keys', () => {
+		expect(getDatapointDescription('model')).to.equal('Specific model of the Lamp');
+		expect(getDatapointDescription('ip')).to.equal('IP address of the Lamp');
+		expect(getDatapointDescription('bleVersionHard')).to.equal('Bluetooth Low Energy Hardware Version');
+		expect(getDatapointDescription('bleVersionSoft')).to.equal('Bluetooth Low Energy Software Version');
+		expect(getDatapointDescription('wifiVersionHard')).to.equal('WiFi Hardware Version');
+		expect(getDatapointDescription('wifiVersionSoft')).to.equal('WiFi Software Version');
 	});
-	// ... more tests => it
+	it('should return empty string for unknown keys', () => {
+		expect(getDatapointDescription('unknown')).to.equal('');
+	});
 });
 
-// ... more test suites => describe
+describe('GoveeLocal', () => {
+	it('should construct without error and have config fields', () => {
+		const instance = new GoveeLocal({});
+		expect(instance).to.be.an('object');
+		// Simuliere eine vollständige Konfiguration
+		instance.config = {
+			interface: '127.0.0.1',
+			extendedLogging: false,
+			searchInterval: 10,
+			deviceStatusRefreshInterval: 30,
+		};
+		expect(instance.config.interface).to.equal('127.0.0.1');
+		expect(instance.config.searchInterval).to.equal(10);
+		expect(instance.config.deviceStatusRefreshInterval).to.equal(30);
+	});
+});

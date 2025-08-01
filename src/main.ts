@@ -27,7 +27,7 @@ const devices: { [ip: string]: string } = {};
 
 const loggedDevices = [] as string[];
 
-class GoveeLocal extends utils.Adapter {
+export class GoveeLocal extends utils.Adapter {
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
 			...options,
@@ -338,7 +338,7 @@ class GoveeLocal extends utils.Adapter {
 }
 
 if (require.main !== module) {
-	// Export the constructor in compact mode
+	// Exportiere eine Factory-Funktion für ioBroker, aber die Klasse ist jetzt auch als ES6-Export verfügbar
 	module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
 } else {
 	// otherwise start the instance directly
@@ -353,7 +353,7 @@ if (require.main !== module) {
  * @param name the name of the parameter retrieved from the device
  * @returns the description, that should be set to the datapoint
  */
-function getDatapointDescription(name: string): string {
+export function getDatapointDescription(name: string): string {
 	switch (name) {
 		case 'model':
 			return 'Specific model of the Lamp';

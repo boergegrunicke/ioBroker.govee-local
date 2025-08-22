@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.2.8",
+    "version": "0.2.9",
     "news": {
+      "0.2.9": {
+        "en": "update dependencies\nadd support for node 24\nupdate to ESlint 9",
+        "de": "aktualisierung der abhängigkeiten\nunterstützung für knoten 24 hinzufügen\nupdate auf ESlint 9",
+        "ru": "обновление зависимостей\nдобавить поддержку node 24\nобновление для ESlint 9",
+        "pt": "atualizar dependências\nadicionar suporte para o nó 24\natualização para ESlint 9",
+        "nl": "afhankelijkheden bijwerken\nondersteuning voor node 24 toevoegen\nupdate naar ESlint 9",
+        "fr": "mettre à jour les dépendances\najouter un support pour le nœud 24\nmise à jour de ESlint 9",
+        "it": "aggiornamento dipendenze\naggiungere supporto per nodo 24\naggiornamento a ESlint 9",
+        "es": "dependencias de actualización\nañadir soporte para nodo 24\nactualización a ESlint 9",
+        "pl": "aktualizacji zależności\ndodaj obsługę węzła 24\naktualizacja do ESlint 9",
+        "uk": "оновлення залежності\nдодати підтримку для вузла 24\nоновлення до ESlint 9",
+        "zh-cn": "更新依赖关系\n添加节点24的支持\n更新到 Eslint 9"
+      },
       "0.2.8": {
         "en": "update dependencies",
         "de": "aktualisierung der abhängigkeiten",
@@ -80,19 +93,6 @@
         "pl": "remontowanie Off / wszystkie inne działania Fiksy #65\nusunąć z powodu dzikiej karty",
         "uk": "ремонт наОфф / всі інші дії Виправлення: #65\nфіксація спамерування колод через дикийкарт",
         "zh-cn": "b. 修理效率/所有其他行动 固定: #65\nfix 由于野生素卡的投机"
-      },
-      "0.2.0": {
-        "en": "support controlling the color\nextended logging mode",
-        "de": "unterstützung controlling der farbe\nerweiterter logging-modus",
-        "ru": "поддержка контролируя цвет\nрасширенный режим входа",
-        "pt": "suporte controlando a cor\nmodo de registro estendido",
-        "nl": "de kleur controleren\nverlengde logging mode",
-        "fr": "support de contrôle de la couleur\nmode d ' enregistrement élargi",
-        "it": "supporto che controlla il colore\nmodalità di registrazione estesa",
-        "es": "soporte controlando el color\nmodo de registro ampliado",
-        "pl": "kontrolować kolor\nrozszerzony tryb logowania",
-        "uk": "супровід управління кольором\nрозширений режим входу",
-        "zh-cn": "控制颜色的支助\n扩大的伐木模式"
       }
     },
     "titleLang": {

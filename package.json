@@ -43,7 +43,7 @@
     "@types/sinon": "^17.0.4",
     "@types/sinon-chai": "^3.2.12",
     "chai": "^4.5.0",
-    "chai-as-promised": "^8.0.1",
+    "chai-as-promised": "^8.0.2",
     "eslint": "^9.32.0",
     "mocha": "^11.7.1",
     "prettier": "^3.3.3",

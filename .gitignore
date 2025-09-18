@@ -12,8 +12,10 @@ nbproject
 # Build output
 build/*
 !build/main.js
+
 # npm package files
 iobroker.*.tgz
+.commitinfo
 
 Thumbs.db
 

@@ -3,16 +3,18 @@
  * This class is independent from ioBroker.Adapter and can be tested separately.
  */
 import * as dgram from 'node:dgram';
+import type { GoveeServiceOptions } from './goveeServiceOptions';
 
-export interface GoveeServiceOptions {
-	interface: string;
-	searchInterval: number;
-	deviceStatusRefreshInterval: number;
-	extendedLogging?: boolean;
-	forbiddenChars?: RegExp;
-	logger?: { debug: (msg: string) => void; info: (msg: string) => void; error: (msg: string) => void };
-}
-
+/**
+ * GoveeService handles all business logic for device discovery, status updates, and UDP communication.
+ * This class is independent from ioBroker.Adapter and can be tested separately.
+ *
+ * Usage:
+ *   const service = new GoveeService(options);
+ *   service.start();
+ *   // ...
+ *   service.stop();
+ */
 export class GoveeService {
 	private socket: dgram.Socket;
 	private options: GoveeServiceOptions;
@@ -33,6 +35,7 @@ export class GoveeService {
 
 	/**
 	 * Create a new GoveeService instance.
+	 *
 	 * @param options Configuration options for the service.
 	 */
 	constructor(options: GoveeServiceOptions) {
@@ -71,6 +74,7 @@ export class GoveeService {
 
 	/**
 	 * Handle incoming UDP messages.
+	 *
 	 * @param message The message buffer.
 	 * @param remote The sender info.
 	 */
@@ -118,6 +122,7 @@ export class GoveeService {
 
 	/**
 	 * Send device status request to a specific device.
+	 *
 	 * @param receiver The IP address or hostname of the device.
 	 */
 	public requestDeviceStatus(receiver: string): void {

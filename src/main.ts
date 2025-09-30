@@ -57,18 +57,10 @@ export class GoveeLocal extends utils.Adapter {
 		return Promise.resolve();
 	}
 
-
-
-
-
-
-
-
-
 	/**
 	 * Is called if a subscribed state changes
-	 * @param id The ID of the changed state.
-	 * @param state The new state object or null/undefined.
+	 * @param _id The ID of the changed state.
+	 * @param _state The new state object or null/undefined.
 	 */
 	private async onStateChange(_id: string, _state: ioBroker.State | null | undefined): Promise<void> {
 		// TODO: Implement state change handling using GoveeService if needed

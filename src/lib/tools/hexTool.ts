@@ -1,6 +1,6 @@
-
 /**
  * Converts a number (0-255) to a two-digit hexadecimal string.
+ *
  * @param c The number to convert.
  * @returns Hex string (e.g. '0A', 'FF').
  */
@@ -11,6 +11,7 @@ export function componentToHex(c: number): string {
 
 /**
  * Converts a hex color string (e.g. '#FFAABB') to an RGB object.
+ *
  * @param hex The hex color string.
  * @returns An object with r, g, b properties.
  */

@@ -59,6 +59,7 @@ export class GoveeLocal extends utils.Adapter {
 
 	/**
 	 * Is called if a subscribed state changes
+	 *
 	 * @param _id The ID of the changed state.
 	 * @param _state The new state object or null/undefined.
 	 */
@@ -68,6 +69,7 @@ export class GoveeLocal extends utils.Adapter {
 	}
 	/**
 	 * Called when adapter shuts down - callback must be called under any circumstances!
+	 *
 	 * @param callback Callback function after unload process.
 	 */
 	private onUnload(callback: () => void): void {

@@ -2,8 +2,10 @@
  * GoveeService handles all business logic for device discovery, status updates, and UDP communication.
  * This class is independent from ioBroker.Adapter and can be tested separately.
  */
+
 import * as dgram from 'node:dgram';
 import type { GoveeServiceOptions } from './goveeServiceOptions';
+import { hexToRgb } from './tools/hexTool';
 
 /**
  * GoveeService handles all business logic for device discovery, status updates, and UDP communication.
@@ -168,5 +170,94 @@ export class GoveeService {
 	 */
 	public getDevices(): { [ip: string]: string } {
 		return this.devices;
+	}
+
+	/**
+	 * Handles a state change and sends the appropriate command to the device.
+	 *
+	 * @param id The state ID
+	 * @param state The new state object
+	 * @param receiver The device IP as string
+	 */
+	public handleStateChange(id: string, state: ioBroker.State, receiver: string): void {
+		const stateKey = id.split('.')[4];
+		switch (stateKey) {
+			case 'onOff':
+				this.sendTurnCommand(receiver, !!state.val);
+				break;
+			case 'brightness':
+				this.sendBrightnessCommand(receiver, Number(state.val));
+				break;
+			case 'colorTemInKelvin':
+				this.sendColorTempCommand(receiver, Number(state.val));
+				break;
+			case 'color': {
+				const colorValue = state.val?.toString();
+				if (colorValue) {
+					this.sendColorCommand(receiver, colorValue);
+				}
+				break;
+			}
+		}
+	}
+	/**
+	 * Send a turn on/off command to a device.
+	 *
+	 * @param receiver IP address or hostname
+	 * @param value true for on, false for off
+	 */
+	public sendTurnCommand(receiver: string, value: boolean): void {
+		const turnMessage = { msg: { cmd: 'turn', data: { value: value ? 1 : 0 } } };
+		const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
+		this.socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+	}
+
+	/**
+	 * Send a brightness command to a device.
+	 *
+	 * @param receiver IP address or hostname
+	 * @param value Brightness value
+	 */
+	public sendBrightnessCommand(receiver: string, value: number): void {
+		const brightnessMessage = { msg: { cmd: 'brightness', data: { value } } };
+		const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
+		this.socket.send(
+			brightnessMessageBuffer,
+			0,
+			brightnessMessageBuffer.length,
+			GoveeService.CONTROL_PORT,
+			receiver,
+		);
+	}
+
+	/**
+	 * Send a color temperature command to a device.
+	 *
+	 * @param receiver IP address or hostname
+	 * @param kelvin Color temperature in Kelvin
+	 */
+	public sendColorTempCommand(receiver: string, kelvin: number): void {
+		const colorTempMessageBuffer = Buffer.from(
+			JSON.stringify({
+				msg: {
+					cmd: 'colorwc',
+					data: { color: { r: 0, g: 0, b: 0 }, colorTemInKelvin: kelvin },
+				},
+			}),
+		);
+		this.socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+	}
+
+	/**
+	 * Send a color command to a device.
+	 *
+	 * @param receiver IP address or hostname
+	 * @param hexColor Color as hex string (e.g. #FFAABB)
+	 */
+	public sendColorCommand(receiver: string, hexColor: string): void {
+		const rgb = hexToRgb(hexColor);
+		const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
+		const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+		this.socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
 	}
 }

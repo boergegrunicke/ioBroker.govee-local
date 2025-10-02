@@ -1,7 +1,7 @@
-import { GoveeService } from '../lib/goveeService';
-import type { GoveeServiceOptions } from '../lib/goveeServiceOptions';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { GoveeService } from '../lib/goveeService';
+import type { GoveeServiceOptions } from '../lib/goveeServiceOptions';
 
 describe('GoveeService', () => {
 	let service: GoveeService;
@@ -36,7 +36,7 @@ describe('GoveeService', () => {
 	});
 
 	it('should call logger.error on UDP error', (done) => {
-			service.start(); // Error-Listener aktivieren
+		service.start(); // Error-Listener aktivieren
 		// Fehler abfangen, damit Mocha nicht abbricht
 		(service as any).socket.on('error', () => {
 			expect(logger.error.calledWithMatch('test error')).to.be.true;

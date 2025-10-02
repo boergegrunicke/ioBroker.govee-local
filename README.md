@@ -27,6 +27,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 
 ### **WORK IN PROGRESS**
 
+- Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities, improved test coverage, and ensured all code is in English.
 - Dependencies updated
 
 ### 0.2.9 (2025-08-22)

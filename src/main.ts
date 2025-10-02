@@ -60,11 +60,19 @@ export class GoveeLocal extends utils.Adapter {
 	/**
 	 * Is called if a subscribed state changes
 	 *
-	 * @param _id The ID of the changed state.
-	 * @param _state The new state object or null/undefined.
+	 * @param id The ID of the changed state.
+	 * @param state The new state object or null/undefined.
 	 */
-	private async onStateChange(_id: string, _state: ioBroker.State | null | undefined): Promise<void> {
-		// TODO: Implement state change handling using GoveeService if needed
+	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
+		if (state && !state.ack) {
+			const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
+			const receiver = ipOfDevice?.val?.toString();
+			if (typeof receiver === 'string') {
+				this.goveeService.handleStateChange(id, state, receiver);
+			} else {
+				this.log.error('device not found or IP is not a string');
+			}
+		}
 		return Promise.resolve();
 	}
 	/**

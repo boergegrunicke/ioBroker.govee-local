@@ -49,6 +49,7 @@ export class GoveeService {
 	 * Bind UDP socket and start device search/refresh intervals.
 	 */
 	public start(): void {
+		this.options.logger?.debug('Starting goveeService ...');
 		this.socket.on('message', this.onUdpMessage.bind(this));
 		this.socket.on('error', (error) => {
 			this.options.logger?.error(`server bind error : ${error.message}`);
@@ -82,6 +83,7 @@ export class GoveeService {
 	 */
 	private onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): void {
 		const messageObject = JSON.parse(message.toString());
+		this.options.logger?.info(`on udp message : ${JSON.stringify(messageObject)}`);
 		switch (messageObject.msg.cmd) {
 			case 'scan': {
 				for (const key of Object.keys(messageObject.msg.data)) {
@@ -117,6 +119,7 @@ export class GoveeService {
 	 * Send device status request to all known devices.
 	 */
 	public refreshAllDevices(): void {
+		this.options.logger?.info(`refreshing all ${Object.keys(this.devices).length} devices`);
 		for (const ip in this.devices) {
 			this.requestDeviceStatus(ip);
 		}
@@ -142,6 +145,9 @@ export class GoveeService {
 	 * Send scan message to the UDP multicast address.
 	 */
 	public sendScan(): void {
+		if (this.options.extendedLogging) {
+			this.options.logger?.debug('send scan message');
+		}
 		const scanMessageBuffer = Buffer.from(JSON.stringify(GoveeService.scanMessage));
 		this.socket.send(
 			scanMessageBuffer,
@@ -156,6 +162,7 @@ export class GoveeService {
 	 * Stop all intervals and close the socket.
 	 */
 	public stop(): void {
+		this.options.logger?.debug('Stopping goveeService');
 		if (this.searchInterval) {
 			clearInterval(this.searchInterval);
 		}

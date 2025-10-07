@@ -6,7 +6,8 @@
  */
 
 import { expect } from 'chai';
-import { getDatapointDescription, GoveeLocal } from './main';
+import { getDatapointDescription } from './lib/tools/datapointTools';
+import { GoveeLocal } from './main';
 
 describe('getDatapointDescription', () => {
 	it('should return correct descriptions for known keys', () => {

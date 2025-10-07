@@ -99,7 +99,7 @@ export class GoveeLocal extends utils.Adapter {
 	}
 
 	/**
-	 * handle icoming messages on the udp socket
+	 * handle incoming messages on the udp socket
 	 *
 	 * @param message the message itself
 	 * @param remote the sender of the message
@@ -140,7 +140,7 @@ export class GoveeLocal extends utils.Adapter {
 				const sendingDevice = devices[remote.address];
 				if (sendingDevice) {
 					if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
-						this.log.info(`deivce status message data: ${JSON.stringify(messageObject)}`);
+						this.log.info(`device status message data: ${JSON.stringify(messageObject)}`);
 						loggedDevices.push(remote.address.toString());
 					}
 					const devStatusMessageObject = JSON.parse(message.toString());
@@ -226,7 +226,7 @@ export class GoveeLocal extends utils.Adapter {
 	/**
 	 * sends the device status request to one specific device
 	 *
-	 * @param receiver the ip ( / hsotname ) of the device that should be queried
+	 * @param receiver the ip ( / hostname ) of the device that should be queried
 	 */
 	private requestDeviceStatus(receiver: string): void {
 		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
@@ -245,7 +245,7 @@ export class GoveeLocal extends utils.Adapter {
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 *
-	 * @param callback Callback-Funktion, die nach Abschluss des Unload-Prozesses aufgerufen wird.
+	 * @param callback Callback-function, die nach Abschluss des Unload-Prozesses aufgerufen wird.
 	 */
 	private onUnload(callback: () => void): void {
 		try {

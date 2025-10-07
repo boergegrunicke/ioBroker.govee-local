@@ -142,6 +142,7 @@ export class GoveeService {
 	 * Send scan message to the UDP multicast address.
 	 */
 	public sendScan(): void {
+		this.options.logger?.debug('sending scan message');
 		const scanMessageBuffer = Buffer.from(JSON.stringify(GoveeService.scanMessage));
 		this.socket.send(
 			scanMessageBuffer,

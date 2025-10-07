@@ -28,8 +28,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var main_exports = {};
 __export(main_exports, {
-  GoveeLocal: () => GoveeLocal,
-  getDatapointDescription: () => getDatapointDescription
+  GoveeLocal: () => GoveeLocal
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
@@ -81,14 +80,26 @@ class GoveeLocal extends utils.Adapter {
   }
   /**
    * Is called if a subscribed state changes
+   *
    * @param id The ID of the changed state.
    * @param state The new state object or null/undefined.
    */
-  async onStateChange(_id, _state) {
+  async onStateChange(id, state) {
+    var _a;
+    if (state && !state.ack) {
+      const ipOfDevice = await this.getStateAsync(`${id.split(".")[2]}.deviceInfo.ip`);
+      const receiver = (_a = ipOfDevice == null ? void 0 : ipOfDevice.val) == null ? void 0 : _a.toString();
+      if (typeof receiver === "string") {
+        this.goveeService.handleStateChange(id, state, receiver);
+      } else {
+        this.log.error("device not found or IP is not a string");
+      }
+    }
     return Promise.resolve();
   }
   /**
    * Called when adapter shuts down - callback must be called under any circumstances!
+   *
    * @param callback Callback function after unload process.
    */
   onUnload(callback) {
@@ -118,27 +129,8 @@ if (require.main !== module) {
 } else {
   (() => new GoveeLocal())();
 }
-function getDatapointDescription(name) {
-  switch (name) {
-    case "model":
-      return "Specific model of the Lamp";
-    case "ip":
-      return "IP address of the Lamp";
-    case "bleVersionHard":
-      return "Bluetooth Low Energy Hardware Version";
-    case "bleVersionSoft":
-      return "Bluetooth Low Energy Software Version";
-    case "wifiVersionHard":
-      return "WiFi Hardware Version";
-    case "wifiVersionSoft":
-      return "WiFi Software Version";
-    default:
-      return "";
-  }
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  GoveeLocal,
-  getDatapointDescription
+  GoveeLocal
 });
 //# sourceMappingURL=main.js.map

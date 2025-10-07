@@ -245,7 +245,7 @@ export class GoveeLocal extends utils.Adapter {
 	/**
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 *
-	 * @param callback Callback-function, die nach Abschluss des Unload-Prozesses aufgerufen wird.
+	 * @param callback callback method that will be called when cleanup is done
 	 */
 	private onUnload(callback: () => void): void {
 		try {
@@ -263,8 +263,8 @@ export class GoveeLocal extends utils.Adapter {
 	/**
 	 * Is called if a subscribed state changes
 	 *
-	 * @param id Die ID des geänderten States.
-	 * @param state Das neue State-Objekt oder null/undefined.
+	 * @param id the id of the changed state.
+	 * @param state the new state object or null/undefined.
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
 		if (state && !state.ack) {
@@ -338,7 +338,7 @@ export class GoveeLocal extends utils.Adapter {
 }
 
 if (require.main !== module) {
-	// Exportiere eine Factory-Funktion für ioBroker, aber die Klasse ist jetzt auch als ES6-Export verfügbar
+	// Export a factory function for ioBroker, but the class is now also available as an ES6 export
 	module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
 } else {
 	// otherwise start the instance directly
@@ -346,9 +346,9 @@ if (require.main !== module) {
 }
 
 /**
- * This method returns the description for device information datapoints
- * to unbloat the upper methods.
- * tanslations would be great here
+ * This method returns the description for device information data points
+ * to un-bloat the upper methods.
+ * translations would be great here
  *
  * @param name the name of the parameter retrieved from the device
  * @returns the description, that should be set to the datapoint

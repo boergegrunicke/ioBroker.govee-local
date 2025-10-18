@@ -3,7 +3,7 @@
  */
 
 import * as utils from '@iobroker/adapter-core';
-import { GoveeService } from './lib/goveeService';
+import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
 
 export class GoveeLocal extends utils.Adapter {
 	private goveeService!: GoveeService;
@@ -47,6 +47,15 @@ export class GoveeLocal extends utils.Adapter {
 				error: (msg) => this.log.error(msg),
 			},
 		});
+
+		// Set up event listeners
+		this.goveeService.on('deviceDiscovered', (data) => {
+			void this.handleDeviceDiscovered(data);
+		});
+
+		this.goveeService.on('deviceStatusUpdate', (data) => {
+			void this.handleDeviceStatusUpdate(data);
+		});
 		this.goveeService.start();
 
 		if (this.config.extendedLogging) {
@@ -83,6 +92,7 @@ export class GoveeLocal extends utils.Adapter {
 	private onUnload(callback: () => void): void {
 		try {
 			if (this.goveeService) {
+				this.goveeService.removeAllListeners();
 				this.goveeService.stop();
 			}
 			void this.updateStateAsync('info.connection', false);
@@ -101,6 +111,123 @@ export class GoveeLocal extends utils.Adapter {
 				ack: acknowledged,
 			});
 		}
+	}
+
+	/**
+	 * Handle device discovery event.
+	 *
+	 * @param event The device discovery event data.
+	 */
+	private async handleDeviceDiscovered(event: DeviceDiscoveryEvent): Promise<void> {
+		const { ip, deviceName } = event;
+
+		// Create device folder
+		await this.setObjectNotExistsAsync(deviceName, {
+			type: 'folder',
+			common: {
+				name: deviceName,
+			},
+			native: {},
+		});
+
+		// Create deviceInfo folder
+		await this.setObjectNotExistsAsync(`${deviceName}.deviceInfo`, {
+			type: 'folder',
+			common: {
+				name: 'Device Info',
+			},
+			native: {},
+		});
+
+		// Create IP address state
+		await this.setObjectNotExistsAsync(`${deviceName}.deviceInfo.ip`, {
+			type: 'state',
+			common: {
+				name: 'IP address of the Lamp',
+				type: 'string',
+				role: 'info.ip',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.deviceInfo.ip`, ip);
+
+		// Create devStatus folder
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus`, {
+			type: 'folder',
+			common: {
+				name: 'Device Status',
+			},
+			native: {},
+		});
+
+		this.log.info(`Device discovered: ${deviceName} at ${ip}`);
+	}
+
+	/**
+	 * Handle device status update event.
+	 *
+	 * @param event The device status update event data.
+	 */
+	private async handleDeviceStatusUpdate(event: DeviceStatusEvent): Promise<void> {
+		const { deviceName, status } = event;
+
+		// Create and update onOff state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.onOff`, {
+			type: 'state',
+			common: {
+				name: 'On / Off state of the lamp',
+				type: 'boolean',
+				role: 'switch',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.onOff`, status.onOff);
+
+		// Create and update brightness state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.brightness`, {
+			type: 'state',
+			common: {
+				name: 'Brightness of the light',
+				type: 'number',
+				role: 'level.dimmer',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
+
+		// Create and update color state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
+			type: 'state',
+			common: {
+				name: 'Current showing color of the lamp',
+				type: 'string',
+				role: 'level.color.rgb',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
+
+		// Create and update color temperature state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
+			type: 'state',
+			common: {
+				name: 'If staying in white light, the color temperature',
+				type: 'number',
+				role: 'level.color.temperature',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
 	}
 }
 

@@ -79,4 +79,49 @@ describe('GoveeService', () => {
 		(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
 		expect(logger.error.calledWithMatch('message from:')).to.be.true;
 	});
+
+	it('should emit deviceDiscovered event on scan message', (done) => {
+		service.on('deviceDiscovered', (data) => {
+			expect(data.ip).to.equal('1.2.3.4');
+			expect(data.deviceName).to.equal('TestDevice');
+			done();
+		});
+
+		const msg = {
+			msg: {
+				cmd: 'scan',
+				data: { device: 'TestDevice' },
+			},
+		};
+		const buf = Buffer.from(JSON.stringify(msg));
+		(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+	});
+
+	it('should emit deviceStatusUpdate event on devStatus message', (done) => {
+		(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+		service.on('deviceStatusUpdate', (data) => {
+			expect(data.deviceName).to.equal('TestDevice');
+			expect(data.ip).to.equal('1.2.3.4');
+			expect(data.status.onOff).to.be.true;
+			expect(data.status.brightness).to.equal(75);
+			expect(data.status.color).to.equal('#FF0000');
+			expect(data.status.colorTemInKelvin).to.equal(3000);
+			done();
+		});
+
+		const msg = {
+			msg: {
+				cmd: 'devStatus',
+				data: {
+					onOff: 1,
+					brightness: 75,
+					color: { r: 255, g: 0, b: 0 },
+					colorTemInKelvin: 3000,
+				},
+			},
+		};
+		const buf = Buffer.from(JSON.stringify(msg));
+		(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+	});
 });

@@ -4,20 +4,58 @@
  */
 
 import * as dgram from 'node:dgram';
+import { EventEmitter } from 'node:events';
 import type { GoveeServiceOptions } from './goveeServiceOptions';
-import { hexToRgb } from './tools/hexTool';
+import { componentToHex, hexToRgb } from './tools/hexTool';
+
+/**
+ * Device discovery event data.
+ */
+export interface DeviceDiscoveryEvent {
+	/** The IP address of the discovered device. */
+	ip: string;
+	/** The sanitized device name. */
+	deviceName: string;
+}
+
+/**
+ * Device status update event data.
+ */
+export interface DeviceStatusEvent {
+	/** The sanitized device name. */
+	deviceName: string;
+	/** The IP address of the device. */
+	ip: string;
+	/** The current status of the device. */
+	status: {
+		/** Current on/off state. */
+		onOff: boolean;
+		/** Current brightness level. */
+		brightness: number;
+		/** Current color as hex string. */
+		color: string;
+		/** Current color temperature in Kelvin. */
+		colorTemInKelvin: number;
+	};
+}
 
 /**
  * GoveeService handles all business logic for device discovery, status updates, and UDP communication.
  * This class is independent from ioBroker.Adapter and can be tested separately.
  *
+ * Events:
+ *   - 'deviceDiscovered': Emitted when a new device is found
+ *   - 'deviceStatusUpdate': Emitted when device status is updated
+ *
  * Usage:
  *   const service = new GoveeService(options);
+ *   service.on('deviceDiscovered', (data) => { ... });
+ *   service.on('deviceStatusUpdate', (data) => { ... });
  *   service.start();
  *   // ...
  *   service.stop();
  */
-export class GoveeService {
+export class GoveeService extends EventEmitter {
 	private socket: dgram.Socket;
 	private options: GoveeServiceOptions;
 	private devices: { [ip: string]: string } = {};
@@ -41,6 +79,7 @@ export class GoveeService {
 	 * @param options Configuration options for the service.
 	 */
 	constructor(options: GoveeServiceOptions) {
+		super();
 		this.options = options;
 		this.socket = dgram.createSocket({ type: 'udp4' });
 	}
@@ -81,18 +120,20 @@ export class GoveeService {
 	 * @param remote The sender info.
 	 */
 	private onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): void {
+		this.options.logger?.debug(`UDP message from ${remote.address}:${remote.port} - ${message.toString()}`);
 		const messageObject = JSON.parse(message.toString());
 		switch (messageObject.msg.cmd) {
 			case 'scan': {
-				for (const key of Object.keys(messageObject.msg.data)) {
-					if (key !== 'device') {
-						const deviceName = messageObject.msg.data.device.replace(
-							this.options.forbiddenChars ?? /[^a-zA-Z0-9_-]/g,
-							'_',
-						);
-						this.devices[remote.address] = deviceName;
-						// Device registration logic can be handled via callback or event
-					}
+				if (messageObject.msg.data.device) {
+					const deviceName = messageObject.msg.data.device.replace(
+						this.options.forbiddenChars ?? /[^a-zA-Z0-9_-]/g,
+						'_',
+					);
+					this.devices[remote.address] = deviceName;
+					this.emit('deviceDiscovered', {
+						ip: remote.address,
+						deviceName: deviceName,
+					} as DeviceDiscoveryEvent);
 				}
 				break;
 			}
@@ -103,7 +144,7 @@ export class GoveeService {
 						this.options.logger?.info(`device status message data: ${JSON.stringify(messageObject)}`);
 						this.loggedDevices.push(remote.address.toString());
 					}
-					// Status update logic can be handled via callback or event
+					this.emitDeviceStatusUpdate(sendingDevice, remote.address, messageObject);
 				}
 				break;
 			}
@@ -260,5 +301,28 @@ export class GoveeService {
 		const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
 		const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
 		this.socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+	}
+
+	/**
+	 * Emit device status update event with parsed status data.
+	 *
+	 * @param deviceName The device name.
+	 * @param ip The device IP address.
+	 * @param messageObject The parsed message object containing device status.
+	 */
+	private emitDeviceStatusUpdate(deviceName: string, ip: string, messageObject: any): void {
+		const deviceData = messageObject.msg.data;
+		const colorString = `#${componentToHex(deviceData.color.r)}${componentToHex(deviceData.color.g)}${componentToHex(deviceData.color.b)}`;
+
+		this.emit('deviceStatusUpdate', {
+			deviceName: deviceName,
+			ip: ip,
+			status: {
+				onOff: deviceData.onOff === 1,
+				brightness: deviceData.brightness,
+				color: colorString,
+				colorTemInKelvin: deviceData.colorTemInKelvin,
+			},
+		} as DeviceStatusEvent);
 	}
 }

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "news": {
+      "0.3.1": {
+        "en": "updated release script run configuration",
+        "de": "aktualisierte versionsskriptlaufkonfiguration",
+        "ru": "обновленная конфигурация для запуска сценария",
+        "pt": "configuração de execução do script de versão atualizada",
+        "nl": "bijgewerkte versie script-run configuratie",
+        "fr": "mise à jour de la configuration du script de publication",
+        "it": "configurazione dell'esecuzione dello script di rilascio aggiornata",
+        "es": "configuración actualizada script script script run",
+        "pl": "zaktualizowana konfiguracja uruchamiania skryptu wydania",
+        "uk": "оновлена конфігурація запуску сценарію релізу",
+        "zh-cn": "更新发布脚本运行配置"
+      },
       "0.3.0": {
         "en": "Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities\nImproved test coverage\nDependencies updated",
         "de": "Hergestellt: Alle Gerätelogik auf eine dedizierte GoveeService-Klasse verschoben, modularisierte Versorgungsprogramme\nVerbesserte Testabdeckung\nAusgaben aktualisiert",
@@ -80,19 +93,6 @@
         "pl": "utworzyć tylko jedno gniazdo, ponieważ drugie wydaje się nie być konieczne\nrefaktoring kodu dla lepszej struktury\nmożliwość wyboru interfejsu słuchania w ustawieniach",
         "uk": "створити тільки одну розетку, так як другий здається не потрібно\nрефакторинг коду для кращої структури\nможливість вибору інтерфейсу прослуховування в налаштуваннях",
         "zh-cn": "只创建一个套接字, 因为第二个似乎没有必要\n为更好的结构重构代码\n在设置中选择监听界面的可能性"
-      },
-      "0.2.4": {
-        "en": "fix access",
-        "de": "zugriff",
-        "ru": "исправить доступ",
-        "pt": "corrigir o acesso",
-        "nl": "fix toegang",
-        "fr": "fixer l'accès",
-        "it": "fissare l'accesso",
-        "es": "acceso fijo",
-        "pl": "naprawić dostęp",
-        "uk": "фіксувати доступ",
-        "zh-cn": "固定访问"
       }
     },
     "titleLang": {

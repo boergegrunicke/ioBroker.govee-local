@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import * as dgram from 'dgram';
 import { EventEmitter } from 'events';
 import sinon from 'sinon';
-import { GoveeService } from '../lib/goveeService';
-import type { GoveeServiceOptions } from '../lib/goveeServiceOptions';
+import { GoveeService } from './goveeService';
+import type { GoveeServiceOptions } from './goveeServiceOptions';
 
 describe('GoveeService', () => {
 	let service: GoveeService;

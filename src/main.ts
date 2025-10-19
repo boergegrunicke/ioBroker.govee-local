@@ -2,32 +2,19 @@
  * Created with @iobroker/create-adapter v2.3.0
  */
 
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
-import * as dgram from 'node:dgram';
-import { componentToHex, hexToRgb } from './tools/hexTool';
+import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
 
-// Load your modules here, e.g.:
-
-const LOCAL_PORT = 4002;
-const SEND_SCAN_PORT = 4001;
-const CONTROL_PORT = 4003;
-const M_CAST = '239.255.255.250';
-
-const socket = dgram.createSocket({ type: 'udp4' });
-
-const scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } };
-const requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
-
-let searchInterval: ioBroker.Interval;
-let refreshInterval: ioBroker.Interval;
-
-const devices: { [ip: string]: string } = {};
-
-const loggedDevices = [] as string[];
-
+/**
+ * The adapter class.
+ */
 export class GoveeLocal extends utils.Adapter {
+	private goveeService!: GoveeService;
+	/**
+	 * Constructor of the adapter class.
+	 *
+	 * @param options Optional adapter options to override defaults.
+	 */
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
 			...options,
@@ -55,275 +42,73 @@ export class GoveeLocal extends utils.Adapter {
 			},
 			native: {},
 		});
-		socket.on('message', this.onUdpMessage.bind(this));
-		socket.on('error', (error) => {
-			this.log.error(`server bind error : ${error.message}`);
-			void this.setStateChanged('info.connection', { val: false, ack: true });
+		// Initialize GoveeService with adapter config and logger
+		this.goveeService = new GoveeService({
+			interface: this.config.interface,
+			searchInterval: this.config.searchInterval,
+			deviceStatusRefreshInterval: this.config.deviceStatusRefreshInterval,
+			extendedLogging: this.config.extendedLogging,
+			forbiddenChars: /[^a-zA-Z0-9_-]/g,
+			logger: {
+				debug: (msg) => this.log.debug(msg),
+				info: (msg) => this.log.info(msg),
+				error: (msg) => this.log.error(msg),
+			},
 		});
+
+		// Set up event listeners
+		this.goveeService.on('deviceDiscovered', (data) => {
+			void this.handleDeviceDiscovered(data);
+		});
+
+		this.goveeService.on('deviceStatusUpdate', (data) => {
+			void this.handleDeviceStatusUpdate(data);
+		});
+		this.goveeService.start();
 
 		if (this.config.extendedLogging) {
 			this.log.debug('running with extended logging');
 		}
 
-		void socket.bind({ address: this.config.interface, port: LOCAL_PORT }, this.serverBound.bind(this));
 		void this.subscribeStates('*.devStatus.*');
 		return Promise.resolve();
 	}
 
 	/**
-	 * handles when udp socket is up
-	 * configure multicast membership
-	 * start periodic scan for devices
-	 */
-	private async serverBound(): Promise<void> {
-		socket.setBroadcast(true);
-		socket.setMulticastTTL(128);
-		socket.setMulticastInterface(this.config.interface);
-		socket.addMembership(M_CAST);
-		void this.setStateChanged('info.connection', { val: true, ack: true });
-		this.log.debug(`UDP listening on ${(socket.address() as any).address}:${(socket.address() as any).port}`);
-
-		const deviceSearchInterval = this.setInterval(this.sendScan.bind(this), this.config.searchInterval * 1000);
-		if (deviceSearchInterval) {
-			searchInterval = deviceSearchInterval;
-		}
-
-		const deviceRefreshInterval = this.setInterval(
-			this.refreshAllDevices.bind(this),
-			this.config.deviceStatusRefreshInterval * 1000,
-		);
-		if (deviceRefreshInterval) {
-			refreshInterval = deviceRefreshInterval;
-		}
-		return Promise.resolve();
-	}
-
-	/**
-	 * handle incoming messages on the udp socket
+	 * Is called if a subscribed state changes
 	 *
-	 * @param message the message itself
-	 * @param remote the sender of the message
+	 * @param id The ID of the changed state.
+	 * @param state The new state object or null/undefined.
 	 */
-	private async onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): Promise<void> {
-		const messageObject = JSON.parse(message.toString());
-		switch (messageObject.msg.cmd) {
-			case 'scan': {
-				for (const key of Object.keys(messageObject.msg.data)) {
-					if (key != 'device') {
-						const deviceName = messageObject.msg.data.device.replace(this.FORBIDDEN_CHARS, '_');
-						devices[remote.address] = deviceName;
-						void this.setObjectNotExists(deviceName, {
-							type: 'device',
-							common: {
-								name: messageObject.msg.data.sku,
-								role: 'group',
-							},
-							native: {},
-						});
-						void this.setObjectNotExists(`${deviceName}.deviceInfo.${key}`, {
-							type: 'state',
-							common: {
-								name: getDatapointDescription(key),
-								type: 'string',
-								role: 'state',
-								read: true,
-								write: false,
-							},
-							native: {},
-						});
-						void this.updateStateAsync(`${deviceName}.deviceInfo.${key}`, messageObject.msg.data[key]);
-					}
-				}
-				break;
-			}
-			case 'devStatus': {
-				const sendingDevice = devices[remote.address];
-				if (sendingDevice) {
-					if (this.config.extendedLogging && !loggedDevices.includes(remote.address.toString())) {
-						this.log.info(`device status message data: ${JSON.stringify(messageObject)}`);
-						loggedDevices.push(remote.address.toString());
-					}
-					const devStatusMessageObject = JSON.parse(message.toString());
-					void this.setObjectNotExists(`${sendingDevice}.devStatus.onOff`, {
-						type: 'state',
-						common: {
-							name: 'On / Off state of the lamp',
-							type: 'boolean',
-							role: 'switch',
-							read: true,
-							write: true,
-						},
-						native: {},
-					});
-					void this.updateStateAsync(
-						`${sendingDevice}.devStatus.onOff`,
-						devStatusMessageObject.msg.data.onOff == 1,
-					);
-					void this.setObjectNotExists(`${sendingDevice}.devStatus.brightness`, {
-						type: 'state',
-						common: {
-							name: 'Brightness of the light',
-							type: 'number',
-							role: 'level.dimmer',
-							read: true,
-							write: true,
-						},
-						native: {},
-					});
-					void this.updateStateAsync(
-						`${sendingDevice}.devStatus.brightness`,
-						devStatusMessageObject.msg.data.brightness,
-					);
-					void this.setObjectNotExists(`${sendingDevice}.devStatus.color`, {
-						type: 'state',
-						common: {
-							name: 'Current showing color of the lamp',
-							type: 'string',
-							role: 'level.color.rgb',
-							read: true,
-							write: true,
-						},
-						native: {},
-					});
-					const colorString = `#${componentToHex(devStatusMessageObject.msg.data.color.r)}${componentToHex(devStatusMessageObject.msg.data.color.g)}${componentToHex(devStatusMessageObject.msg.data.color.b)}`;
-					void this.setState(`${sendingDevice}.devStatus.color`, {
-						val: colorString,
-						ack: true,
-					});
-					void this.updateStateAsync(`${sendingDevice}.devStatus.color`, colorString);
-					void this.setObjectNotExists(`${sendingDevice}.devStatus.colorTemInKelvin`, {
-						type: 'state',
-						common: {
-							name: 'If staying in white light, the color temperature',
-							type: 'number',
-							role: 'level.color.temperature',
-							read: true,
-							write: true,
-						},
-						native: {},
-					});
-					void this.updateStateAsync(
-						`${sendingDevice}.devStatus.colorTemInKelvin`,
-						devStatusMessageObject.msg.data.colorTemInKelvin,
-					);
-				}
-				break;
-			}
-			default: {
-				this.log.error(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
+	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
+		if (state && !state.ack) {
+			const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
+			const receiver = ipOfDevice?.val?.toString();
+			if (typeof receiver === 'string') {
+				this.goveeService.handleStateChange(id, state, receiver);
+			} else {
+				this.log.error('device not found or IP is not a string');
 			}
 		}
 		return Promise.resolve();
 	}
-
-	private async refreshAllDevices(): Promise<void> {
-		for (const ip in devices) {
-			this.requestDeviceStatus(ip);
-		}
-		return Promise.resolve();
-	}
-
 	/**
-	 * sends the device status request to one specific device
+	 * Called when adapter shuts down - callback must be called under any circumstances!
 	 *
-	 * @param receiver the ip ( / hostname ) of the device that should be queried
-	 */
-	private requestDeviceStatus(receiver: string): void {
-		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(requestStatusMessage));
-		void socket.send(requestDeviceStatusBuffer, 0, requestDeviceStatusBuffer.length, CONTROL_PORT, receiver);
-	}
-
-	/**
-	 * send the scan message to the udp multicast address
-	 */
-	private async sendScan(): Promise<void> {
-		const scanMessageBuffer = Buffer.from(JSON.stringify(scanMessage));
-		void socket.send(scanMessageBuffer, 0, scanMessageBuffer.length, SEND_SCAN_PORT, M_CAST);
-		return Promise.resolve();
-	}
-
-	/**
-	 * Is called when adapter shuts down - callback has to be called under any circumstances!
-	 *
-	 * @param callback callback method that will be called when cleanup is done
+	 * @param callback Callback function after unload process.
 	 */
 	private onUnload(callback: () => void): void {
 		try {
-			this.clearInterval(searchInterval);
-			this.clearInterval(refreshInterval);
-			socket.close();
+			if (this.goveeService) {
+				this.goveeService.removeAllListeners();
+				this.goveeService.stop();
+			}
 			void this.updateStateAsync('info.connection', false);
 			callback();
 		} catch (e: any) {
 			this.log.error(e.message);
 			callback();
 		}
-	}
-
-	/**
-	 * Is called if a subscribed state changes
-	 *
-	 * @param id the id of the changed state.
-	 * @param state the new state object or null/undefined.
-	 */
-	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
-		if (state && !state.ack) {
-			const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
-			if (ipOfDevice) {
-				const receiver = ipOfDevice.val?.toString();
-				switch (id.split('.')[4]) {
-					case 'onOff': {
-						const turnMessage = { msg: { cmd: 'turn', data: { value: state.val ? 1 : 0 } } };
-						const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
-						void socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, CONTROL_PORT, receiver);
-						break;
-					}
-					case 'brightness': {
-						const brightnessMessage = { msg: { cmd: 'brightness', data: { value: state.val } } };
-						const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
-						void socket.send(
-							brightnessMessageBuffer,
-							0,
-							brightnessMessageBuffer.length,
-							CONTROL_PORT,
-							receiver,
-						);
-						break;
-					}
-					case 'colorTemInKelvin': {
-						const colorTempMessageBuffer = Buffer.from(
-							JSON.stringify({
-								msg: {
-									cmd: 'colorwc',
-									data: { color: { r: '0', g: '0', b: '0' }, colorTemInKelvin: state.val },
-								},
-							}),
-						);
-						void socket.send(
-							colorTempMessageBuffer,
-							0,
-							colorTempMessageBuffer.length,
-							CONTROL_PORT,
-							receiver,
-						);
-						break;
-					}
-					case 'color': {
-						const colorValue = state.val?.toString();
-						if (colorValue) {
-							const rgb = hexToRgb(colorValue);
-							const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
-							const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-							void socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, CONTROL_PORT, receiver);
-						}
-						break;
-					}
-				}
-			} else {
-				this.log.error('device not found');
-			}
-		}
-		return Promise.resolve();
 	}
 
 	private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
@@ -335,39 +120,129 @@ export class GoveeLocal extends utils.Adapter {
 			});
 		}
 	}
+
+	/**
+	 * Handle device discovery event.
+	 *
+	 * @param event The device discovery event data.
+	 */
+	private async handleDeviceDiscovered(event: DeviceDiscoveryEvent): Promise<void> {
+		const { ip, deviceName } = event;
+
+		// Create device folder
+		await this.setObjectNotExistsAsync(deviceName, {
+			type: 'folder',
+			common: {
+				name: deviceName,
+			},
+			native: {},
+		});
+
+		// Create deviceInfo folder
+		await this.setObjectNotExistsAsync(`${deviceName}.deviceInfo`, {
+			type: 'folder',
+			common: {
+				name: 'Device Info',
+			},
+			native: {},
+		});
+
+		// Create IP address state
+		await this.setObjectNotExistsAsync(`${deviceName}.deviceInfo.ip`, {
+			type: 'state',
+			common: {
+				name: 'IP address of the Lamp',
+				type: 'string',
+				role: 'info.ip',
+				read: true,
+				write: false,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.deviceInfo.ip`, ip);
+
+		// Create devStatus folder
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus`, {
+			type: 'folder',
+			common: {
+				name: 'Device Status',
+			},
+			native: {},
+		});
+
+		this.log.info(`Device discovered: ${deviceName} at ${ip}`);
+	}
+
+	/**
+	 * Handle device status update event.
+	 *
+	 * @param event The device status update event data.
+	 */
+	private async handleDeviceStatusUpdate(event: DeviceStatusEvent): Promise<void> {
+		const { deviceName, status } = event;
+
+		// Create and update onOff state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.onOff`, {
+			type: 'state',
+			common: {
+				name: 'On / Off state of the lamp',
+				type: 'boolean',
+				role: 'switch',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.onOff`, status.onOff);
+
+		// Create and update brightness state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.brightness`, {
+			type: 'state',
+			common: {
+				name: 'Brightness of the light',
+				type: 'number',
+				role: 'level.dimmer',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
+
+		// Create and update color state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
+			type: 'state',
+			common: {
+				name: 'Current showing color of the lamp',
+				type: 'string',
+				role: 'level.color.rgb',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
+
+		// Create and update color temperature state
+		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
+			type: 'state',
+			common: {
+				name: 'If staying in white light, the color temperature',
+				type: 'number',
+				role: 'level.color.temperature',
+				read: true,
+				write: true,
+			},
+			native: {},
+		});
+		await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
+	}
 }
 
 if (require.main !== module) {
-	// Export a factory function for ioBroker, but the class is now also available as an ES6 export
+	// Exportiere eine Factory-Funktion für ioBroker, aber die Klasse ist jetzt auch als ES6-Export verfügbar
 	module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
 } else {
 	// otherwise start the instance directly
 	(() => new GoveeLocal())();
-}
-
-/**
- * This method returns the description for device information data points
- * to un-bloat the upper methods.
- * translations would be great here
- *
- * @param name the name of the parameter retrieved from the device
- * @returns the description, that should be set to the datapoint
- */
-export function getDatapointDescription(name: string): string {
-	switch (name) {
-		case 'model':
-			return 'Specific model of the Lamp';
-		case 'ip':
-			return 'IP address of the Lamp';
-		case 'bleVersionHard':
-			return 'Bluetooth Low Energy Hardware Version';
-		case 'bleVersionSoft':
-			return 'Bluetooth Low Energy Software Version';
-		case 'wifiVersionHard':
-			return 'WiFi Hardware Version';
-		case 'wifiVersionSoft':
-			return 'WiFi Software Version';
-		default:
-			return '';
-	}
 }

@@ -24,8 +24,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.3.0 (2025-10-19)
 
 - Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities
 - Improved test coverage

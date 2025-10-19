@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.2.9",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "en": "Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities\nImproved test coverage\nDependencies updated",
+        "de": "Hergestellt: Alle Gerätelogik auf eine dedizierte GoveeService-Klasse verschoben, modularisierte Versorgungsprogramme\nVerbesserte Testabdeckung\nAusgaben aktualisiert",
+        "ru": "Рефакторированный: Перенес всю логику устройства в выделенный класс GoveeService, модульные утилиты\nУлучшенный охват испытаниями\nОбновленные зависимости",
+        "pt": "Refactorado: Moveu toda a lógica do dispositivo para uma classe dedicada do GoveeService, utilitários modularizados\nMelhor cobertura de teste\nDependências atualizadas",
+        "nl": "Refactored: Verplaatste alle apparaat logica naar een speciale GoveeService klasse, modulaire utilities\nVerbeterde testdekking\nAfhankelijkheden bijgewerkt",
+        "fr": "Reformulé : Déplace toute la logique de l'appareil vers une classe GoveeService dédiée, utilitaires modulaires\nAmélioration de la couverture des tests\nDépendances actualisées",
+        "it": "Refactored: Spostato tutta la logica del dispositivo a una classe GoveeService dedicata, utilità modularizzate\nCopertura di test migliorata\nDipendenze aggiornate",
+        "es": "Refactored: Movedo toda la lógica del dispositivo a una clase dedicada GoveeService, utilidades modulares\nMejora de la cobertura de pruebas\nActualización de las dependencias",
+        "pl": "Zmienione: Przesunął całą logikę urządzenia do specjalnej klasy GoveeService, modularyzowane narzędzia\nLepszy zakres badań\nAktualizacja zależności",
+        "uk": "Рефактор: Переміщено всі логіку пристрою для виділеного класу GoveeService, модульовані утиліти\nПокращене покриття тесту\nЗалежність оновлено",
+        "zh-cn": "已重构 : 将所有设备逻辑移至专用的 GoveeService 类,模块化的公用事业\n提高测试覆盖率\n更新的依赖关系"
+      },
       "0.2.9": {
         "en": "update dependencies\nadd support for node 24\nupdate to ESlint 9",
         "de": "aktualisierung der abhängigkeiten\nunterstützung für knoten 24 hinzufügen\nupdate auf ESlint 9",
@@ -80,19 +93,6 @@
         "pl": "naprawić dostęp",
         "uk": "фіксувати доступ",
         "zh-cn": "固定访问"
-      },
-      "0.2.1": {
-        "en": "repair onOff / all other actions Fixes: #65\nfix log spamming because of wildcard",
-        "de": "reparatur onOff / alle anderen Aktionen Behebungen: #65\nprotokoll spamming wegen wildcard",
-        "ru": "ремонт onOff / все другие действия Исправления: #65\nисправить спамирование лога из-за дикой карты",
-        "pt": "reparação emOff / todas as outras ações Correções: #65 #\ncorrigir spam de log por causa do wildcard",
-        "nl": "vertaling: Vertaling: 65\nvertaling:",
-        "fr": "réparation onOff / toutes les autres actions Fixes: #65\ncorriger l'éblouissement du journal à cause de wildcard",
-        "it": "riparazione onOff / tutte le altre azioni Fissi: #65\nsistemare il log spamming a causa di jolly",
-        "es": "reparación onOff / todas las demás acciones Arreglos: #65\nfijar registro de spam debido a wildcard",
-        "pl": "remontowanie Off / wszystkie inne działania Fiksy #65\nusunąć z powodu dzikiej karty",
-        "uk": "ремонт наОфф / всі інші дії Виправлення: #65\nфіксація спамерування колод через дикийкарт",
-        "zh-cn": "b. 修理效率/所有其他行动 固定: #65\nfix 由于野生素卡的投机"
       }
     },
     "titleLang": {
@@ -150,12 +150,12 @@
     },
     "dependencies": [
       {
-  "js-controller": ">=6.0.11"
+        "js-controller": ">=6.0.11"
       }
     ],
     "globalDependencies": [
       {
-  "admin": ">=7.6.17"
+        "admin": ">=7.6.17"
       }
     ]
   },

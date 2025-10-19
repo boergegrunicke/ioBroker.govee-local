@@ -67,11 +67,8 @@ export class GoveeService extends EventEmitter {
 	static readonly SEND_SCAN_PORT = 4001;
 	static readonly CONTROL_PORT = 4003;
 	static readonly M_CAST = '239.255.255.250';
-	/** Network interface to bind UDP socket to. */
 	static readonly scanMessage = { msg: { cmd: 'scan', data: { account_topic: 'reserved' } } };
-	/** Interval in seconds for device search. */
 	static readonly requestStatusMessage = { msg: { cmd: 'devStatus', data: {} } };
-	/** Interval in seconds for device status refresh. */
 
 	/**
 	 * Create a new GoveeService instance.
@@ -120,7 +117,6 @@ export class GoveeService extends EventEmitter {
 	 * @param remote The sender info.
 	 */
 	private onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): void {
-		this.options.logger?.debug(`UDP message from ${remote.address}:${remote.port} - ${message.toString()}`);
 		const messageObject = JSON.parse(message.toString());
 		switch (messageObject.msg.cmd) {
 			case 'scan': {
@@ -149,7 +145,7 @@ export class GoveeService extends EventEmitter {
 				break;
 			}
 			default: {
-				this.options.logger?.error(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
+				this.options.logger?.debug(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
 			}
 		}
 	}

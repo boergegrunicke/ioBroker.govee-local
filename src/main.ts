@@ -5,8 +5,16 @@
 import * as utils from '@iobroker/adapter-core';
 import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
 
+/**
+ * The adapter class.
+ */
 export class GoveeLocal extends utils.Adapter {
 	private goveeService!: GoveeService;
+	/**
+	 * Constructor of the adapter class.
+	 *
+	 * @param options Optional adapter options to override defaults.
+	 */
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
 			...options,

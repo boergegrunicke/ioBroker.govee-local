@@ -145,7 +145,7 @@ export class GoveeService extends EventEmitter {
 				break;
 			}
 			default: {
-				this.options.logger?.debug(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
+				this.options.logger?.error(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
 			}
 		}
 	}
@@ -308,7 +308,13 @@ export class GoveeService extends EventEmitter {
 	 */
 	private emitDeviceStatusUpdate(deviceName: string, ip: string, messageObject: any): void {
 		const deviceData = messageObject.msg.data;
-		const colorString = `#${componentToHex(deviceData.color.r)}${componentToHex(deviceData.color.g)}${componentToHex(deviceData.color.b)}`;
+		let colorString = '#000000';
+		if (deviceData.color && typeof deviceData.color === 'object') {
+			const r = typeof deviceData.color.r === 'number' ? deviceData.color.r : 0;
+			const g = typeof deviceData.color.g === 'number' ? deviceData.color.g : 0;
+			const b = typeof deviceData.color.b === 'number' ? deviceData.color.b : 0;
+			colorString = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+		}
 
 		this.emit('deviceStatusUpdate', {
 			deviceName: deviceName,

@@ -274,36 +274,49 @@ describe('GoveeService', () => {
 	});
 
 	describe('Service Lifecycle', () => {
-		it('should transition service status correctly during start', () => {
+		it('should transition service status correctly during start', (done) => {
 			const statusUpdates: string[] = [];
+			let finished = false;
 			service.on('serviceStatusUpdate', (data) => {
 				statusUpdates.push(data.status);
+				if (!finished && statusUpdates.includes('starting') && statusUpdates.includes('running')) {
+					finished = true;
+					expect(statusUpdates).to.include('starting');
+					expect(statusUpdates).to.include('running');
+					done();
+				}
 			});
-
 			service.start();
-
-			expect(statusUpdates).to.include('starting');
-			expect(statusUpdates).to.include('running');
 		});
 
-		it('should handle start/stop cycles', () => {
+		it('should handle start/stop cycles', (done) => {
+			let statusCount = 0;
+			service.on('serviceStatusUpdate', (data) => {
+				if (data.status === 'running') {
+					statusCount++;
+					if (statusCount === 1) {
+						service.stop();
+					} else if (statusCount === 2) {
+						expect((service as any).serviceStatus).to.equal('running');
+						done();
+					}
+				}
+				if (data.status === 'stopped' && statusCount === 1) {
+					service.start();
+				}
+			});
 			service.start();
-			expect((service as any).serviceStatus).to.equal('running');
-
-			service.stop();
-			expect((service as any).serviceStatus).to.equal('stopped');
-
-			// Should be able to start again
-			service.start();
-			expect((service as any).serviceStatus).to.equal('running');
 		});
 
-		it('should clean up resources on stop', () => {
+		it('should clean up resources on stop', (done) => {
+			service.on('serviceStatusUpdate', (data) => {
+				if (data.status === 'stopped') {
+					expect((service as any).socket).to.be.null;
+					expect((service as any).serviceStatus).to.equal('stopped');
+					done();
+				}
+			});
 			service.stop();
-
-			expect((service as any).udpSocket).to.be.null;
-			expect((service as any).multicastSocket).to.be.null;
-			expect((service as any).serviceStatus).to.equal('stopped');
 		});
 
 		it('should set error status on socket binding failure', () => {

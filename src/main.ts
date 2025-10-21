@@ -239,10 +239,9 @@ export class GoveeLocal extends utils.Adapter {
 	}
 }
 
-if (require.main !== module) {
-	// Exportiere eine Factory-Funktion für ioBroker, aber die Klasse ist jetzt auch als ES6-Export verfügbar
-	module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
-} else {
+export default (options: Partial<utils.AdapterOptions> | undefined): GoveeLocal => new GoveeLocal(options);
+
+if (require.main === module) {
 	// otherwise start the instance directly
 	(() => new GoveeLocal())();
 }

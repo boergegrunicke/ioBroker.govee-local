@@ -28,8 +28,10 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var main_exports = {};
 __export(main_exports, {
+
   GoveeLocal: () => GoveeLocal,
   default: () => main_default
+
 });
 module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
@@ -237,6 +239,7 @@ class GoveeLocal extends utils.Adapter {
 }
 var main_default = (options) => new GoveeLocal(options);
 if (require.main === module) {
+
   (() => new GoveeLocal())();
 }
 // Annotate the CommonJS export names for ESM import in node:

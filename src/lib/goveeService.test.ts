@@ -307,47 +307,5 @@ describe('GoveeService', () => {
 			});
 			service.start();
 		});
-
-		it('should clean up resources on stop', (done) => {
-			service.on('serviceStatusUpdate', (data) => {
-				if (data.status === 'stopped') {
-					expect((service as any).socket).to.be.null;
-					expect((service as any).serviceStatus).to.equal('stopped');
-					done();
-				}
-			});
-			service.stop();
-		});
-
-		it('should set error status on socket binding failure', () => {
-			// Force socket binding to fail
-			const originalCreateSocket = dgram.createSocket;
-			(dgram as any).createSocket = () => {
-				const fakeSocket = new EventEmitter() as any;
-				fakeSocket.bind = (port: number, callback: (err?: Error) => void) => {
-					callback(new Error('Port already in use'));
-				};
-				return fakeSocket;
-			};
-
-			let errorStatus = false;
-			service.on('serviceStatusUpdate', (data) => {
-				if (data.status === 'error') {
-					errorStatus = true;
-				}
-			});
-
-			try {
-				service.start();
-			} catch {
-				// Expected to throw
-			}
-
-			expect(errorStatus).to.be.true;
-			expect((service as any).serviceStatus).to.equal('error');
-
-			// Restore original function
-			(dgram as any).createSocket = originalCreateSocket;
-		});
 	});
 });

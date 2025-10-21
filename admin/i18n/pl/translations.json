@@ -5,5 +5,11 @@
     "_configDescription": "Nie ma nic obowiązkowego do skonfigurowania. Zmień interwały tylko wtedy, gdy jesteś pewien, że tego właśnie potrzebujesz",
     "_extendedLoggingDescription": "Rozszerzone rejestrowanie drukuje wszystkie dane otrzymane przez urządzenie w dzienniku z informacjami o poziomie. Ponieważ powoduje to powstawanie ogromnego spamu w dziennikach, zaleca się włączenie tej opcji tylko w razie potrzeby, a następnie wyłączenie jej ponownie.",
     "_extendedLogging": "Włączono rozszerzone rejestrowanie",
-    "_networkInterface": "Interfejs sieciowy"
+    "_networkInterface": "Interfejs sieciowy",
+    "datapoint.model": "Konkretny model lampy",
+    "datapoint.ip": "Adres IP Lampy",
+    "datapoint.bleVersionHard": "Wersja sprzętu Bluetooth o niskim zużyciu energii",
+    "datapoint.bleVersionSoft": "Wersja oprogramowania Bluetooth Low Energy",
+    "datapoint.wifiVersionHard": "Wersja sprzętu Wi-Fi",
+    "datapoint.wifiVersionSoft": "Wersja oprogramowania Wi-Fi"
 }

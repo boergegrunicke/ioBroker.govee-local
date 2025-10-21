@@ -5,5 +5,11 @@
     "_configDescription": "Não há nada obrigatório para configurar. Por favor, altere os intervalos somente quando tiver certeza de que é isso que você precisa",
     "_extendedLoggingDescription": "O Extended Logging imprime todos os dados recebidos pelo dispositivo no log com informações de nível. Como isso produz um grande spam de log, é recomendável ativá-lo somente quando necessário e desligá-lo novamente depois.",
     "_extendedLogging": "Registro estendido ativado",
-    "_networkInterface": "Interface de rede"
+    "_networkInterface": "Interface de rede",
+    "datapoint.model": "Modelo específico da Lâmpada",
+    "datapoint.ip": "Endereço IP da lâmpada",
+    "datapoint.bleVersionHard": "Versão de hardware Bluetooth de baixo consumo de energia",
+    "datapoint.bleVersionSoft": "Versão do software Bluetooth de baixo consumo de energia",
+    "datapoint.wifiVersionHard": "Versão de hardware WiFi",
+    "datapoint.wifiVersionSoft": "Versão do software Wi-Fi"
 }

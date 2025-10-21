@@ -5,5 +5,11 @@
     "_configDescription": "Non c'è nulla di obbligatorio da configurare. Si prega di modificare gli intervalli solo quando si è sicuri che questo è ciò di cui si ha bisogno",
     "_extendedLoggingDescription": "La registrazione estesa stampa tutti i dati ricevuti dal dispositivo nel registro con le informazioni sul livello. Poiché ciò produce un enorme spam nei registri, si consiglia di attivarlo solo quando necessario e di disattivarlo nuovamente in seguito.",
     "_extendedLogging": "Registrazione estesa abilitata",
-    "_networkInterface": "Interfaccia di rete"
+    "_networkInterface": "Interfaccia di rete",
+    "datapoint.model": "Modello specifico della Lampada",
+    "datapoint.ip": "Indirizzo IP della Lampada",
+    "datapoint.bleVersionHard": "Versione hardware Bluetooth a basso consumo energetico",
+    "datapoint.bleVersionSoft": "Versione del software Bluetooth a basso consumo energetico",
+    "datapoint.wifiVersionHard": "Versione hardware Wi-Fi",
+    "datapoint.wifiVersionSoft": "Versione del software Wi-Fi"
 }

@@ -82,7 +82,7 @@
 		},
 		"manualIpTable": {
 			"type": "chips",
-			"label": "Manual IP Addresses",
+			"label": "_manualIpAddresses",
 			"xs": 12
 		},
 		"loggingHeader": {

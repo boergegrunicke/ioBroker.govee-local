@@ -7,6 +7,7 @@
 	"_extendedLogging": "Erweiterte Protokollierung aktiviert",
 	"_networkInterface": "Netzwerkschnittstelle",
 	"_networkHint": "Windows-Nutzer: Sie müssen eventuell Ihre IP-Adresse manuell auswählen, da das Lauschen auf allen Schnittstellen unter Umständen nicht zuverlässig funktioniert.",
+	"_manualIpAddresses": "Manuelle IP-Adressen",
 	"datapoint.model": "Spezifisches Modell der Lampe",
 	"datapoint.ip": "IP-Adresse der Lampe",
 	"datapoint.bleVersionHard": "Bluetooth Low Energy Hardware-Version",

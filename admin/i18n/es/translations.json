@@ -12,5 +12,6 @@
     "datapoint.bleVersionSoft": "Versión del software Bluetooth de bajo consumo de energía",
     "datapoint.wifiVersionHard": "Versión de hardware WiFi",
     "datapoint.wifiVersionSoft": "Versión del software WiFi",
-    "_networkHint": "Usuarios de Windows: es posible que deban seleccionar su dirección IP manualmente, ya que escuchar en todas las interfaces puede no funcionar de manera confiable."
+    "_networkHint": "Usuarios de Windows: es posible que deban seleccionar su dirección IP manualmente, ya que escuchar en todas las interfaces puede no funcionar de manera confiable.",
+    "_manualIpAddresses": "Direcciones IP manuales"
 }

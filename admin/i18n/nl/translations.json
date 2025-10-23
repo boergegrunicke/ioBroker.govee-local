@@ -12,5 +12,6 @@
     "datapoint.bleVersionSoft": "Bluetooth Low Energy-softwareversie",
     "datapoint.wifiVersionHard": "WiFi-hardwareversie",
     "datapoint.wifiVersionSoft": "WiFi-softwareversie",
-    "_networkHint": "Windows-gebruikers: Mogelijk moet u uw IP-adres handmatig selecteren, omdat het luisteren op alle interfaces mogelijk niet betrouwbaar werkt."
+    "_networkHint": "Windows-gebruikers: Mogelijk moet u uw IP-adres handmatig selecteren, omdat het luisteren op alle interfaces mogelijk niet betrouwbaar werkt.",
+    "_manualIpAddresses": "Handmatige IP-adressen"
 }

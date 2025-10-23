@@ -13,5 +13,7 @@
     "datapoint.wifiVersionHard": "WiFi硬件版本",
     "datapoint.wifiVersionSoft": "WiFi软件版本",
     "_networkHint": "Windows 用户：您可能需要手动选择 IP 地址，因为侦听所有接口可能无法可靠地工作。",
-    "_manualIpAddresses": "手动 IP 地址"
+    "_manualIpAddresses": "手动 IP 地址",
+    "_manualIpHint": "您可以在此处为未自动发现的设备添加 IP 地址。",
+    "_disableAutoDiscovery": "禁用自动发现"
 }

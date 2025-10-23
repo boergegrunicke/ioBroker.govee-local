@@ -13,5 +13,7 @@
     "datapoint.wifiVersionHard": "WiFi-hardwareversie",
     "datapoint.wifiVersionSoft": "WiFi-softwareversie",
     "_networkHint": "Windows-gebruikers: Mogelijk moet u uw IP-adres handmatig selecteren, omdat het luisteren op alle interfaces mogelijk niet betrouwbaar werkt.",
-    "_manualIpAddresses": "Handmatige IP-adressen"
+    "_manualIpAddresses": "Handmatige IP-adressen",
+    "_manualIpHint": "U kunt hier IP-adressen toevoegen voor apparaten die niet automatisch zijn ontdekt.",
+    "_disableAutoDiscovery": "Schakel automatische detectie uit"
 }

@@ -72,8 +72,13 @@
 		},
 		"manualIpHeader": {
 			"type": "header",
-			"text": "Manual IP Addresses",
+			"text": "_manualIpAddresses",
 			"size": 2,
+			"xs": 12
+		},
+		"manualIpHint": {
+			"type": "staticText",
+			"text": "_manualIpHint",
 			"xs": 12
 		},
 		"manualIpDivider": {
@@ -83,6 +88,12 @@
 		"manualIpTable": {
 			"type": "chips",
 			"label": "_manualIpAddresses",
+			"xs": 12
+		},
+		"disableAutoDiscovery": {
+			"type": "checkbox",
+			"label": "_disableAutoDiscovery",
+			"default": false,
 			"xs": 12
 		},
 		"loggingHeader": {

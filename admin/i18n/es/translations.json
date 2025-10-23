@@ -13,5 +13,7 @@
     "datapoint.wifiVersionHard": "Versión de hardware WiFi",
     "datapoint.wifiVersionSoft": "Versión del software WiFi",
     "_networkHint": "Usuarios de Windows: es posible que deban seleccionar su dirección IP manualmente, ya que escuchar en todas las interfaces puede no funcionar de manera confiable.",
-    "_manualIpAddresses": "Direcciones IP manuales"
+    "_manualIpAddresses": "Direcciones IP manuales",
+    "_manualIpHint": "Puede agregar direcciones IP aquí para dispositivos que no fueron descubiertos automáticamente.",
+    "_disableAutoDiscovery": "Desactivar el descubrimiento automático"
 }

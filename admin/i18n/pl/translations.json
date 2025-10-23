@@ -13,5 +13,7 @@
     "datapoint.wifiVersionHard": "Wersja sprzętu Wi-Fi",
     "datapoint.wifiVersionSoft": "Wersja oprogramowania Wi-Fi",
     "_networkHint": "Użytkownicy systemu Windows: Może być konieczne ręczne wybranie adresu IP, ponieważ nasłuchiwanie na wszystkich interfejsach może nie działać niezawodnie.",
-    "_manualIpAddresses": "Ręczne adresy IP"
+    "_manualIpAddresses": "Ręczne adresy IP",
+    "_manualIpHint": "Możesz tutaj dodać adresy IP dla urządzeń, które nie zostały automatycznie wykryte.",
+    "_disableAutoDiscovery": "Wyłącz automatyczne wykrywanie"
 }

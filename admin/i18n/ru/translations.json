@@ -11,5 +11,6 @@
     "datapoint.bleVersionHard": "Аппаратная версия Bluetooth с низким энергопотреблением",
     "datapoint.bleVersionSoft": "Версия программного обеспечения Bluetooth с низким энергопотреблением",
     "datapoint.wifiVersionHard": "Версия оборудования Wi-Fi",
-    "datapoint.wifiVersionSoft": "Версия программного обеспечения Wi-Fi"
+    "datapoint.wifiVersionSoft": "Версия программного обеспечения Wi-Fi",
+    "_networkHint": "Пользователи Windows: возможно, вам придется выбрать IP-адрес вручную, поскольку прослушивание всех интерфейсов может работать ненадежно."
 }

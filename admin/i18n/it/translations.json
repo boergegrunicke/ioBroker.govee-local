@@ -11,5 +11,6 @@
     "datapoint.bleVersionHard": "Versione hardware Bluetooth a basso consumo energetico",
     "datapoint.bleVersionSoft": "Versione del software Bluetooth a basso consumo energetico",
     "datapoint.wifiVersionHard": "Versione hardware Wi-Fi",
-    "datapoint.wifiVersionSoft": "Versione del software Wi-Fi"
+    "datapoint.wifiVersionSoft": "Versione del software Wi-Fi",
+    "_networkHint": "Utenti Windows: potrebbe essere necessario selezionare manualmente il proprio indirizzo IP, poiché l'ascolto su tutte le interfacce potrebbe non funzionare in modo affidabile."
 }

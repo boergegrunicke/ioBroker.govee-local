@@ -62,6 +62,8 @@ export class GoveeService extends EventEmitter {
 	private loggedDevices: string[] = [];
 	private searchInterval?: NodeJS.Timeout;
 	private refreshInterval?: NodeJS.Timeout;
+	private serviceStatus?: string;
+	private multicastSocket?: dgram.Socket | null;
 
 	static readonly LOCAL_PORT = 4002;
 	static readonly SEND_SCAN_PORT = 4001;
@@ -85,14 +87,20 @@ export class GoveeService extends EventEmitter {
 	 * Bind UDP socket and start device search/refresh intervals.
 	 */
 	public start(): void {
+		if (!this.socket) {
+			this.socket = dgram.createSocket({ type: 'udp4' });
+		}
+		this.serviceStatus = 'starting';
+		this.emit('serviceStatusUpdate', { status: 'starting' });
 		this.socket.on('message', this.onUdpMessage.bind(this));
 		this.socket.on('error', (error) => {
 			this.options.logger?.error(`server bind error : ${error.message}`);
 		});
-		this.socket.bind(
-			{ address: this.options.interface, port: GoveeService.LOCAL_PORT },
-			this.serverBound.bind(this),
-		);
+		this.socket.bind({ address: this.options.interface, port: GoveeService.LOCAL_PORT }, () => {
+			this.serverBound();
+			this.serviceStatus = 'running';
+			this.emit('serviceStatusUpdate', { status: 'running' });
+		});
 	}
 
 	private serverBound(): void {
@@ -145,7 +153,7 @@ export class GoveeService extends EventEmitter {
 				break;
 			}
 			default: {
-				this.options.logger?.debug(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
+				this.options.logger?.error(`message from: ${remote.address}:${remote.port} - ${message.toString()}`);
 			}
 		}
 	}
@@ -196,11 +204,19 @@ export class GoveeService extends EventEmitter {
 	public stop(): void {
 		if (this.searchInterval) {
 			clearInterval(this.searchInterval);
+			this.searchInterval = undefined;
 		}
 		if (this.refreshInterval) {
 			clearInterval(this.refreshInterval);
+			this.refreshInterval = undefined;
 		}
-		this.socket.close();
+		if (this.socket) {
+			this.socket.close();
+			this.socket = null as any;
+		}
+		this.serviceStatus = 'stopped';
+		this.emit('serviceStatusUpdate', { status: 'stopped' });
+		this.multicastSocket = null as any;
 	}
 
 	/**
@@ -308,7 +324,13 @@ export class GoveeService extends EventEmitter {
 	 */
 	private emitDeviceStatusUpdate(deviceName: string, ip: string, messageObject: any): void {
 		const deviceData = messageObject.msg.data;
-		const colorString = `#${componentToHex(deviceData.color.r)}${componentToHex(deviceData.color.g)}${componentToHex(deviceData.color.b)}`;
+		let colorString = '#000000';
+		if (deviceData.color && typeof deviceData.color === 'object') {
+			const r = typeof deviceData.color.r === 'number' ? deviceData.color.r : 0;
+			const g = typeof deviceData.color.g === 'number' ? deviceData.color.g : 0;
+			const b = typeof deviceData.color.b === 'number' ? deviceData.color.b : 0;
+			colorString = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+		}
 
 		this.emit('deviceStatusUpdate', {
 			deviceName: deviceName,

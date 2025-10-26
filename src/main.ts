@@ -113,7 +113,7 @@ export class GoveeLocal extends utils.Adapter {
 
 	private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
 		const currentState = await this.getStateAsync(fullName);
-		if (currentState != state) {
+		if (currentState?.val !== state) {
 			void this.setState(fullName, {
 				val: state,
 				ack: acknowledged,

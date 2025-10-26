@@ -20,6 +20,10 @@ export function getDatapointDescription(name: string): string {
 		case 'wifiVersionSoft':
 			return 'WiFi Software Version';
 		default:
+			// Log unknown datapoints for easier debugging
+			if (process.env.NODE_ENV !== 'production') {
+				console.debug(`[datapointTools] Unknown datapoint: ${name}`);
+			}
 			return '';
 	}
 }

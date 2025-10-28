@@ -6,12 +6,14 @@ import * as utils from '@iobroker/adapter-core';
 import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
 
 /**
- * The adapter class.
+ * Main adapter class for ioBroker Govee Local.
+ * Handles initialization, event wiring, and communication with GoveeService.
  */
 export class GoveeLocal extends utils.Adapter {
+	/** Instance of GoveeService for device communication */
 	private goveeService!: GoveeService;
 	/**
-	 * Constructor of the adapter class.
+	 * Adapter constructor. Registers lifecycle event handlers.
 	 *
 	 * @param options Optional adapter options to override defaults.
 	 */
@@ -20,17 +22,21 @@ export class GoveeLocal extends utils.Adapter {
 			...options,
 			name: 'govee-local',
 		});
+		// Register event handlers for adapter lifecycle
 		this.on('ready', this.onReady.bind(this));
 		this.on('stateChange', this.onStateChange.bind(this));
+		// Uncomment if you want to handle object changes or messages:
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		// this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 	}
 
 	/**
-	 * Is called when databases are connected and adapter received configuration.
+	 * Called when databases are connected and adapter received configuration.
+	 * Initializes GoveeService and sets up event listeners for device events.
 	 */
 	private async onReady(): Promise<void> {
+		// Create connection indicator state if it doesn't exist
 		void this.setObjectNotExists('info.connection', {
 			type: 'state',
 			common: {
@@ -56,7 +62,7 @@ export class GoveeLocal extends utils.Adapter {
 			},
 		});
 
-		// Set up event listeners
+		// Listen for device discovery and status update events
 		this.goveeService.on('deviceDiscovered', (data) => {
 			void this.handleDeviceDiscovered(data);
 		});
@@ -64,27 +70,32 @@ export class GoveeLocal extends utils.Adapter {
 		this.goveeService.on('deviceStatusUpdate', (data) => {
 			void this.handleDeviceStatusUpdate(data);
 		});
+		// Start device discovery and status polling
 		this.goveeService.start();
 
 		if (this.config.extendedLogging) {
 			this.log.debug('running with extended logging');
 		}
 
+		// Subscribe to all device status state changes
 		void this.subscribeStates('*.devStatus.*');
 		return Promise.resolve();
 	}
 
 	/**
-	 * Is called if a subscribed state changes
+	 * Called if a subscribed state changes (e.g. user toggles a switch in ioBroker UI).
+	 * Forwards the change to the GoveeService for device communication.
 	 *
 	 * @param id The ID of the changed state.
 	 * @param state The new state object or null/undefined.
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
 		if (state && !state.ack) {
+			// Extract device name from state ID and get its IP address
 			const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
 			const receiver = ipOfDevice?.val?.toString();
 			if (typeof receiver === 'string') {
+				// Forward the state change to the GoveeService
 				this.goveeService.handleStateChange(id, state, receiver);
 			} else {
 				this.log.error('device not found or IP is not a string');
@@ -93,7 +104,7 @@ export class GoveeLocal extends utils.Adapter {
 		return Promise.resolve();
 	}
 	/**
-	 * Called when adapter shuts down - callback must be called under any circumstances!
+	 * Called when the adapter shuts down. Cleans up resources and stops services.
 	 *
 	 * @param callback Callback function after unload process.
 	 */
@@ -103,6 +114,7 @@ export class GoveeLocal extends utils.Adapter {
 				this.goveeService.removeAllListeners();
 				this.goveeService.stop();
 			}
+			// Set connection state to false
 			void this.updateStateAsync('info.connection', false);
 			callback();
 		} catch (e: any) {
@@ -111,6 +123,13 @@ export class GoveeLocal extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * Updates a state only if the value has changed.
+	 *
+	 * @param fullName Full object path
+	 * @param state New value
+	 * @param acknowledged Whether the value is acknowledged (default: true)
+	 */
 	private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
 		const currentState = await this.getStateAsync(fullName);
 		if (currentState?.val !== state) {
@@ -122,7 +141,8 @@ export class GoveeLocal extends utils.Adapter {
 	}
 
 	/**
-	 * Handle device discovery event.
+	 * Handles device discovery event from GoveeService.
+	 * Creates all necessary objects and states for the new device.
 	 *
 	 * @param event The device discovery event data.
 	 */
@@ -174,7 +194,8 @@ export class GoveeLocal extends utils.Adapter {
 	}
 
 	/**
-	 * Handle device status update event.
+	 * Handles device status update event from GoveeService.
+	 * Creates and updates all relevant states for the device.
 	 *
 	 * @param event The device status update event data.
 	 */
@@ -239,10 +260,11 @@ export class GoveeLocal extends utils.Adapter {
 	}
 }
 
+// Export factory function for ioBroker or start instance directly
 if (require.main !== module) {
-	// Exportiere eine Factory-Funktion für ioBroker, aber die Klasse ist jetzt auch als ES6-Export verfügbar
+	// Export factory function for ioBroker, also available as ES6 export
 	module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
 } else {
-	// otherwise start the instance directly
+	// Otherwise start the instance directly
 	(() => new GoveeLocal())();
 }

@@ -34,9 +34,10 @@ module.exports = __toCommonJS(main_exports);
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_goveeService = require("./lib/goveeService");
 class GoveeLocal extends utils.Adapter {
+  /** Instance of GoveeService for device communication */
   goveeService;
   /**
-   * Constructor of the adapter class.
+   * Adapter constructor. Registers lifecycle event handlers.
    *
    * @param options Optional adapter options to override defaults.
    */
@@ -50,7 +51,8 @@ class GoveeLocal extends utils.Adapter {
     this.on("unload", this.onUnload.bind(this));
   }
   /**
-   * Is called when databases are connected and adapter received configuration.
+   * Called when databases are connected and adapter received configuration.
+   * Initializes GoveeService and sets up event listeners for device events.
    */
   async onReady() {
     void this.setObjectNotExists("info.connection", {
@@ -90,7 +92,8 @@ class GoveeLocal extends utils.Adapter {
     return Promise.resolve();
   }
   /**
-   * Is called if a subscribed state changes
+   * Called if a subscribed state changes (e.g. user toggles a switch in ioBroker UI).
+   * Forwards the change to the GoveeService for device communication.
    *
    * @param id The ID of the changed state.
    * @param state The new state object or null/undefined.
@@ -109,7 +112,7 @@ class GoveeLocal extends utils.Adapter {
     return Promise.resolve();
   }
   /**
-   * Called when adapter shuts down - callback must be called under any circumstances!
+   * Called when the adapter shuts down. Cleans up resources and stops services.
    *
    * @param callback Callback function after unload process.
    */
@@ -126,9 +129,16 @@ class GoveeLocal extends utils.Adapter {
       callback();
     }
   }
+  /**
+   * Updates a state only if the value has changed.
+   *
+   * @param fullName Full object path
+   * @param state New value
+   * @param acknowledged Whether the value is acknowledged (default: true)
+   */
   async updateStateAsync(fullName, state, acknowledged = true) {
     const currentState = await this.getStateAsync(fullName);
-    if (currentState != state) {
+    if ((currentState == null ? void 0 : currentState.val) !== state) {
       void this.setState(fullName, {
         val: state,
         ack: acknowledged
@@ -136,7 +146,8 @@ class GoveeLocal extends utils.Adapter {
     }
   }
   /**
-   * Handle device discovery event.
+   * Handles device discovery event from GoveeService.
+   * Creates all necessary objects and states for the new device.
    *
    * @param event The device discovery event data.
    */
@@ -178,7 +189,8 @@ class GoveeLocal extends utils.Adapter {
     this.log.info(`Device discovered: ${deviceName} at ${ip}`);
   }
   /**
-   * Handle device status update event.
+   * Handles device status update event from GoveeService.
+   * Creates and updates all relevant states for the device.
    *
    * @param event The device status update event data.
    */

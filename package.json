@@ -42,7 +42,7 @@
     "@types/proxyquire": "^1.3.31",
     "@types/sinon": "^17.0.4",
     "@types/sinon-chai": "^3.2.12",
-    "chai": "^6.0.1",
+    "chai": "^6.2.0",
     "chai-as-promised": "^8.0.2",
     "eslint": "^9.34.0",
     "mocha": "^11.7.4",

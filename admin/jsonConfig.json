@@ -13,19 +13,6 @@
 			"text": "_networkHint",
 			"xs": 12
 		},
-		"networkDivider": {
-			"type": "divider",
-			"xs": 12
-		},
-		"_description": {
-			"type": "staticText",
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12,
-			"text": "_configDescription"
-		},
 		"interface": {
 			"type": "ip",
 			"listenOnAllPorts": true,
@@ -42,10 +29,6 @@
 			"type": "header",
 			"text": "Intervals",
 			"size": 2,
-			"xs": 12
-		},
-		"intervalsDivider": {
-			"type": "divider",
 			"xs": 12
 		},
 		"searchInterval": {
@@ -81,10 +64,6 @@
 			"text": "_manualIpHint",
 			"xs": 12
 		},
-		"manualIpDivider": {
-			"type": "divider",
-			"xs": 12
-		},
 		"manualIpTable": {
 			"type": "chips",
 			"label": "_manualIpAddresses",
@@ -100,10 +79,6 @@
 			"type": "header",
 			"text": "Logging",
 			"size": 2,
-			"xs": 12
-		},
-		"loggingDivider": {
-			"type": "divider",
 			"xs": 12
 		},
 		"_descriptionExtendedLogging": {

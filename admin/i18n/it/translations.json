@@ -15,5 +15,7 @@
     "_networkHint": "Utenti Windows: potrebbe essere necessario selezionare manualmente il proprio indirizzo IP, poiché l'ascolto su tutte le interfacce potrebbe non funzionare in modo affidabile.",
     "_manualIpAddresses": "Indirizzi IP manuali",
     "_manualIpHint": "Puoi aggiungere qui gli indirizzi IP per i dispositivi che non sono stati rilevati automaticamente.",
-    "_disableAutoDiscovery": "Disabilita il rilevamento automatico"
+    "_disableAutoDiscovery": "Disabilita il rilevamento automatico",
+    "_discoveredDevicesHint": "Tutti i dispositivi rilevati (auto e manuale) possono essere trovati in Oggetti → govee-local.0 → informazioni → discoverDevices",
+    "_discoveredDevices": "Dispositivi rilevati"
 }

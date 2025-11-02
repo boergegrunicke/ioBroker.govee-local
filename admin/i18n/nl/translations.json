@@ -15,5 +15,7 @@
     "_networkHint": "Windows-gebruikers: Mogelijk moet u uw IP-adres handmatig selecteren, omdat het luisteren op alle interfaces mogelijk niet betrouwbaar werkt.",
     "_manualIpAddresses": "Handmatige IP-adressen",
     "_manualIpHint": "U kunt hier IP-adressen toevoegen voor apparaten die niet automatisch zijn ontdekt.",
-    "_disableAutoDiscovery": "Schakel automatische detectie uit"
+    "_disableAutoDiscovery": "Schakel automatische detectie uit",
+    "_discoveredDevicesHint": "Alle ontdekte apparaten (automatisch en handmatig) zijn te vinden in Objecten → govee-local.0 → info → ontdekte apparaten",
+    "_discoveredDevices": "Ontdekte apparaten"
 }

@@ -30,6 +30,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 -   Updated translations for datapoint descriptions in all supported languages
 -   Refreshed and modernized the admin UI: clearer sections, manual IP address list, Windows hint, and option to disable auto-discovery
 -   Possibility to manually add devices via IP-Address and Option to disable auto discovery
+-   Save auto discovered devices in info datapoint and show in admin UI
 
 ### 0.3.1 (2025-10-19)
 

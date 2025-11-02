@@ -15,5 +15,7 @@
     "_networkHint": "Usuários do Windows: talvez seja necessário selecionar seu endereço IP manualmente, pois a escuta em todas as interfaces pode não funcionar de maneira confiável.",
     "_manualIpAddresses": "Endereços IP manuais",
     "_manualIpHint": "Você pode adicionar endereços IP aqui para dispositivos que não foram descobertos automaticamente.",
-    "_disableAutoDiscovery": "Desativar descoberta automática"
+    "_disableAutoDiscovery": "Desativar descoberta automática",
+    "_discoveredDevicesHint": "Todos os dispositivos descobertos (automáticos e manuais) podem ser encontrados em Objetos → govee-local.0 → informações → dispositivos descobertos",
+    "_discoveredDevices": "Dispositivos descobertos"
 }

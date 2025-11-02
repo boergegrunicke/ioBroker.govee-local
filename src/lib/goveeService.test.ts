@@ -394,7 +394,7 @@ describe('GoveeService', () => {
 
 		it('should request device status for manual devices', () => {
 			sinon.stub(service, 'requestDeviceStatus');
-			
+
 			const manualIps = ['192.168.1.50', '192.168.1.51'];
 			service.addManualDevices(manualIps);
 

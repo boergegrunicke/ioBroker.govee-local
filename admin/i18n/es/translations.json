@@ -15,5 +15,7 @@
     "_networkHint": "Usuarios de Windows: es posible que deban seleccionar su dirección IP manualmente, ya que escuchar en todas las interfaces puede no funcionar de manera confiable.",
     "_manualIpAddresses": "Direcciones IP manuales",
     "_manualIpHint": "Puede agregar direcciones IP aquí para dispositivos que no fueron descubiertos automáticamente.",
-    "_disableAutoDiscovery": "Desactivar el descubrimiento automático"
+    "_disableAutoDiscovery": "Desactivar el descubrimiento automático",
+    "_discoveredDevicesHint": "Todos los dispositivos descubiertos (automáticos y manuales) se pueden encontrar en Objetos → govee-local.0 → información → dispositivos descubiertos",
+    "_discoveredDevices": "Dispositivos descubiertos"
 }

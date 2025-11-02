@@ -66,6 +66,18 @@ class GoveeLocal extends utils.Adapter {
       },
       native: {}
     });
+    void this.setObjectNotExists("info.discoveredDevices", {
+      type: "state",
+      common: {
+        name: "List of discovered devices",
+        type: "string",
+        role: "json",
+        read: true,
+        write: false,
+        desc: "JSON object with IP addresses and device names of all discovered devices"
+      },
+      native: {}
+    });
     this.goveeService = new import_goveeService.GoveeService({
       interface: this.config.interface,
       searchInterval: this.config.searchInterval,
@@ -189,6 +201,17 @@ class GoveeLocal extends utils.Adapter {
       native: {}
     });
     this.log.info(`Device discovered: ${deviceName} at ${ip}`);
+    await this.updateDiscoveredDevicesList();
+  }
+  /**
+   * Updates the info.discoveredDevices state with the current list of all discovered devices.
+   */
+  async updateDiscoveredDevicesList() {
+    const devices = this.goveeService.getDevices();
+    await this.setStateAsync("info.discoveredDevices", {
+      val: JSON.stringify(devices, null, 2),
+      ack: true
+    });
   }
   /**
    * Handles device status update event from GoveeService.

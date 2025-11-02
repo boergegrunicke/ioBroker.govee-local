@@ -24,8 +24,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.4.0 (2025-11-02)
 
 -   Updated translations for datapoint descriptions in all supported languages
 -   Refreshed and modernized the admin UI: clearer sections, manual IP address list, Windows hint, and option to disable auto-discovery

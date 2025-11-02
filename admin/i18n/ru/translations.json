@@ -16,6 +16,6 @@
     "_manualIpAddresses": "IP-адреса вручную",
     "_manualIpHint": "Здесь вы можете добавить IP-адреса для устройств, которые не были обнаружены автоматически.",
     "_disableAutoDiscovery": "Отключить автоматическое обнаружение",
-    "_discoveredDevicesHint": "Все обнаруженные устройства (автоматические и ручные) можно найти в Objects → govee-local.0 → info → selectedDevices.",
+    "_discoveredDevicesHint": "Все обнаруженные устройства (автоматические и ручные) можно найти в Objects → govee-local.0 → info → discoveredDevices.",
     "_discoveredDevices": "Обнаруженные устройства"
 }

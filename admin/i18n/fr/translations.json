@@ -16,6 +16,6 @@
     "_manualIpAddresses": "Adresses IP manuelles",
     "_manualIpHint": "Vous pouvez ajouter ici des adresses IP pour les appareils qui n'ont pas été découverts automatiquement.",
     "_disableAutoDiscovery": "Désactiver la découverte automatique",
-    "_discoveredDevicesHint": "Tous les appareils découverts (auto et manuels) peuvent être trouvés dans Objets → govee-local.0 → info → découvertDevices",
+    "_discoveredDevicesHint": "Tous les appareils découverts (auto et manuels) peuvent être trouvés dans Objets → govee-local.0 → info → discoveredDevices",
     "_discoveredDevices": "Appareils découverts"
 }

@@ -16,6 +16,6 @@
     "_manualIpAddresses": "Ręczne adresy IP",
     "_manualIpHint": "Możesz tutaj dodać adresy IP dla urządzeń, które nie zostały automatycznie wykryte.",
     "_disableAutoDiscovery": "Wyłącz automatyczne wykrywanie",
-    "_discoveredDevicesHint": "Wszystkie wykryte urządzenia (automatyczne i ręczne) można znaleźć w Obiekty → govee-local.0 → info → foundDevices",
+    "_discoveredDevicesHint": "Wszystkie wykryte urządzenia (automatyczne i ręczne) można znaleźć w Obiekty → govee-local.0 → info → discoveredDevices",
     "_discoveredDevices": "Odkryte urządzenia"
 }

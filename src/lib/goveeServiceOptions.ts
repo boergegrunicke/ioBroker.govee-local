@@ -14,4 +14,8 @@ export interface GoveeServiceOptions {
 	forbiddenChars?: RegExp;
 	/** Logger object with debug/info/error methods. */
 	logger?: { debug: (msg: string) => void; info: (msg: string) => void; error: (msg: string) => void };
+	/** Array of manual IP addresses for devices that should be added without discovery. */
+	manualIpAddresses?: string[];
+	/** Disable automatic device discovery via multicast. */
+	disableAutoDiscovery?: boolean;
 }

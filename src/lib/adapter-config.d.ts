@@ -8,6 +8,8 @@ declare global {
 			deviceStatusRefreshInterval: number;
 			extendedLogging: boolean;
 			interface: string;
+			manualIpTable: string[];
+			disableAutoDiscovery: boolean;
 		}
 	}
 }

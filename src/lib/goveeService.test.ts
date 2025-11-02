@@ -337,4 +337,191 @@ describe('GoveeService', () => {
 			(dgram as any).createSocket = originalCreateSocket;
 		});
 	});
+
+	describe('Manual IP Configuration', () => {
+		it('should add manual devices on initialization', (done) => {
+			const manualIps = ['192.168.1.50', '192.168.1.51'];
+			options.manualIpAddresses = manualIps;
+			service = new GoveeService(options);
+
+			let discoveredCount = 0;
+			service.on('deviceDiscovered', (data) => {
+				discoveredCount++;
+				expect(manualIps).to.include(data.ip);
+				expect(data.deviceName).to.match(/^Manual_192_168_1_5[01]$/);
+
+				if (discoveredCount === manualIps.length) {
+					const devices = service.getDevices();
+					expect(devices['192.168.1.50']).to.equal('Manual_192_168_1_50');
+					expect(devices['192.168.1.51']).to.equal('Manual_192_168_1_51');
+					done();
+				}
+			});
+
+			// Stub socket methods to prevent actual network calls
+			sinon.stub((service as any).socket, 'send');
+			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
+				// Immediately call the callback to trigger serverBound
+				setImmediate(() => cb());
+			});
+			sinon.stub((service as any).socket, 'setBroadcast');
+			sinon.stub((service as any).socket, 'setMulticastTTL');
+			sinon.stub((service as any).socket, 'setMulticastInterface');
+			sinon.stub((service as any).socket, 'addMembership');
+			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+
+			service.start();
+		});
+
+		it('should skip empty IP addresses in manual configuration', () => {
+			const manualIps = ['192.168.1.50', '', '  ', '192.168.1.51'];
+			service.addManualDevices(manualIps);
+
+			const devices = service.getDevices();
+			expect(Object.keys(devices)).to.have.lengthOf(2);
+			expect(devices['192.168.1.50']).to.equal('Manual_192_168_1_50');
+			expect(devices['192.168.1.51']).to.equal('Manual_192_168_1_51');
+		});
+
+		it('should trim whitespace from manual IP addresses', () => {
+			const manualIps = ['  192.168.1.50  ', '\t192.168.1.51\n'];
+			service.addManualDevices(manualIps);
+
+			const devices = service.getDevices();
+			expect(devices['192.168.1.50']).to.equal('Manual_192_168_1_50');
+			expect(devices['192.168.1.51']).to.equal('Manual_192_168_1_51');
+		});
+
+		it('should request device status for manual devices', () => {
+			sinon.stub(service, 'requestDeviceStatus');
+			
+			const manualIps = ['192.168.1.50', '192.168.1.51'];
+			service.addManualDevices(manualIps);
+
+			expect((service.requestDeviceStatus as sinon.SinonStub).calledWith('192.168.1.50')).to.be.true;
+			expect((service.requestDeviceStatus as sinon.SinonStub).calledWith('192.168.1.51')).to.be.true;
+		});
+
+		it('should validate IP addresses and reject invalid ones', () => {
+			const invalidIps = [
+				'not-an-ip',
+				'999.999.999.999',
+				'192.168.1',
+				'192.168.1.256',
+				'hello world',
+				'192.168.1.1.1',
+				'abc.def.ghi.jkl',
+				'192.168.-1.1',
+				'',
+			];
+
+			service.addManualDevices(invalidIps);
+
+			const devices = service.getDevices();
+			expect(Object.keys(devices)).to.have.lengthOf(0);
+			expect(logger.error.called).to.be.true;
+		});
+
+		it('should accept valid IP addresses', () => {
+			const validIps = ['0.0.0.0', '192.168.1.1', '255.255.255.255', '10.0.0.1', '172.16.0.1'];
+
+			service.addManualDevices(validIps);
+
+			const devices = service.getDevices();
+			expect(Object.keys(devices)).to.have.lengthOf(validIps.length);
+		});
+
+		it('should filter out invalid IPs from mixed list', () => {
+			const mixedIps = ['192.168.1.50', 'invalid', '10.0.0.1', '999.999.999.999', '172.16.0.5'];
+
+			service.addManualDevices(mixedIps);
+
+			const devices = service.getDevices();
+			expect(Object.keys(devices)).to.have.lengthOf(3);
+			expect(devices['192.168.1.50']).to.equal('Manual_192_168_1_50');
+			expect(devices['10.0.0.1']).to.equal('Manual_10_0_0_1');
+			expect(devices['172.16.0.5']).to.equal('Manual_172_16_0_5');
+		});
+	});
+
+	describe('Auto-Discovery Toggle', () => {
+		it('should not start search interval when auto-discovery is disabled', (done) => {
+			options.disableAutoDiscovery = true;
+			service = new GoveeService(options);
+
+			// Stub socket methods
+			sinon.stub((service as any).socket, 'send');
+			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
+				setImmediate(() => cb());
+			});
+			sinon.stub((service as any).socket, 'setBroadcast');
+			sinon.stub((service as any).socket, 'setMulticastTTL');
+			sinon.stub((service as any).socket, 'setMulticastInterface');
+			sinon.stub((service as any).socket, 'addMembership');
+			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+
+			service.start();
+
+			setTimeout(() => {
+				expect((service as any).searchInterval).to.be.undefined;
+				expect(logger.info.calledWithMatch('Auto-discovery is disabled')).to.be.true;
+				done();
+			}, 100);
+		});
+
+		it('should start search interval when auto-discovery is not disabled', (done) => {
+			options.disableAutoDiscovery = false;
+			service = new GoveeService(options);
+
+			// Stub socket methods
+			sinon.stub((service as any).socket, 'send');
+			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
+				setImmediate(() => cb());
+			});
+			sinon.stub((service as any).socket, 'setBroadcast');
+			sinon.stub((service as any).socket, 'setMulticastTTL');
+			sinon.stub((service as any).socket, 'setMulticastInterface');
+			sinon.stub((service as any).socket, 'addMembership');
+			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+
+			service.start();
+
+			setTimeout(() => {
+				expect((service as any).searchInterval).to.not.be.undefined;
+				done();
+			}, 100);
+		});
+
+		it('should combine manual devices with auto-discovery when enabled', (done) => {
+			options.manualIpAddresses = ['192.168.1.50'];
+			options.disableAutoDiscovery = false;
+			service = new GoveeService(options);
+
+			let manualDeviceDiscovered = false;
+			service.on('deviceDiscovered', (data) => {
+				if (data.ip === '192.168.1.50') {
+					manualDeviceDiscovered = true;
+				}
+			});
+
+			// Stub socket methods
+			sinon.stub((service as any).socket, 'send');
+			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
+				setImmediate(() => cb());
+			});
+			sinon.stub((service as any).socket, 'setBroadcast');
+			sinon.stub((service as any).socket, 'setMulticastTTL');
+			sinon.stub((service as any).socket, 'setMulticastInterface');
+			sinon.stub((service as any).socket, 'addMembership');
+			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+
+			service.start();
+
+			setTimeout(() => {
+				expect(manualDeviceDiscovered).to.be.true;
+				expect((service as any).searchInterval).to.not.be.undefined;
+				done();
+			}, 100);
+		});
+	});
 });

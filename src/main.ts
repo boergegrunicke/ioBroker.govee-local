@@ -55,6 +55,8 @@ export class GoveeLocal extends utils.Adapter {
 			deviceStatusRefreshInterval: this.config.deviceStatusRefreshInterval,
 			extendedLogging: this.config.extendedLogging,
 			forbiddenChars: /[^a-zA-Z0-9_-]/g,
+			manualIpAddresses: this.config.manualIpTable,
+			disableAutoDiscovery: this.config.disableAutoDiscovery,
 			logger: {
 				debug: (msg) => this.log.debug(msg),
 				info: (msg) => this.log.info(msg),

@@ -1,0 +1,8 @@
+{
+	"esbuild": {
+		"logLevel": "warning",
+		"logOverride": {
+			"commonjs-variable-in-esm": "silent"
+		}
+	}
+}

@@ -1,6 +1,5 @@
 {
-	"esbuild": {
-		"logLevel": "warning",
+	"typescriptRaw": {
 		"logOverride": {
 			"commonjs-variable-in-esm": "silent"
 		}

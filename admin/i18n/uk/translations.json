@@ -15,5 +15,7 @@
     "_networkHint": "Користувачі Windows: можливо, вам доведеться вибрати свою IP-адресу вручну, оскільки прослуховування на всіх інтерфейсах може працювати ненадійно.",
     "_manualIpAddresses": "IP-адреси вручну",
     "_manualIpHint": "Тут можна додати IP-адреси для пристроїв, які не були виявлені автоматично.",
-    "_disableAutoDiscovery": "Вимкнути автоматичне виявлення"
+    "_disableAutoDiscovery": "Вимкнути автоматичне виявлення",
+    "_discoveredDevicesHint": "Усі виявлені пристрої (автоматичні та ручні) можна знайти в Objects → govee-local.0 → info → discoveredDevices",
+    "_discoveredDevices": "Виявлені пристрої"
 }

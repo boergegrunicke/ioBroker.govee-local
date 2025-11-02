@@ -7,6 +7,7 @@ import * as dgram from 'node:dgram';
 import { EventEmitter } from 'node:events';
 import type { GoveeServiceOptions } from './goveeServiceOptions';
 import { componentToHex, hexToRgb } from './tools/hexTool';
+import { isValidIpAddress } from './tools/ipValidation';
 
 /**
  * Device discovery event data.
@@ -103,7 +104,23 @@ export class GoveeService extends EventEmitter {
 		this.options.logger?.debug(
 			`UDP listening on ${(this.socket.address() as any).address}:${(this.socket.address() as any).port}`,
 		);
-		this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);
+
+		// Add manual IP addresses if provided
+		if (this.options.manualIpAddresses && this.options.manualIpAddresses.length > 0) {
+			this.addManualDevices(this.options.manualIpAddresses);
+			this.options.logger?.info(
+				`Added ${this.options.manualIpAddresses.length} manual device(s) from configuration.`,
+			);
+		}
+
+		// Only start auto-discovery if not disabled
+		if (!this.options.disableAutoDiscovery) {
+			this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);
+			this.options.logger?.info(`Auto-discovery started with interval ${this.options.searchInterval} seconds.`);
+		} else {
+			this.options.logger?.info('Auto-discovery is disabled. Only manual devices will be used.');
+		}
+
 		this.refreshInterval = setInterval(
 			() => this.refreshAllDevices(),
 			this.options.deviceStatusRefreshInterval * 1000,
@@ -188,6 +205,41 @@ export class GoveeService extends EventEmitter {
 			GoveeService.SEND_SCAN_PORT,
 			GoveeService.M_CAST,
 		);
+	}
+
+	/**
+	 * Add manual devices by IP address without discovery.
+	 * These devices will be added to the device list and can be controlled.
+	 *
+	 * @param ipAddresses Array of IP addresses to add as manual devices.
+	 */
+	public addManualDevices(ipAddresses: string[]): void {
+		for (const ip of ipAddresses) {
+			if (!ip || ip.trim().length === 0) {
+				continue;
+			}
+			const trimmedIp = ip.trim();
+
+			// Validate IP address format
+			if (!isValidIpAddress(trimmedIp)) {
+				this.options.logger?.error(`Invalid IP address format: "${trimmedIp}" - skipping this entry`);
+				continue;
+			}
+
+			// Generate a device name based on the IP address
+			const deviceName = `Manual_${trimmedIp.replace(/\./g, '_')}`;
+			this.devices[trimmedIp] = deviceName;
+			this.options.logger?.info(`Added manual device: ${deviceName} at ${trimmedIp}`);
+
+			// Emit discovery event for manual device
+			this.emit('deviceDiscovered', {
+				ip: trimmedIp,
+				deviceName: deviceName,
+			} as DeviceDiscoveryEvent);
+
+			// Request initial status
+			this.requestDeviceStatus(trimmedIp);
+		}
 	}
 
 	/**

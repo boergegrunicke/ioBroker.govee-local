@@ -64,6 +64,22 @@
 			"text": "_manualIpHint",
 			"xs": 12
 		},
+		"discoveredDevicesHint": {
+			"type": "staticText",
+			"text": "_discoveredDevicesHint",
+			"xs": 12,
+			"newLine": true
+		},
+		"discoveredDevicesState": {
+			"type": "state",
+			"oid": "info.discoveredDevices",
+			"system": true,
+			"control": "html",
+			"label": "_discoveredDevices",
+			"readOnly": true,
+			"xs": 12,
+			"newLine": true
+		},
 		"manualIpTable": {
 			"type": "chips",
 			"label": "_manualIpAddresses",

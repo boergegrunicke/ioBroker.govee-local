@@ -1,0 +1,7 @@
+{
+	"typescriptRaw": {
+		"logOverride": {
+			"commonjs-variable-in-esm": "silent"
+		}
+	}
+}

@@ -9,6 +9,8 @@
 	"_networkHint": "Windows-Nutzer: Sie müssen eventuell Ihre IP-Adresse manuell auswählen, da das Lauschen auf allen Schnittstellen unter Umständen nicht zuverlässig funktioniert.",
 	"_manualIpAddresses": "Manuelle IP-Adressen",
 	"_manualIpHint": "Hier können Sie IP-Adressen für Geräte eintragen, die nicht automatisch gefunden wurden.",
+	"_discoveredDevicesHint": "Alle gefundenen Geräte (automatisch und manuell) werden unten angezeigt:",
+	"_discoveredDevices": "Gefundene Geräte",
 	"_disableAutoDiscovery": "Automatische Suche deaktivieren",
 	"datapoint.model": "Spezifisches Modell der Lampe",
 	"datapoint.ip": "IP-Adresse der Lampe",

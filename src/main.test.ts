@@ -33,9 +33,13 @@ describe('GoveeLocal', () => {
 			extendedLogging: false,
 			searchInterval: 10,
 			deviceStatusRefreshInterval: 30,
+			manualIpTable: [],
+			disableAutoDiscovery: false,
 		};
 		expect(instance.config.interface).to.equal('127.0.0.1');
 		expect(instance.config.searchInterval).to.equal(10);
 		expect(instance.config.deviceStatusRefreshInterval).to.equal(30);
+		expect(instance.config.manualIpTable).to.deep.equal([]);
+		expect(instance.config.disableAutoDiscovery).to.equal(false);
 	});
 });

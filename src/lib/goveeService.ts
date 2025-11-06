@@ -113,18 +113,21 @@ export class GoveeService extends EventEmitter {
 			);
 		}
 
-		// Only start auto-discovery if not disabled
+		// Start auto-discovery if not disabled
 		if (!this.options.disableAutoDiscovery) {
 			this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);
-			this.options.logger?.info(`Auto-discovery started with interval ${this.options.searchInterval} seconds.`);
+			this.options.logger?.debug(`Auto-discovery started with interval ${this.options.searchInterval} seconds.`);
 		} else {
-			this.options.logger?.info('Auto-discovery is disabled. Only manual devices will be used.');
+			this.options.logger?.debug('Auto-discovery is disabled. Only manual devices will be used.');
 		}
 
 		this.refreshInterval = setInterval(
 			() => this.refreshAllDevices(),
 			this.options.deviceStatusRefreshInterval * 1000,
 		);
+
+		// Emit serviceStarted event after successful startup
+		this.emit('serviceStarted');
 	}
 
 	/**
@@ -196,7 +199,9 @@ export class GoveeService extends EventEmitter {
 	 * Send scan message to the UDP multicast address.
 	 */
 	public sendScan(): void {
-		this.options.logger?.debug('sending scan message');
+		if (this.options.extendedLogging) {
+			this.options.logger?.debug('sending scan message');
+		}
 		const scanMessageBuffer = Buffer.from(JSON.stringify(GoveeService.scanMessage));
 		this.socket.send(
 			scanMessageBuffer,
@@ -246,6 +251,7 @@ export class GoveeService extends EventEmitter {
 	 * Stop all intervals and close the socket.
 	 */
 	public stop(): void {
+		this.options.logger?.debug('Stopping GoveeService and closing UDP socket.');
 		if (this.searchInterval) {
 			clearInterval(this.searchInterval);
 		}

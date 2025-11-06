@@ -87,6 +87,12 @@ export class GoveeLocal extends utils.Adapter {
 		this.goveeService.on('deviceStatusUpdate', (data) => {
 			void this.handleDeviceStatusUpdate(data);
 		});
+
+		// Listen for serviceStarted event to set connection state to true
+		this.goveeService.on('serviceStarted', () => {
+			void this.setState('info.connection', { val: true, ack: true });
+		});
+
 		// Start device discovery and status polling
 		this.goveeService.start();
 

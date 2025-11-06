@@ -98,6 +98,9 @@ class GoveeLocal extends utils.Adapter {
     this.goveeService.on("deviceStatusUpdate", (data) => {
       void this.handleDeviceStatusUpdate(data);
     });
+    this.goveeService.on("serviceStarted", () => {
+      void this.setState("info.connection", { val: true, ack: true });
+    });
     this.goveeService.start();
     if (this.config.extendedLogging) {
       this.log.debug("running with extended logging");

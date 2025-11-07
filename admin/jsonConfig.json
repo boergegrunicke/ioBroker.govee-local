@@ -11,7 +11,11 @@
 		"networkHint": {
 			"type": "staticText",
 			"text": "_networkHint",
-			"xs": 12
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
 		},
 		"interface": {
 			"type": "ip",
@@ -62,12 +66,20 @@
 		"manualIpHint": {
 			"type": "staticText",
 			"text": "_manualIpHint",
-			"xs": 12
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
 		},
 		"discoveredDevicesHint": {
 			"type": "staticText",
 			"text": "_discoveredDevicesHint",
 			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12,
 			"newLine": true
 		},
 		"discoveredDevicesState": {
@@ -78,12 +90,20 @@
 			"label": "_discoveredDevices",
 			"readOnly": true,
 			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12,
 			"newLine": true
 		},
 		"manualIpTable": {
 			"type": "chips",
 			"label": "_manualIpAddresses",
-			"xs": 12
+			"xs": 12,
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"xl": 12
 		},
 		"disableAutoDiscovery": {
 			"type": "checkbox",

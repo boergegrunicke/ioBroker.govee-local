@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "news": {
+      "0.4.1": {
+        "en": "fix logging\nfix connection state",
+        "de": "fehlerbehebung\nbefestigungszustand",
+        "ru": "фиксировать лесозаготовки\nфиксировать состояние соединения",
+        "pt": "corrigir o registo\ncorrigir o estado da ligação",
+        "nl": "loggen herstellen\nfix verbindingstoestand",
+        "fr": "correction de l'enregistrement\nfixer l'état de connexion",
+        "it": "correggere la registrazione\ncorrezione dello stato di connessione",
+        "es": "corrección de registro\nestado de conexión",
+        "pl": "naprawić logowanie\nstan połączenia",
+        "uk": "фіксувати забір\nфіксувати стан з'єднання",
+        "zh-cn": "固定记录\n固定连接状态"
+      },
       "0.4.0": {
         "en": "Updated translations for datapoint descriptions in all supported languages\nRefreshed and modernized the admin UI: clearer sections, manual IP address list, Windows hint, and option to disable auto-discovery\nPossibility to manually add devices via IP-Address and Option to disable auto discovery\nSave auto discovered devices in info datapoint and show in admin UI",
         "de": "Aktualisierte Übersetzungen für Datapoint-Beschreibungen in allen unterstützten Sprachen\nErfrischt und modernisiert den Admin UI: klarere Abschnitte, manuelle IP-Adressenliste, Windows-Hinweis und Option, Auto-Entdeckung deaktivieren\nMöglichkeit, manuell Geräte über IP-Adresse und Option hinzuzufügen, um die automatische Entdeckung zu deaktivieren\nSpeichern Sie Auto entdeckte Geräte in Info-Datenpunkt und zeigen Sie in admin UI",
@@ -80,19 +93,6 @@
         "pl": "aktualizacji zależności rdzenia i min wymagana wersja węzła do 18",
         "uk": "оновлення основних залежностей і обов'язкової версії вершини до 18",
         "zh-cn": "将核心依赖和分钟需要的节点版本更新到 18"
-      },
-      "0.2.6": {
-        "en": "fix brightness change also changing white tmperature",
-        "de": "helligkeitsänderung auch ändern weiße tmperatur",
-        "ru": "исправить яркость изменения также изменение белое tmperature",
-        "pt": "corrigir a mudança de brilho também mudando a tintura branca",
-        "nl": "fix helderheid verandering ook het veranderen van witte tmperatuur",
-        "fr": "fixer le changement de luminosité aussi changer la morphologie blanche",
-        "it": "correzione cambiamento di luminosità anche cambiando la serratura bianca",
-        "es": "arreglar el cambio de brillo también cambiar la tmperatura blanca",
-        "pl": "naprawić zmianę jasności również zmieniając biały tmperature",
-        "uk": "зафіксувати яскравість зміни також змінюють білу мпературу",
-        "zh-cn": "固定亮度改变, 也改变白色温度"
       }
     },
     "titleLang": {

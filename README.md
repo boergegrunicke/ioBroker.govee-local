@@ -25,6 +25,10 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	### **WORK IN PROGRESS**
 -->
 
+### **WORK IN PROGRESS**
+
+- update dependecies
+
 ### 0.4.1 (2025-11-07)
 
 - fix logging

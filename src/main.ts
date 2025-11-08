@@ -170,13 +170,14 @@ export class GoveeLocal extends utils.Adapter {
 	 * @param event The device discovery event data.
 	 */
 	private async handleDeviceDiscovered(event: DeviceDiscoveryEvent): Promise<void> {
-		const { ip, deviceName } = event;
+		const { ip, deviceName, deviceModel } = event;
 
 		// Create device folder
 		await this.setObjectNotExistsAsync(deviceName, {
-			type: 'folder',
+			type: 'device',
 			common: {
-				name: deviceName,
+				name: deviceModel,
+				role: 'group',
 			},
 			native: {},
 		});

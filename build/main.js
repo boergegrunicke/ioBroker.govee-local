@@ -169,11 +169,12 @@ class GoveeLocal extends utils.Adapter {
    * @param event The device discovery event data.
    */
   async handleDeviceDiscovered(event) {
-    const { ip, deviceName } = event;
+    const { ip, deviceName, deviceModel } = event;
     await this.setObjectNotExistsAsync(deviceName, {
-      type: "folder",
+      type: "device",
       common: {
-        name: deviceName
+        name: deviceModel,
+        role: "group"
       },
       native: {}
     });

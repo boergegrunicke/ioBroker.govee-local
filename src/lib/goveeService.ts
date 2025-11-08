@@ -17,6 +17,8 @@ export interface DeviceDiscoveryEvent {
 	ip: string;
 	/** The sanitized device name. */
 	deviceName: string;
+	/** The device model. */
+	deviceModel: string;
 }
 
 /**
@@ -146,9 +148,15 @@ export class GoveeService extends EventEmitter {
 						'_',
 					);
 					this.devices[remote.address] = deviceName;
+					if (this.options.extendedLogging) {
+						this.options.logger?.info(
+							`Discovered device: ${deviceName} at ${remote.address} (model: ${messageObject.msg.data.sku})`,
+						);
+					}
 					this.emit('deviceDiscovered', {
 						ip: remote.address,
 						deviceName: deviceName,
+						deviceModel: messageObject.msg.data.sku,
 					} as DeviceDiscoveryEvent);
 				}
 				break;

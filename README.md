@@ -27,7 +27,8 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 
 ### **WORK IN PROGRESS**
 
-- update dependecies
+- update dependencies
+- fix device name / model identifier in the objects
 
 ### 0.4.1 (2025-11-07)
 

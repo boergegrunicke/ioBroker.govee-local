@@ -69,7 +69,7 @@ export class GoveeLocal extends utils.Adapter {
 			searchInterval: this.config.searchInterval,
 			deviceStatusRefreshInterval: this.config.deviceStatusRefreshInterval,
 			extendedLogging: this.config.extendedLogging,
-			forbiddenChars: /[^a-zA-Z0-9_-]/g,
+			forbiddenChars: this.FORBIDDEN_CHARS,
 			manualIpAddresses: this.config.manualIpTable,
 			disableAutoDiscovery: this.config.disableAutoDiscovery,
 			logger: {

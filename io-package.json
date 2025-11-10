@@ -43,19 +43,6 @@
         "zh-cn": "更新所有支持语言的数据点描述翻译\n更新和现代化管理 UI: 更清晰的段落、 手动 IP 地址列表、 Windows 提示和禁用自动发现选项\n通过 IP- Address和选项手动添加设备以禁用自动发现的可能性\n在信息数据点中保存自动发现的设备, 并在 admin UI 中显示"
       },
       "0.3.1": {
-        "en": "updated release script run configuration",
-        "de": "aktualisierte versionsskriptlaufkonfiguration",
-        "ru": "обновленная конфигурация для запуска сценария",
-        "pt": "configuração de execução do script de versão atualizada",
-        "nl": "bijgewerkte versie script-run configuratie",
-        "fr": "mise à jour de la configuration du script de publication",
-        "it": "configurazione dell'esecuzione dello script di rilascio aggiornata",
-        "es": "configuración actualizada script script script run",
-        "pl": "zaktualizowana konfiguracja uruchamiania skryptu wydania",
-        "uk": "оновлена конфігурація запуску сценарію релізу",
-        "zh-cn": "更新发布脚本运行配置"
-      },
-      "0.3.0": {
         "en": "Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities\nImproved test coverage\nDependencies updated",
         "de": "Hergestellt: Alle Gerätelogik auf eine dedizierte GoveeService-Klasse verschoben, modularisierte Versorgungsprogramme\nVerbesserte Testabdeckung\nAusgaben aktualisiert",
         "ru": "Рефакторированный: Перенес всю логику устройства в выделенный класс GoveeService, модульные утилиты\nУлучшенный охват испытаниями\nОбновленные зависимости",

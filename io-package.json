@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "news": {
+      "0.4.3": {
+        "en": "fix responsive design in the settings\nrevert forbidden characters checking\nupdate dependencies",
+        "de": "reagierendes design in den einstellungen beheben\nzurücksetzen verbotene zeichen überprüfen\naktualisierung der abhängigkeiten",
+        "ru": "исправить отзывчивый дизайн в настройках\nпроверка запрещенных персонажей\nобновление зависимостей",
+        "pt": "corrigir o design responsivo nas configurações\nreverter a verificação de caracteres proibidos\natualizar dependências",
+        "nl": "repareren responsief ontwerp in de instellingen\n_verboden tekens controleren\nafhankelijkheden bijwerken",
+        "fr": "fixer la conception réactive dans les paramètres\nretourner la vérification des caractères interdits\nmettre à jour les dépendances",
+        "it": "fissare il design reattivo nelle impostazioni\nrevert i caratteri vietati controllando\naggiornamento dipendenze",
+        "es": "fijar diseño sensible en la configuración\nrevertir caracteres prohibidos\ndependencias de actualización",
+        "pl": "naprawić reagujący projekt w ustawieniach\nrevert zabronione sprawdzanie znaków\naktualizacji zależności",
+        "uk": "виправити адаптивний дизайн в налаштуваннях\nперевернути заборонені символи перевірки\nоновлення залежності",
+        "zh-cn": "在设置中固定响应性设计\n返回禁用字符检查\n更新依赖关系"
+      },
       "0.4.2": {
         "en": "update dependencies\nfix device name / model identifier in the objects",
         "de": "aktualisierung der abhängigkeiten\ngerätename / modellkennung in den objekten fixieren",

@@ -24,6 +24,13 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- fix responsive design in the settings
+- revert forbidden characters checking
+- update dependencies
+
 ### 0.4.2 (2025-11-08)
 
 - update dependencies

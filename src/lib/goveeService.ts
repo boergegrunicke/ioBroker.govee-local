@@ -139,7 +139,15 @@ export class GoveeService extends EventEmitter {
 	 * @param remote The sender info.
 	 */
 	private onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): void {
-		const messageObject = JSON.parse(message.toString());
+		let messageObject: any;
+		try {
+			messageObject = JSON.parse(message.toString());
+		} catch (err) {
+			this.options.logger?.error(
+				`Malformed UDP message from ${remote.address}:${remote.port}: ${err instanceof Error ? err.message : String(err)}`,
+			);
+			throw err;
+		}
 		switch (messageObject.msg.cmd) {
 			case 'scan': {
 				if (messageObject.msg.data.device) {

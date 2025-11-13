@@ -120,7 +120,6 @@
 			"lg": 12,
 			"xl": 12
 		},
-		// entfernt: disableAutoDiscovery, da jetzt über scanMode geregelt
 		"loggingHeader": {
 			"type": "header",
 			"text": "Logging",

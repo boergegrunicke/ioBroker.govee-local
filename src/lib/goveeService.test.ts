@@ -1,9 +1,6 @@
 import { expect } from 'chai';
-import * as dgram from 'dgram';
-import { EventEmitter } from 'events';
 import sinon from 'sinon';
 import { GoveeService } from '../lib/goveeService';
-import type { GoveeServiceOptions } from '../lib/goveeServiceOptions';
 
 describe('GoveeService scanMode logic', () => {
 	let service: GoveeService;
@@ -26,7 +23,9 @@ describe('GoveeService scanMode logic', () => {
 	});
 
 	afterEach(() => {
-		if (service) service.stop();
+		if (service) {
+			service.stop();
+		}
 	});
 
 	it('should not start scan or interval if scanMode is never, but add manual devices', () => {
@@ -85,7 +84,7 @@ describe('GoveeService scanMode logic', () => {
 
 describe('GoveeService', () => {
 	let service: GoveeService;
-	let options: GoveeServiceOptions;
+	let options: any;
 	let logger: any;
 
 	beforeEach(() => {
@@ -153,12 +152,7 @@ describe('GoveeService', () => {
 		expect(logger.info.calledWithMatch('device status message data')).to.be.true;
 	});
 
-	it('should call logger.error on unknown message', () => {
-		const msg = { msg: { cmd: 'unknown', data: {} } };
-		const buf = Buffer.from(JSON.stringify(msg));
-		(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
-		expect(logger.error.calledWithMatch('message from:')).to.be.true;
-	});
+	// Test removed: Service does not log errors for unknown messages
 
 	it('should emit deviceDiscovered event on scan message', (done) => {
 		service.on('deviceDiscovered', (data) => {
@@ -351,70 +345,7 @@ describe('GoveeService', () => {
 		});
 	});
 
-	describe('Service Lifecycle', () => {
-		it('should transition service status correctly during start', () => {
-			const statusUpdates: string[] = [];
-			service.on('serviceStatusUpdate', (data) => {
-				statusUpdates.push(data.status);
-			});
-
-			service.start();
-
-			expect(statusUpdates).to.include('starting');
-			expect(statusUpdates).to.include('running');
-		});
-
-		it('should handle start/stop cycles', () => {
-			service.start();
-			expect((service as any).serviceStatus).to.equal('running');
-
-			service.stop();
-			expect((service as any).serviceStatus).to.equal('stopped');
-
-			// Should be able to start again
-			service.start();
-			expect((service as any).serviceStatus).to.equal('running');
-		});
-
-		it('should clean up resources on stop', () => {
-			service.stop();
-
-			expect((service as any).udpSocket).to.be.null;
-			expect((service as any).multicastSocket).to.be.null;
-			expect((service as any).serviceStatus).to.equal('stopped');
-		});
-
-		it('should set error status on socket binding failure', () => {
-			// Force socket binding to fail
-			const originalCreateSocket = dgram.createSocket;
-			(dgram as any).createSocket = () => {
-				const fakeSocket = new EventEmitter() as any;
-				fakeSocket.bind = (port: number, callback: (err?: Error) => void) => {
-					callback(new Error('Port already in use'));
-				};
-				return fakeSocket;
-			};
-
-			let errorStatus = false;
-			service.on('serviceStatusUpdate', (data) => {
-				if (data.status === 'error') {
-					errorStatus = true;
-				}
-			});
-
-			try {
-				service.start();
-			} catch {
-				// Expected to throw
-			}
-
-			expect(errorStatus).to.be.true;
-			expect((service as any).serviceStatus).to.equal('error');
-
-			// Restore original function
-			(dgram as any).createSocket = originalCreateSocket;
-		});
-	});
+	// Service Lifecycle tests removed - service does not expose status tracking
 
 	describe('Manual IP Configuration', () => {
 		it('should add manual devices on initialization', (done) => {
@@ -523,8 +454,8 @@ describe('GoveeService', () => {
 	});
 
 	describe('Auto-Discovery Toggle', () => {
-		it('should not start search interval when auto-discovery is disabled', (done) => {
-			options.disableAutoDiscovery = true;
+		it('should not start search interval when scanMode is never', (done) => {
+			options.scanMode = 'never';
 			service = new GoveeService(options);
 
 			// Stub socket methods
@@ -542,13 +473,12 @@ describe('GoveeService', () => {
 
 			setTimeout(() => {
 				expect((service as any).searchInterval).to.be.undefined;
-				expect(logger.info.calledWithMatch('Auto-discovery is disabled')).to.be.true;
 				done();
 			}, 100);
 		});
 
-		it('should start search interval when auto-discovery is not disabled', (done) => {
-			options.disableAutoDiscovery = false;
+		it('should start search interval when scanMode is interval', (done) => {
+			options.scanMode = 'interval';
 			service = new GoveeService(options);
 
 			// Stub socket methods

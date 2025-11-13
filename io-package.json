@@ -121,8 +121,14 @@
 			"zh-cn": "通过本地访问控制 Govee 设备（无云）",
 			"uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
 		},
-		"authors": ["Børge Grunicke <boerge@grunicke.de>"],
-		"keywords": ["govee", "light", "local"],
+		"authors": [
+			"Børge Grunicke <boerge@grunicke.de>"
+		],
+		"keywords": [
+			"govee",
+			"light",
+			"local"
+		],
 		"licenseInformation": {
 			"type": "free",
 			"license": "MIT"

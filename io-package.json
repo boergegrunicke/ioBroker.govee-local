@@ -1,170 +1,171 @@
 {
-  "common": {
-    "name": "govee-local",
-    "version": "0.4.3",
-    "news": {
-      "0.4.3": {
-        "en": "fix responsive design in the settings\nrevert forbidden characters checking\nupdate dependencies",
-        "de": "reagierendes design in den einstellungen beheben\nzurücksetzen verbotene zeichen überprüfen\naktualisierung der abhängigkeiten",
-        "ru": "исправить отзывчивый дизайн в настройках\nпроверка запрещенных персонажей\nобновление зависимостей",
-        "pt": "corrigir o design responsivo nas configurações\nreverter a verificação de caracteres proibidos\natualizar dependências",
-        "nl": "repareren responsief ontwerp in de instellingen\n_verboden tekens controleren\nafhankelijkheden bijwerken",
-        "fr": "fixer la conception réactive dans les paramètres\nretourner la vérification des caractères interdits\nmettre à jour les dépendances",
-        "it": "fissare il design reattivo nelle impostazioni\nrevert i caratteri vietati controllando\naggiornamento dipendenze",
-        "es": "fijar diseño sensible en la configuración\nrevertir caracteres prohibidos\ndependencias de actualización",
-        "pl": "naprawić reagujący projekt w ustawieniach\nrevert zabronione sprawdzanie znaków\naktualizacji zależności",
-        "uk": "виправити адаптивний дизайн в налаштуваннях\nперевернути заборонені символи перевірки\nоновлення залежності",
-        "zh-cn": "在设置中固定响应性设计\n返回禁用字符检查\n更新依赖关系"
-      },
-      "0.4.2": {
-        "en": "update dependencies\nfix device name / model identifier in the objects",
-        "de": "aktualisierung der abhängigkeiten\ngerätename / modellkennung in den objekten fixieren",
-        "ru": "обновление зависимостей\nфиксировать имя устройства / идентификатор модели в объектах",
-        "pt": "atualizar dependências\ncorrigir o nome do dispositivo / identificador do modelo nos objetos",
-        "nl": "afhankelijkheden bijwerken\nfix apparaatnaam / modelidentificatie in de objecten",
-        "fr": "mettre à jour les dépendances\ncorrection du nom du périphérique / de l'identificateur du modèle dans les objets",
-        "it": "aggiornamento dipendenze\nfix nome del dispositivo / modello identificatore negli oggetti",
-        "es": "dependencias de actualización\nfijar el nombre del dispositivo / identificador modelo en los objetos",
-        "pl": "aktualizacji zależności\nnaprawić nazwę urządzenia / identyfikator modelu w obiektach",
-        "uk": "оновлення залежності\nвиправити назву пристрою / ідентифікатор моделі в об'єктах",
-        "zh-cn": "更新依赖关系\n对象中的固定设备名称/ 模型标识符"
-      },
-      "0.4.1": {
-        "en": "fix logging\nfix connection state",
-        "de": "fehlerbehebung\nbefestigungszustand",
-        "ru": "фиксировать лесозаготовки\nфиксировать состояние соединения",
-        "pt": "corrigir o registo\ncorrigir o estado da ligação",
-        "nl": "loggen herstellen\nfix verbindingstoestand",
-        "fr": "correction de l'enregistrement\nfixer l'état de connexion",
-        "it": "correggere la registrazione\ncorrezione dello stato di connessione",
-        "es": "corrección de registro\nestado de conexión",
-        "pl": "naprawić logowanie\nstan połączenia",
-        "uk": "фіксувати забір\nфіксувати стан з'єднання",
-        "zh-cn": "固定记录\n固定连接状态"
-      },
-      "0.4.0": {
-        "en": "Updated translations for datapoint descriptions in all supported languages\nRefreshed and modernized the admin UI: clearer sections, manual IP address list, Windows hint, and option to disable auto-discovery\nPossibility to manually add devices via IP-Address and Option to disable auto discovery\nSave auto discovered devices in info datapoint and show in admin UI",
-        "de": "Aktualisierte Übersetzungen für Datapoint-Beschreibungen in allen unterstützten Sprachen\nErfrischt und modernisiert den Admin UI: klarere Abschnitte, manuelle IP-Adressenliste, Windows-Hinweis und Option, Auto-Entdeckung deaktivieren\nMöglichkeit, manuell Geräte über IP-Adresse und Option hinzuzufügen, um die automatische Entdeckung zu deaktivieren\nSpeichern Sie Auto entdeckte Geräte in Info-Datenpunkt und zeigen Sie in admin UI",
-        "ru": "Обновленные переводы для описания точек данных на всех поддерживаемых языках\nОбновленный и модернизированный пользовательский интерфейс администратора: более четкие разделы, ручной список IP-адресов, подсказка Windows и возможность отключения автоматического обнаружения\nВозможность вручную добавлять устройства через IP-адрес и опцию для отключения автоматического обнаружения\nСохранить автоматически обнаруженные устройства в точке данных info и показать в admin UI",
-        "pt": "Traduções atualizadas para descrições de pontos de dados em todos os idiomas suportados\nAtualizada e modernizada a interface de administração: seções mais claras, lista de endereços IP manuais, dica do Windows e opção para desativar a descoberta automática\nPossibilidade de adicionar dispositivos manualmente via endereço IP e opção para desativar a descoberta automática\nSalve os dispositivos auto descobertos no ponto de dados de informação e mostrar na interface de administração",
-        "nl": "Bijgewerkte vertalingen voor gegevenspuntenbeschrijvingen in alle ondersteunde talen\nVernieuwde en gemoderniseerde admin UI: duidelijkere secties, handmatige IP-adreslijst, Windows-hint en optie om auto-ontdekking uit te schakelen\nMogelijkheid om handmatig apparaten toe te voegen via IP-adres en optie om automatische ontdekking uit te schakelen\nOpslaan automatisch ontdekte apparaten in info datapoint en tonen in admin UI",
-        "fr": "Traductions actualisées pour les descriptions de points de données dans toutes les langues prises en charge\nRafraîchi et modernisé l'interface utilisateur admin: sections plus claires, liste d'adresses IP manuelle, conseils de Windows, et option pour désactiver la découverte automatique\nPossibilité d'ajouter manuellement des périphériques via IP-Adresse et Option pour désactiver la découverte automatique\nEnregistrer les périphériques découverts automatiquement dans info datapoint et afficher dans admin UI",
-        "it": "Traduzioni aggiornate per le descrizioni dei datapoint in tutte le lingue supportate\nAggiornato e modernizzato l'interfaccia utente di amministrazione: sezioni più chiare, elenco di indirizzi IP manuale, suggerimento di Windows e l'opzione per disabilitare l'auto-scoprimento\nPossibilità di aggiungere manualmente i dispositivi tramite IP-Address e Opzione per disabilitare la scoperta automatica\nSalvare i dispositivi auto scoperti in datapoint info e mostrare in admin UI",
-        "es": "Traducciones actualizadas para descripciones de puntos de datos en todos los idiomas compatibles\nActualizado y modernizado el administrador UI: secciones más claras, lista manual de direcciones IP, insinuación de Windows y opción para desactivar el auto-descubrimiento\nPosibilidad de añadir manualmente dispositivos a través de IP-Address y Option para desactivar el descubrimiento automático\nGuardar dispositivos auto descubiertos en info datapoint y mostrar en admin UI",
-        "pl": "Aktualizacja tłumaczeń opisów punktów danych we wszystkich obsługiwanych językach\nOdśwież i zmodernizuj interfejs administracyjny: jaśniejsze sekcje, ręczną listę adresów IP, podpowiedź systemu Windows oraz opcję wyłączenia autoodkrycia\nMożliwość ręcznego dodawania urządzeń poprzez adres IP- i opcja wyłączenia automatycznego wyszukiwania\nZapisz automatycznie odkryte urządzenia w info datapoint i pokaż w UI admin",
-        "uk": "Оновлено переклади для описів точок даних у всіх підтриманих мовах\nВідновлений і модернізований адміністратор UI: чіткі розділи, ручний IP-адресний список, підказка для Windows, і опція для вимкнення автоматично-розкриття\nМожливість вручну додати пристрої через IP-адресу та можливість вимкнути автоматичне відкриття\nЗаощаджуйте автовідкриті пристрої в інформаційній точці та покажете в адмін UI",
-        "zh-cn": "更新所有支持语言的数据点描述翻译\n更新和现代化管理 UI: 更清晰的段落、 手动 IP 地址列表、 Windows 提示和禁用自动发现选项\n通过 IP- Address和选项手动添加设备以禁用自动发现的可能性\n在信息数据点中保存自动发现的设备, 并在 admin UI 中显示"
-      },
-      "0.3.1": {
-        "en": "Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities\nImproved test coverage\nDependencies updated",
-        "de": "Hergestellt: Alle Gerätelogik auf eine dedizierte GoveeService-Klasse verschoben, modularisierte Versorgungsprogramme\nVerbesserte Testabdeckung\nAusgaben aktualisiert",
-        "ru": "Рефакторированный: Перенес всю логику устройства в выделенный класс GoveeService, модульные утилиты\nУлучшенный охват испытаниями\nОбновленные зависимости",
-        "pt": "Refactorado: Moveu toda a lógica do dispositivo para uma classe dedicada do GoveeService, utilitários modularizados\nMelhor cobertura de teste\nDependências atualizadas",
-        "nl": "Refactored: Verplaatste alle apparaat logica naar een speciale GoveeService klasse, modulaire utilities\nVerbeterde testdekking\nAfhankelijkheden bijgewerkt",
-        "fr": "Reformulé : Déplace toute la logique de l'appareil vers une classe GoveeService dédiée, utilitaires modulaires\nAmélioration de la couverture des tests\nDépendances actualisées",
-        "it": "Refactored: Spostato tutta la logica del dispositivo a una classe GoveeService dedicata, utilità modularizzate\nCopertura di test migliorata\nDipendenze aggiornate",
-        "es": "Refactored: Movedo toda la lógica del dispositivo a una clase dedicada GoveeService, utilidades modulares\nMejora de la cobertura de pruebas\nActualización de las dependencias",
-        "pl": "Zmienione: Przesunął całą logikę urządzenia do specjalnej klasy GoveeService, modularyzowane narzędzia\nLepszy zakres badań\nAktualizacja zależności",
-        "uk": "Рефактор: Переміщено всі логіку пристрою для виділеного класу GoveeService, модульовані утиліти\nПокращене покриття тесту\nЗалежність оновлено",
-        "zh-cn": "已重构 : 将所有设备逻辑移至专用的 GoveeService 类,模块化的公用事业\n提高测试覆盖率\n更新的依赖关系"
-      },
-      "0.2.9": {
-        "en": "update dependencies\nadd support for node 24\nupdate to ESlint 9",
-        "de": "aktualisierung der abhängigkeiten\nunterstützung für knoten 24 hinzufügen\nupdate auf ESlint 9",
-        "ru": "обновление зависимостей\nдобавить поддержку node 24\nобновление для ESlint 9",
-        "pt": "atualizar dependências\nadicionar suporte para o nó 24\natualização para ESlint 9",
-        "nl": "afhankelijkheden bijwerken\nondersteuning voor node 24 toevoegen\nupdate naar ESlint 9",
-        "fr": "mettre à jour les dépendances\najouter un support pour le nœud 24\nmise à jour de ESlint 9",
-        "it": "aggiornamento dipendenze\naggiungere supporto per nodo 24\naggiornamento a ESlint 9",
-        "es": "dependencias de actualización\nañadir soporte para nodo 24\nactualización a ESlint 9",
-        "pl": "aktualizacji zależności\ndodaj obsługę węzła 24\naktualizacja do ESlint 9",
-        "uk": "оновлення залежності\nдодати підтримку для вузла 24\nоновлення до ESlint 9",
-        "zh-cn": "更新依赖关系\n添加节点24的支持\n更新到 Eslint 9"
-      },
-      "0.2.8": {
-        "en": "update dependencies",
-        "de": "aktualisierung der abhängigkeiten",
-        "ru": "обновление зависимостей",
-        "pt": "dependências",
-        "nl": "afhankelijkheden bijwerken",
-        "fr": "mettre à jour les dépendances",
-        "it": "aggiornamento dipendenze",
-        "es": "dependencias de actualización",
-        "pl": "aktualizacji zależności",
-        "uk": "оновлення залежності",
-        "zh-cn": "更新依赖关系"
-      }
-    },
-    "titleLang": {
-      "en": "Govee local",
-      "de": "Govee local",
-      "ru": "Govee местный",
-      "pt": "Govee local",
-      "nl": "Govee lokaal",
-      "fr": "Govee local",
-      "it": "Govee local",
-      "es": "Govee Local",
-      "pl": "Lokalny Govee",
-      "uk": "Govee місцевий",
-      "zh-cn": "Govee Local"
-    },
-    "desc": {
-      "en": "Control Govee devices via local access (no cloud)",
-      "de": "Steuerung von Govee-Geräten über lokalen Zugriff (keine Cloud)",
-      "ru": "Управляйте устройствами Govee через локальный доступ (без облака)",
-      "pt": "Controle os dispositivos Govee via acesso local (sem nuvem)",
-      "nl": "Bedien Govee-apparaten via lokale toegang (geen cloud)",
-      "fr": "Contrôlez les appareils Govee via un accès local (pas de cloud)",
-      "it": "Controlla i dispositivi Govee tramite accesso locale (no cloud)",
-      "es": "Controle los dispositivos Govee a través del acceso local (sin nube)",
-      "pl": "Steruj urządzeniami Govee przez dostęp lokalny (bez chmury)",
-      "zh-cn": "通过本地访问控制 Govee 设备（无云）",
-      "uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
-    },
-    "authors": [
-      "Børge Grunicke <boerge@grunicke.de>"
-    ],
-    "keywords": [
-      "govee",
-      "light",
-      "local"
-    ],
-    "licenseInformation": {
-      "type": "free",
-      "license": "MIT"
-    },
-    "platform": "Javascript/Node.js",
-    "icon": "govee-local.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",
-    "readme": "https://github.com/boergegrunicke/ioBroker.govee-local/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "lighting",
-    "tier": 2,
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "adminUI": {
-      "config": "json"
-    },
-    "dependencies": [
-      {
-        "js-controller": ">=6.0.11"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=7.6.17"
-      }
-    ]
-  },
-  "native": {
-    "searchInterval": 10,
-    "deviceStatusRefreshInterval": 1,
-    "extendedLogging": false,
-    "interface": "0.0.0.0"
-  },
-  "objects": [],
-  "instanceObjects": []
+	"common": {
+		"name": "govee-local",
+		"version": "0.4.3",
+		"news": {
+			"0.4.3": {
+				"en": "fix responsive design in the settings\nrevert forbidden characters checking\nupdate dependencies",
+				"de": "reagierendes design in den einstellungen beheben\nzurücksetzen verbotene zeichen überprüfen\naktualisierung der abhängigkeiten",
+				"ru": "исправить отзывчивый дизайн в настройках\nпроверка запрещенных персонажей\nобновление зависимостей",
+				"pt": "corrigir o design responsivo nas configurações\nreverter a verificação de caracteres proibidos\natualizar dependências",
+				"nl": "repareren responsief ontwerp in de instellingen\n_verboden tekens controleren\nafhankelijkheden bijwerken",
+				"fr": "fixer la conception réactive dans les paramètres\nretourner la vérification des caractères interdits\nmettre à jour les dépendances",
+				"it": "fissare il design reattivo nelle impostazioni\nrevert i caratteri vietati controllando\naggiornamento dipendenze",
+				"es": "fijar diseño sensible en la configuración\nrevertir caracteres prohibidos\ndependencias de actualización",
+				"pl": "naprawić reagujący projekt w ustawieniach\nrevert zabronione sprawdzanie znaków\naktualizacji zależności",
+				"uk": "виправити адаптивний дизайн в налаштуваннях\nперевернути заборонені символи перевірки\nоновлення залежності",
+				"zh-cn": "在设置中固定响应性设计\n返回禁用字符检查\n更新依赖关系"
+			},
+			"0.4.2": {
+				"en": "update dependencies\nfix device name / model identifier in the objects",
+				"de": "aktualisierung der abhängigkeiten\ngerätename / modellkennung in den objekten fixieren",
+				"ru": "обновление зависимостей\nфиксировать имя устройства / идентификатор модели в объектах",
+				"pt": "atualizar dependências\ncorrigir o nome do dispositivo / identificador do modelo nos objetos",
+				"nl": "afhankelijkheden bijwerken\nfix apparaatnaam / modelidentificatie in de objecten",
+				"fr": "mettre à jour les dépendances\ncorrection du nom du périphérique / de l'identificateur du modèle dans les objets",
+				"it": "aggiornamento dipendenze\nfix nome del dispositivo / modello identificatore negli oggetti",
+				"es": "dependencias de actualización\nfijar el nombre del dispositivo / identificador modelo en los objetos",
+				"pl": "aktualizacji zależności\nnaprawić nazwę urządzenia / identyfikator modelu w obiektach",
+				"uk": "оновлення залежності\nвиправити назву пристрою / ідентифікатор моделі в об'єктах",
+				"zh-cn": "更新依赖关系\n对象中的固定设备名称/ 模型标识符"
+			},
+			"0.4.1": {
+				"en": "fix logging\nfix connection state",
+				"de": "fehlerbehebung\nbefestigungszustand",
+				"ru": "фиксировать лесозаготовки\nфиксировать состояние соединения",
+				"pt": "corrigir o registo\ncorrigir o estado da ligação",
+				"nl": "loggen herstellen\nfix verbindingstoestand",
+				"fr": "correction de l'enregistrement\nfixer l'état de connexion",
+				"it": "correggere la registrazione\ncorrezione dello stato di connessione",
+				"es": "corrección de registro\nestado de conexión",
+				"pl": "naprawić logowanie\nstan połączenia",
+				"uk": "фіксувати забір\nфіксувати стан з'єднання",
+				"zh-cn": "固定记录\n固定连接状态"
+			},
+			"0.4.0": {
+				"en": "Updated translations for datapoint descriptions in all supported languages\nRefreshed and modernized the admin UI: clearer sections, manual IP address list, Windows hint, and option to disable auto-discovery\nPossibility to manually add devices via IP-Address and Option to disable auto discovery\nSave auto discovered devices in info datapoint and show in admin UI",
+				"de": "Aktualisierte Übersetzungen für Datapoint-Beschreibungen in allen unterstützten Sprachen\nErfrischt und modernisiert den Admin UI: klarere Abschnitte, manuelle IP-Adressenliste, Windows-Hinweis und Option, Auto-Entdeckung deaktivieren\nMöglichkeit, manuell Geräte über IP-Adresse und Option hinzuzufügen, um die automatische Entdeckung zu deaktivieren\nSpeichern Sie Auto entdeckte Geräte in Info-Datenpunkt und zeigen Sie in admin UI",
+				"ru": "Обновленные переводы для описания точек данных на всех поддерживаемых языках\nОбновленный и модернизированный пользовательский интерфейс администратора: более четкие разделы, ручной список IP-адресов, подсказка Windows и возможность отключения автоматического обнаружения\nВозможность вручную добавлять устройства через IP-адрес и опцию для отключения автоматического обнаружения\nСохранить автоматически обнаруженные устройства в точке данных info и показать в admin UI",
+				"pt": "Traduções atualizadas para descrições de pontos de dados em todos os idiomas suportados\nAtualizada e modernizada a interface de administração: seções mais claras, lista de endereços IP manuais, dica do Windows e opção para desativar a descoberta automática\nPossibilidade de adicionar dispositivos manualmente via endereço IP e opção para desativar a descoberta automática\nSalve os dispositivos auto descobertos no ponto de dados de informação e mostrar na interface de administração",
+				"nl": "Bijgewerkte vertalingen voor gegevenspuntenbeschrijvingen in alle ondersteunde talen\nVernieuwde en gemoderniseerde admin UI: duidelijkere secties, handmatige IP-adreslijst, Windows-hint en optie om auto-ontdekking uit te schakelen\nMogelijkheid om handmatig apparaten toe te voegen via IP-adres en optie om automatische ontdekking uit te schakelen\nOpslaan automatisch ontdekte apparaten in info datapoint en tonen in admin UI",
+				"fr": "Traductions actualisées pour les descriptions de points de données dans toutes les langues prises en charge\nRafraîchi et modernisé l'interface utilisateur admin: sections plus claires, liste d'adresses IP manuelle, conseils de Windows, et option pour désactiver la découverte automatique\nPossibilité d'ajouter manuellement des périphériques via IP-Adresse et Option pour désactiver la découverte automatique\nEnregistrer les périphériques découverts automatiquement dans info datapoint et afficher dans admin UI",
+				"it": "Traduzioni aggiornate per le descrizioni dei datapoint in tutte le lingue supportate\nAggiornato e modernizzato l'interfaccia utente di amministrazione: sezioni più chiare, elenco di indirizzi IP manuale, suggerimento di Windows e l'opzione per disabilitare l'auto-scoprimento\nPossibilità di aggiungere manualmente i dispositivi tramite IP-Address e Opzione per disabilitare la scoperta automatica\nSalvare i dispositivi auto scoperti in datapoint info e mostrare in admin UI",
+				"es": "Traducciones actualizadas para descripciones de puntos de datos en todos los idiomas compatibles\nActualizado y modernizado el administrador UI: secciones más claras, lista manual de direcciones IP, insinuación de Windows y opción para desactivar el auto-descubrimiento\nPosibilidad de añadir manualmente dispositivos a través de IP-Address y Option para desactivar el descubrimiento automático\nGuardar dispositivos auto descubiertos en info datapoint y mostrar en admin UI",
+				"pl": "Aktualizacja tłumaczeń opisów punktów danych we wszystkich obsługiwanych językach\nOdśwież i zmodernizuj interfejs administracyjny: jaśniejsze sekcje, ręczną listę adresów IP, podpowiedź systemu Windows oraz opcję wyłączenia autoodkrycia\nMożliwość ręcznego dodawania urządzeń poprzez adres IP- i opcja wyłączenia automatycznego wyszukiwania\nZapisz automatycznie odkryte urządzenia w info datapoint i pokaż w UI admin",
+				"uk": "Оновлено переклади для описів точок даних у всіх підтриманих мовах\nВідновлений і модернізований адміністратор UI: чіткі розділи, ручний IP-адресний список, підказка для Windows, і опція для вимкнення автоматично-розкриття\nМожливість вручну додати пристрої через IP-адресу та можливість вимкнути автоматичне відкриття\nЗаощаджуйте автовідкриті пристрої в інформаційній точці та покажете в адмін UI",
+				"zh-cn": "更新所有支持语言的数据点描述翻译\n更新和现代化管理 UI: 更清晰的段落、 手动 IP 地址列表、 Windows 提示和禁用自动发现选项\n通过 IP- Address和选项手动添加设备以禁用自动发现的可能性\n在信息数据点中保存自动发现的设备, 并在 admin UI 中显示"
+			},
+			"0.3.1": {
+				"en": "Refactored: Moved all device logic to a dedicated GoveeService class, modularized utilities\nImproved test coverage\nDependencies updated",
+				"de": "Hergestellt: Alle Gerätelogik auf eine dedizierte GoveeService-Klasse verschoben, modularisierte Versorgungsprogramme\nVerbesserte Testabdeckung\nAusgaben aktualisiert",
+				"ru": "Рефакторированный: Перенес всю логику устройства в выделенный класс GoveeService, модульные утилиты\nУлучшенный охват испытаниями\nОбновленные зависимости",
+				"pt": "Refactorado: Moveu toda a lógica do dispositivo para uma classe dedicada do GoveeService, utilitários modularizados\nMelhor cobertura de teste\nDependências atualizadas",
+				"nl": "Refactored: Verplaatste alle apparaat logica naar een speciale GoveeService klasse, modulaire utilities\nVerbeterde testdekking\nAfhankelijkheden bijgewerkt",
+				"fr": "Reformulé : Déplace toute la logique de l'appareil vers une classe GoveeService dédiée, utilitaires modulaires\nAmélioration de la couverture des tests\nDépendances actualisées",
+				"it": "Refactored: Spostato tutta la logica del dispositivo a una classe GoveeService dedicata, utilità modularizzate\nCopertura di test migliorata\nDipendenze aggiornate",
+				"es": "Refactored: Movedo toda la lógica del dispositivo a una clase dedicada GoveeService, utilidades modulares\nMejora de la cobertura de pruebas\nActualización de las dependencias",
+				"pl": "Zmienione: Przesunął całą logikę urządzenia do specjalnej klasy GoveeService, modularyzowane narzędzia\nLepszy zakres badań\nAktualizacja zależności",
+				"uk": "Рефактор: Переміщено всі логіку пристрою для виділеного класу GoveeService, модульовані утиліти\nПокращене покриття тесту\nЗалежність оновлено",
+				"zh-cn": "已重构 : 将所有设备逻辑移至专用的 GoveeService 类,模块化的公用事业\n提高测试覆盖率\n更新的依赖关系"
+			},
+			"0.2.9": {
+				"en": "update dependencies\nadd support for node 24\nupdate to ESlint 9",
+				"de": "aktualisierung der abhängigkeiten\nunterstützung für knoten 24 hinzufügen\nupdate auf ESlint 9",
+				"ru": "обновление зависимостей\nдобавить поддержку node 24\nобновление для ESlint 9",
+				"pt": "atualizar dependências\nadicionar suporte para o nó 24\natualização para ESlint 9",
+				"nl": "afhankelijkheden bijwerken\nondersteuning voor node 24 toevoegen\nupdate naar ESlint 9",
+				"fr": "mettre à jour les dépendances\najouter un support pour le nœud 24\nmise à jour de ESlint 9",
+				"it": "aggiornamento dipendenze\naggiungere supporto per nodo 24\naggiornamento a ESlint 9",
+				"es": "dependencias de actualización\nañadir soporte para nodo 24\nactualización a ESlint 9",
+				"pl": "aktualizacji zależności\ndodaj obsługę węzła 24\naktualizacja do ESlint 9",
+				"uk": "оновлення залежності\nдодати підтримку для вузла 24\nоновлення до ESlint 9",
+				"zh-cn": "更新依赖关系\n添加节点24的支持\n更新到 Eslint 9"
+			},
+			"0.2.8": {
+				"en": "update dependencies",
+				"de": "aktualisierung der abhängigkeiten",
+				"ru": "обновление зависимостей",
+				"pt": "dependências",
+				"nl": "afhankelijkheden bijwerken",
+				"fr": "mettre à jour les dépendances",
+				"it": "aggiornamento dipendenze",
+				"es": "dependencias de actualización",
+				"pl": "aktualizacji zależności",
+				"uk": "оновлення залежності",
+				"zh-cn": "更新依赖关系"
+			}
+		},
+		"titleLang": {
+			"en": "Govee local",
+			"de": "Govee local",
+			"ru": "Govee местный",
+			"pt": "Govee local",
+			"nl": "Govee lokaal",
+			"fr": "Govee local",
+			"it": "Govee local",
+			"es": "Govee Local",
+			"pl": "Lokalny Govee",
+			"uk": "Govee місцевий",
+			"zh-cn": "Govee Local"
+		},
+		"desc": {
+			"en": "Control Govee devices via local access (no cloud)",
+			"de": "Steuerung von Govee-Geräten über lokalen Zugriff (keine Cloud)",
+			"ru": "Управляйте устройствами Govee через локальный доступ (без облака)",
+			"pt": "Controle os dispositivos Govee via acesso local (sem nuvem)",
+			"nl": "Bedien Govee-apparaten via lokale toegang (geen cloud)",
+			"fr": "Contrôlez les appareils Govee via un accès local (pas de cloud)",
+			"it": "Controlla i dispositivi Govee tramite accesso locale (no cloud)",
+			"es": "Controle los dispositivos Govee a través del acceso local (sin nube)",
+			"pl": "Steruj urządzeniami Govee przez dostęp lokalny (bez chmury)",
+			"zh-cn": "通过本地访问控制 Govee 设备（无云）",
+			"uk": "Керуйте пристроями Govee через локальний доступ (без хмари)"
+		},
+		"authors": [
+			"Børge Grunicke <boerge@grunicke.de>"
+		],
+		"keywords": [
+			"govee",
+			"light",
+			"local"
+		],
+		"licenseInformation": {
+			"type": "free",
+			"license": "MIT"
+		},
+		"platform": "Javascript/Node.js",
+		"icon": "govee-local.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/boergegrunicke/ioBroker.govee-local/main/admin/govee-local.png",
+		"readme": "https://github.com/boergegrunicke/ioBroker.govee-local/blob/main/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "lighting",
+		"tier": 2,
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"adminUI": {
+			"config": "json"
+		},
+		"dependencies": [
+			{
+				"js-controller": ">=6.0.11"
+			}
+		],
+		"globalDependencies": [
+			{
+				"admin": ">=7.6.17"
+			}
+		]
+	},
+	"native": {
+		"scanMode": "interval",
+		"searchInterval": 10,
+		"deviceStatusRefreshInterval": 1,
+		"extendedLogging": false,
+		"interface": "0.0.0.0"
+	},
+	"objects": [],
+	"instanceObjects": []
 }

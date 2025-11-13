@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
 import * as dgram from 'dgram';
 import { EventEmitter } from 'events';
+import sinon from 'sinon';
 import { GoveeService } from '../lib/goveeService';
 import type { GoveeServiceOptions } from '../lib/goveeServiceOptions';
 
@@ -21,7 +21,7 @@ describe('GoveeService scanMode logic', () => {
 			searchInterval: 60,
 			deviceStatusRefreshInterval: 60,
 			logger,
-			   manualIpAddresses: ['192.168.1.50'],
+			manualIpAddresses: ['192.168.1.50'],
 		};
 	});
 
@@ -602,3 +602,4 @@ describe('GoveeService', () => {
 			}, 100);
 		});
 	});
+});

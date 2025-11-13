@@ -160,6 +160,7 @@
     ]
   },
   "native": {
+    "scanMode": "interval",
     "searchInterval": 10,
     "deviceStatusRefreshInterval": 1,
     "extendedLogging": false,

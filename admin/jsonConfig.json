@@ -31,9 +31,24 @@
 		},
 		"intervalsHeader": {
 			"type": "header",
-			"text": "Intervals",
+			"text": "_scanMode",
 			"size": 2,
 			"xs": 12
+		},
+		"scanMode": {
+			"type": "select",
+			"label": "_scanMode",
+			"options": [
+				{ "value": "interval", "label": "_scanModeInterval" },
+				{ "value": "once", "label": "_scanModeOnce" },
+				{ "value": "never", "label": "_scanModeNever" }
+			],
+			"default": "interval",
+			"xs": 12,
+			"sm": 12,
+			"md": 6,
+			"lg": 4,
+			"xl": 4
 		},
 		"searchInterval": {
 			"type": "number",
@@ -44,7 +59,7 @@
 			"md": 3,
 			"lg": 2,
 			"xl": 2,
-			"label": "_searchInterval"
+			"label": "_searchIntervalHint"
 		},
 		"deviceStatusRefreshInterval": {
 			"type": "number",
@@ -105,16 +120,7 @@
 			"lg": 12,
 			"xl": 12
 		},
-		"disableAutoDiscovery": {
-			"type": "checkbox",
-			"label": "_disableAutoDiscovery",
-			"default": false,
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12
-		},
+		// entfernt: disableAutoDiscovery, da jetzt über scanMode geregelt
 		"loggingHeader": {
 			"type": "header",
 			"text": "Logging",

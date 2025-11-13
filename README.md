@@ -24,6 +24,11 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- add option to run auto discovery once on startup, in interval or completly disable it
+
 ### 0.4.3 (2025-11-11)
 
 - fix responsive design in the settings

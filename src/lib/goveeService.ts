@@ -65,6 +65,7 @@ export class GoveeService extends EventEmitter {
 	private loggedDevices: string[] = [];
 	private searchInterval?: NodeJS.Timeout;
 	private refreshInterval?: NodeJS.Timeout;
+	private scanMode: 'interval' | 'once' | 'never' = 'interval';
 
 	static readonly LOCAL_PORT = 4002;
 	static readonly SEND_SCAN_PORT = 4001;
@@ -82,6 +83,12 @@ export class GoveeService extends EventEmitter {
 		super();
 		this.options = options;
 		this.socket = dgram.createSocket({ type: 'udp4' });
+		// scanMode aus options übernehmen, fallback auf interval
+		if ((options as any).scanMode === 'once' || (options as any).scanMode === 'never') {
+			this.scanMode = (options as any).scanMode;
+		} else {
+			this.scanMode = 'interval';
+		}
 	}
 
 	/**
@@ -115,11 +122,14 @@ export class GoveeService extends EventEmitter {
 			);
 		}
 
-		// Start auto-discovery if not disabled
-		if (!this.options.disableAutoDiscovery) {
+		// Discovery according to the user's preference (scanMode)
+		if (this.scanMode === 'interval') {
 			this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);
 			this.options.logger?.debug(`Auto-discovery started with interval ${this.options.searchInterval} seconds.`);
-		} else {
+		} else if (this.scanMode === 'once') {
+			this.sendScan();
+			this.options.logger?.debug('Auto-discovery: scan once at startup.');
+		} else if (this.scanMode === 'never') {
 			this.options.logger?.debug('Auto-discovery is disabled. Only manual devices will be used.');
 		}
 
@@ -382,8 +392,14 @@ export class GoveeService extends EventEmitter {
 	 */
 	private emitDeviceStatusUpdate(deviceName: string, ip: string, messageObject: any): void {
 		const deviceData = messageObject.msg.data;
-		const colorString = `#${componentToHex(deviceData.color.r)}${componentToHex(deviceData.color.g)}${componentToHex(deviceData.color.b)}`;
-
+		// Robust: Fallback für fehlende oder ungültige Farbdaten
+		let colorString = '#000000';
+		if (deviceData.color && typeof deviceData.color === 'object') {
+			const r = typeof deviceData.color.r === 'number' ? deviceData.color.r : 0;
+			const g = typeof deviceData.color.g === 'number' ? deviceData.color.g : 0;
+			const b = typeof deviceData.color.b === 'number' ? deviceData.color.b : 0;
+			colorString = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+		}
 		this.emit('deviceStatusUpdate', {
 			deviceName: deviceName,
 			ip: ip,

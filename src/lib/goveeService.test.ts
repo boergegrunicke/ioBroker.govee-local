@@ -1,3 +1,80 @@
+describe('GoveeService scanMode logic', () => {
+	let service: GoveeService;
+	let logger: any;
+	let options: any;
+
+	beforeEach(() => {
+		logger = {
+			debug: sinon.spy(),
+			info: sinon.spy(),
+			error: sinon.spy(),
+		};
+		options = {
+			interface: '127.0.0.1',
+			searchInterval: 60,
+			deviceStatusRefreshInterval: 60,
+			logger,
+			manualIpAddresses: ['192.168.1.50']
+		};
+	});
+
+	afterEach(() => {
+		if (service) service.stop();
+	});
+
+	it('should not start scan or interval if scanMode is never, but add manual devices', () => {
+		options.scanMode = 'never';
+		service = new GoveeService(options);
+		const sendScanSpy = sinon.spy(service, 'sendScan');
+		sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => cb());
+		sinon.stub((service as any).socket, 'setBroadcast');
+		sinon.stub((service as any).socket, 'setMulticastTTL');
+		sinon.stub((service as any).socket, 'setMulticastInterface');
+		sinon.stub((service as any).socket, 'addMembership');
+		sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+		sinon.stub((service as any).socket, 'send');
+		service.start();
+		// No scan should be triggered
+		sinon.assert.notCalled(sendScanSpy);
+		// Manual device should be present
+		const devices = service.getDevices();
+		expect(devices['192.168.1.50']).to.equal('Manual_192_168_1_50');
+	});
+
+	it('should call sendScan once if scanMode is once', () => {
+		options.scanMode = 'once';
+		service = new GoveeService(options);
+		const sendScanSpy = sinon.spy(service, 'sendScan');
+		sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => cb());
+		sinon.stub((service as any).socket, 'setBroadcast');
+		sinon.stub((service as any).socket, 'setMulticastTTL');
+		sinon.stub((service as any).socket, 'setMulticastInterface');
+		sinon.stub((service as any).socket, 'addMembership');
+		sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+		sinon.stub((service as any).socket, 'send');
+		service.start();
+		sinon.assert.calledOnce(sendScanSpy);
+	});
+
+	it('should start scan interval if scanMode is interval', (done) => {
+		options.scanMode = 'interval';
+		options.searchInterval = 0.01; // very short for test
+		service = new GoveeService(options);
+		const sendScanSpy = sinon.spy(service, 'sendScan');
+		sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => cb());
+		sinon.stub((service as any).socket, 'setBroadcast');
+		sinon.stub((service as any).socket, 'setMulticastTTL');
+		sinon.stub((service as any).socket, 'setMulticastInterface');
+		sinon.stub((service as any).socket, 'addMembership');
+		sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+		sinon.stub((service as any).socket, 'send');
+		service.start();
+		setTimeout(() => {
+			expect(sendScanSpy.callCount).to.be.greaterThan(1);
+			done();
+		}, 30);
+	});
+});
 import { expect } from 'chai';
 import * as dgram from 'dgram';
 import { EventEmitter } from 'events';

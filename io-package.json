@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.4.4",
+    "version": "0.4.5",
     "news": {
+      "0.4.5": {
+        "en": "- fix scan mode inconsistency\n  enhance log output behavior",
+        "de": "- scan-modus inkonsistenz beheben\ndas log ausgabeverhalten erhöhen",
+        "ru": "- исправление несоответствия режима сканирования\nулучшение поведения log output",
+        "pt": "- corrigir a inconsistência do modo de digitalização\nmelhorar o comportamento de saída do log",
+        "nl": "- repareren scan mode inconsistentie\nloguitvoergedrag verbeteren",
+        "fr": "- correction de l'incohérence du mode de balayage\naméliorer le comportement de sortie du journal",
+        "it": "- correzione di inconsistenza della modalità di scansione\nmigliorare il comportamento di uscita di log",
+        "es": "- fijar la inconsistencia del modo de escaneo\nmejorar el comportamiento de salida del registro",
+        "pl": "- naprawić niespójność trybu skanowania\npoprawić zachowanie wyjściowe log",
+        "uk": "- виправити невідповідність режиму сканування\nпідвищити поведінку виходу колоди",
+        "zh-cn": "- 修正扫描模式不一致\n增强日志输出行为"
+      },
       "0.4.4": {
         "en": "add option to run auto discovery once on startup, in interval or completly disable it",
         "de": "fügen sie die option, die auto-erkennung einmal beim start zu starten, in intervall oder completly deaktivieren",
@@ -80,19 +93,6 @@
         "pl": "Zmienione: Przesunął całą logikę urządzenia do specjalnej klasy GoveeService, modularyzowane narzędzia\nLepszy zakres badań\nAktualizacja zależności",
         "uk": "Рефактор: Переміщено всі логіку пристрою для виділеного класу GoveeService, модульовані утиліти\nПокращене покриття тесту\nЗалежність оновлено",
         "zh-cn": "已重构 : 将所有设备逻辑移至专用的 GoveeService 类,模块化的公用事业\n提高测试覆盖率\n更新的依赖关系"
-      },
-      "0.2.9": {
-        "en": "update dependencies\nadd support for node 24\nupdate to ESlint 9",
-        "de": "aktualisierung der abhängigkeiten\nunterstützung für knoten 24 hinzufügen\nupdate auf ESlint 9",
-        "ru": "обновление зависимостей\nдобавить поддержку node 24\nобновление для ESlint 9",
-        "pt": "atualizar dependências\nadicionar suporte para o nó 24\natualização para ESlint 9",
-        "nl": "afhankelijkheden bijwerken\nondersteuning voor node 24 toevoegen\nupdate naar ESlint 9",
-        "fr": "mettre à jour les dépendances\najouter un support pour le nœud 24\nmise à jour de ESlint 9",
-        "it": "aggiornamento dipendenze\naggiungere supporto per nodo 24\naggiornamento a ESlint 9",
-        "es": "dependencias de actualización\nañadir soporte para nodo 24\nactualización a ESlint 9",
-        "pl": "aktualizacji zależności\ndodaj obsługę węzła 24\naktualizacja do ESlint 9",
-        "uk": "оновлення залежності\nдодати підтримку для вузла 24\nоновлення до ESlint 9",
-        "zh-cn": "更新依赖关系\n添加节点24的支持\n更新到 Eslint 9"
       }
     },
     "titleLang": {

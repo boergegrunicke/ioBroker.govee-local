@@ -120,7 +120,7 @@ export class GoveeService extends EventEmitter {
 		}
 
 		// Start discovery according to scanMode
-		this.options.logger?.info(`Device discovery mode: "${this.scanMode}"`);
+		this.options.logger?.debug(`Device discovery mode: "${this.scanMode}"`);
 
 		if (this.scanMode === 'interval') {
 			this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);

@@ -1,7 +1,7 @@
 {
 	"_configDescription": "Nie ma nic obowiązkowego do skonfigurowania. Zmień interwały tylko wtedy, gdy jesteś pewien, że tego właśnie potrzebujesz",
 	"_deviceStatusRefreshInterval": "interwał odświeżania stanu urządzenia",
-			"_comment_extendedLogging": "Tooltip for option 'extendedLogging'"
+	"_comment_extendedLogging": "Tooltip for option 'extendedLogging'",
 	"_discoveredDevices": "Odkryte urządzenia",
 	"_discoveredDevicesHint": "Wszystkie wykryte urządzenia (automatyczne i ręczne) można znaleźć w Obiekty → govee-local.0 → info → discoveredDevices",
 	"_extendedLogging": "Włączono rozszerzone rejestrowanie",

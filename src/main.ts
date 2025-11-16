@@ -35,7 +35,7 @@ export class GoveeLocal extends utils.Adapter {
 	 * Called when databases are connected and adapter received configuration.
 	 * Initializes GoveeService and sets up event listeners for device events.
 	 */
-	private async onReady(): Promise<void> {
+	private onReady(): void {
 		// Create connection indicator state if it doesn't exist
 		void this.setObjectNotExists('info.connection', {
 			type: 'state',
@@ -102,7 +102,6 @@ export class GoveeLocal extends utils.Adapter {
 
 		// Subscribe to all device status state changes
 		void this.subscribeStates('*.devStatus.*');
-		return Promise.resolve();
 	}
 
 	/**
@@ -124,8 +123,8 @@ export class GoveeLocal extends utils.Adapter {
 				this.log.error('device not found or IP is not a string');
 			}
 		}
-		return Promise.resolve();
 	}
+
 	/**
 	 * Called when the adapter shuts down. Cleans up resources and stops services.
 	 *
@@ -140,8 +139,8 @@ export class GoveeLocal extends utils.Adapter {
 			// Set connection state to false
 			void this.updateStateAsync('info.connection', false);
 			callback();
-		} catch (e: any) {
-			this.log.error(e.message);
+		} catch (e: unknown) {
+			this.log.error(e instanceof Error ? e.message : String(e));
 			callback();
 		}
 	}

@@ -83,7 +83,7 @@ export class GoveeService extends EventEmitter {
 		super();
 		this.options = options;
 		this.socket = dgram.createSocket({ type: 'udp4' });
-		// scanMode aus options übernehmen, fallback auf interval
+		// Get scanMode from options, fallback to interval
 		if ((options as any).scanMode === 'once' || (options as any).scanMode === 'never') {
 			this.scanMode = (options as any).scanMode;
 		} else {
@@ -149,7 +149,7 @@ export class GoveeService extends EventEmitter {
 	 * @param remote The sender info.
 	 */
 	private onUdpMessage(message: Buffer, remote: dgram.RemoteInfo): void {
-		let messageObject: any;
+		let messageObject: { msg: { cmd: string; data: any } };
 		try {
 			messageObject = JSON.parse(message.toString());
 		} catch (err) {
@@ -392,7 +392,7 @@ export class GoveeService extends EventEmitter {
 	 */
 	private emitDeviceStatusUpdate(deviceName: string, ip: string, messageObject: any): void {
 		const deviceData = messageObject.msg.data;
-		// Robust: Fallback für fehlende oder ungültige Farbdaten
+		// Robust: Fallback for missing or invalid color data
 		let colorString = '#000000';
 		if (deviceData.color && typeof deviceData.color === 'object') {
 			const r = typeof deviceData.color.r === 'number' ? deviceData.color.r : 0;

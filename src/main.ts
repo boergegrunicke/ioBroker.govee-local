@@ -71,7 +71,7 @@ export class GoveeLocal extends utils.Adapter {
 			extendedLogging: this.config.extendedLogging,
 			forbiddenChars: this.FORBIDDEN_CHARS,
 			manualIpAddresses: this.config.manualIpTable,
-			disableAutoDiscovery: this.config.disableAutoDiscovery,
+			scanMode: this.config.scanMode,
 			logger: {
 				debug: (msg) => this.log.debug(msg),
 				info: (msg) => this.log.info(msg),
@@ -213,8 +213,6 @@ export class GoveeLocal extends utils.Adapter {
 			native: {},
 		});
 
-		this.log.info(`Device discovered: ${deviceName} at ${ip}`);
-
 		// Update the list of discovered devices
 		await this.updateDiscoveredDevicesList();
 	}
@@ -224,7 +222,7 @@ export class GoveeLocal extends utils.Adapter {
 	 */
 	private async updateDiscoveredDevicesList(): Promise<void> {
 		const devices = this.goveeService.getDevices();
-		await this.setStateAsync('info.discoveredDevices', {
+		await this.setState('info.discoveredDevices', {
 			val: JSON.stringify(devices, null, 2),
 			ack: true,
 		});

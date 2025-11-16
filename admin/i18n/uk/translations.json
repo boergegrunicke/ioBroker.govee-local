@@ -1,7 +1,6 @@
 {
 	"_configDescription": "Немає нічого обов’язкового для налаштування. Будь ласка, змінюйте інтервали лише тоді, коли ви впевнені, що це те, що вам потрібно",
 	"_deviceStatusRefreshInterval": "інтервал оновлення стану пристрою",
-	"_disableAutoDiscovery": "Вимкнути автоматичне виявлення",
 	"_discoveredDevices": "Виявлені пристрої",
 	"_discoveredDevicesHint": "Усі виявлені пристрої (автоматичні та ручні) можна знайти в Objects → govee-local.0 → info → discoveredDevices",
 	"_extendedLogging": "Розширене журналювання ввімкнено",

@@ -1,7 +1,7 @@
 {
 	"_configDescription": "Нет ничего обязательного для настройки. Пожалуйста, меняйте интервалы только тогда, когда вы уверены, что это то, что вам нужно.",
 	"_deviceStatusRefreshInterval": "интервал обновления статуса устройства",
-	"_disableAutoDiscovery": "Отключить автоматическое обнаружение",
+	"_comment_extendedLogging": "Tooltip for option 'extendedLogging'",
 	"_discoveredDevices": "Обнаруженные устройства",
 	"_discoveredDevicesHint": "Все обнаруженные устройства (автоматические и ручные) можно найти в Objects → govee-local.0 → info → discoveredDevices.",
 	"_extendedLogging": "Расширенное ведение журнала включено",

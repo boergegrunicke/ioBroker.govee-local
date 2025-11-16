@@ -16,6 +16,6 @@ export interface GoveeServiceOptions {
 	logger?: { debug: (msg: string) => void; info: (msg: string) => void; error: (msg: string) => void };
 	/** Array of manual IP addresses for devices that should be added without discovery. */
 	manualIpAddresses?: string[];
-	/** Disable automatic device discovery via multicast. */
-	disableAutoDiscovery?: boolean;
+	/** Discovery scan mode: 'interval' (periodic), 'once' (on start), 'never' (manual only). */
+	scanMode?: 'interval' | 'once' | 'never';
 }

@@ -1,7 +1,6 @@
 {
 	"_configDescription": "没有什么必须配置的。仅当您确定这是您需要的时才更改间隔",
 	"_deviceStatusRefreshInterval": "设备状态刷新间隔",
-	"_disableAutoDiscovery": "禁用自动发现",
 	"_discoveredDevices": "发现的设备",
 	"_discoveredDevicesHint": "所有发现的设备（自动和手动）都可以在对象 → govee-local.0 → 信息 →discoveredDevices 中找到",
 	"_extendedLogging": "启用扩展日志记录",

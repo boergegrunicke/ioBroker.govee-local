@@ -1,7 +1,7 @@
 {
 	"_configDescription": "Hier muss nichts konfiguriert werden. Bitte die Intervalle nur ändern, wenn dies explizit gewollt ist.",
 	"_deviceStatusRefreshInterval": "Aktualisierungsintervall für den Gerätestatus",
-	"_disableAutoDiscovery": "Automatische Suche deaktivieren",
+	"_comment_extendedLogging": "Tooltip for option 'extendedLogging'",
 	"_discoveredDevices": "Gefundene Geräte",
 	"_discoveredDevicesHint": "Alle gefundenen Geräte (automatisch und manuell) werden unten angezeigt:",
 	"_extendedLogging": "Erweiterte Protokollierung aktiviert",

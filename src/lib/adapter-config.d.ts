@@ -9,7 +9,7 @@ declare global {
 			extendedLogging: boolean;
 			interface: string;
 			manualIpTable: string[];
-			disableAutoDiscovery: boolean;
+			scanMode: 'interval' | 'once' | 'never';
 		}
 	}
 }

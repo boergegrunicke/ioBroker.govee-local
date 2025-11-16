@@ -11,7 +11,6 @@
 	"_manualIpHint": "You can add IP addresses here for devices that were not auto-discovered.",
 	"_discoveredDevicesHint": "All discovered devices (auto and manual) are shown below:",
 	"_discoveredDevices": "Discovered Devices",
-	"_disableAutoDiscovery": "Disable auto-discovery",
 	"_scanMode": "Device discovery mode",
 	"_scanModeInterval": "Scan in interval",
 	"_scanModeOnce": "Scan once at startup",

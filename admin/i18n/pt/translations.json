@@ -1,7 +1,6 @@
 {
 	"_configDescription": "Não há nada obrigatório para configurar. Por favor, altere os intervalos somente quando tiver certeza de que é isso que você precisa",
 	"_deviceStatusRefreshInterval": "intervalo de atualização do status do dispositivo",
-	"_disableAutoDiscovery": "Desativar descoberta automática",
 	"_discoveredDevices": "Dispositivos descobertos",
 	"_discoveredDevicesHint": "Todos os dispositivos descobertos (automáticos e manuais) podem ser encontrados em Objetos → govee-local.0 → informações → dispositivos descobertos",
 	"_extendedLogging": "Registro estendido ativado",

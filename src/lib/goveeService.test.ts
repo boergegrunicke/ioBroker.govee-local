@@ -502,7 +502,7 @@ describe('GoveeService', () => {
 
 		it('should combine manual devices with auto-discovery when enabled', (done) => {
 			options.manualIpAddresses = ['192.168.1.50'];
-			options.disableAutoDiscovery = false;
+			options.scanMode = 'interval';
 			service = new GoveeService(options);
 
 			let manualDeviceDiscovered = false;

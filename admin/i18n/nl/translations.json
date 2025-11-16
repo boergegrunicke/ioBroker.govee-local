@@ -1,7 +1,6 @@
 {
 	"_configDescription": "Er is niets verplicht om te configureren. Wijzig de intervallen alleen als u zeker weet dat dit is wat u nodig heeft",
 	"_deviceStatusRefreshInterval": "vernieuwingsinterval apparaatstatus",
-	"_disableAutoDiscovery": "Schakel automatische detectie uit",
 	"_discoveredDevices": "Ontdekte apparaten",
 	"_discoveredDevicesHint": "Alle ontdekte apparaten (automatisch en handmatig) zijn te vinden in Objecten → govee-local.0 → info → ontdekte apparaten",
 	"_extendedLogging": "Uitgebreide logboekregistratie ingeschakeld",

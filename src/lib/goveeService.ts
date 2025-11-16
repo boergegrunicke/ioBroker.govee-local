@@ -63,6 +63,7 @@ export class GoveeService extends EventEmitter {
 	private options: GoveeServiceOptions;
 	private devices: { [ip: string]: string } = {};
 	private loggedDevices: string[] = [];
+	private lastStatusLog: { [ip: string]: string } = {};
 	private searchInterval?: NodeJS.Timeout;
 	private refreshInterval?: NodeJS.Timeout;
 	private scanMode: 'interval' | 'once' | 'never' = 'interval';
@@ -84,8 +85,10 @@ export class GoveeService extends EventEmitter {
 		this.options = options;
 		this.socket = dgram.createSocket({ type: 'udp4' });
 		// Get scanMode from options, fallback to interval
-		if ((options as any).scanMode === 'once' || (options as any).scanMode === 'never') {
-			this.scanMode = (options as any).scanMode;
+		const providedScanMode = options.scanMode;
+
+		if (providedScanMode === 'once' || providedScanMode === 'never') {
+			this.scanMode = providedScanMode;
 		} else {
 			this.scanMode = 'interval';
 		}
@@ -110,27 +113,19 @@ export class GoveeService extends EventEmitter {
 		this.socket.setMulticastTTL(128);
 		this.socket.setMulticastInterface(this.options.interface);
 		this.socket.addMembership(GoveeService.M_CAST);
-		this.options.logger?.debug(
-			`UDP listening on ${(this.socket.address() as any).address}:${(this.socket.address() as any).port}`,
-		);
 
 		// Add manual IP addresses if provided
 		if (this.options.manualIpAddresses && this.options.manualIpAddresses.length > 0) {
 			this.addManualDevices(this.options.manualIpAddresses);
-			this.options.logger?.info(
-				`Added ${this.options.manualIpAddresses.length} manual device(s) from configuration.`,
-			);
 		}
 
-		// Discovery according to the user's preference (scanMode)
+		// Start discovery according to scanMode
+		this.options.logger?.info(`Device discovery mode: "${this.scanMode}"`);
+
 		if (this.scanMode === 'interval') {
 			this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);
-			this.options.logger?.debug(`Auto-discovery started with interval ${this.options.searchInterval} seconds.`);
 		} else if (this.scanMode === 'once') {
 			this.sendScan();
-			this.options.logger?.debug('Auto-discovery: scan once at startup.');
-		} else if (this.scanMode === 'never') {
-			this.options.logger?.debug('Auto-discovery is disabled. Only manual devices will be used.');
 		}
 
 		this.refreshInterval = setInterval(
@@ -166,10 +161,11 @@ export class GoveeService extends EventEmitter {
 						'_',
 					);
 					this.devices[remote.address] = deviceName;
-					if (this.options.extendedLogging) {
+					if (this.options.extendedLogging && !this.loggedDevices.includes(remote.address.toString())) {
 						this.options.logger?.info(
 							`Discovered device: ${deviceName} at ${remote.address} (model: ${messageObject.msg.data.sku})`,
 						);
+						this.loggedDevices.push(remote.address.toString());
 					}
 					this.emit('deviceDiscovered', {
 						ip: remote.address,
@@ -182,9 +178,12 @@ export class GoveeService extends EventEmitter {
 			case 'devStatus': {
 				const sendingDevice = this.devices[remote.address];
 				if (sendingDevice) {
-					if (this.options.extendedLogging && !this.loggedDevices.includes(remote.address.toString())) {
-						this.options.logger?.info(`device status message data: ${JSON.stringify(messageObject)}`);
-						this.loggedDevices.push(remote.address.toString());
+					if (this.options.extendedLogging) {
+						const statusString = JSON.stringify(messageObject);
+						if (this.lastStatusLog[remote.address] !== statusString) {
+							this.options.logger?.info(`device status message data: ${statusString}`);
+							this.lastStatusLog[remote.address] = statusString;
+						}
 					}
 					this.emitDeviceStatusUpdate(sendingDevice, remote.address, messageObject);
 				}

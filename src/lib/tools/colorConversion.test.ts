@@ -31,4 +31,14 @@ describe('colorConversion', () => {
                 const kelvin = miredToKelvin(mired);
                 expect(kelvin).to.equal(5000);
         });
+
+        it('clamps extreme kelvin to safe mired range', () => {
+                expect(kelvinToMired(1)).to.equal(600);
+                expect(kelvinToMired(100000)).to.equal(140);
+        });
+
+        it('clamps extreme mired inputs before converting to kelvin', () => {
+                expect(miredToKelvin(0)).to.equal(7143);
+                expect(miredToKelvin(99999)).to.equal(1667);
+        });
 });

@@ -112,6 +112,38 @@ export class GoveeLocal extends utils.Adapter {
                 }
         }
 
+        private sanitizeKelvinValue(
+                deviceName: string,
+                incomingKelvin: unknown,
+                previousKelvin: number,
+        ): number | undefined {
+                const MIN_KELVIN = 1000;
+                const MAX_KELVIN = 10000;
+                const numericKelvin = typeof incomingKelvin === 'number' ? incomingKelvin : NaN;
+
+                if (Number.isFinite(numericKelvin) && numericKelvin >= MIN_KELVIN && numericKelvin <= MAX_KELVIN) {
+                        return Math.round(numericKelvin);
+                }
+
+                if (
+                        Number.isFinite(previousKelvin) &&
+                        previousKelvin >= MIN_KELVIN &&
+                        previousKelvin <= MAX_KELVIN
+                ) {
+                        this.logExtended(
+                                `Ignoring invalid Kelvin ${incomingKelvin} from ${deviceName}, keeping previous value ${previousKelvin}K`,
+                        );
+                        return Math.round(previousKelvin);
+                }
+
+                if (this.config.extendedLogging) {
+                        this.log.info(
+                                `Ignoring invalid Kelvin ${incomingKelvin} from ${deviceName} with no previous value to reuse`,
+                        );
+                }
+                return undefined;
+        }
+
 	/**
 	 * Called if a subscribed state changes (e.g. user toggles a switch in ioBroker UI).
 	 * Forwards the change to the GoveeService for device communication.
@@ -352,16 +384,8 @@ export class GoveeLocal extends utils.Adapter {
                 const previousKelvin = Number(
                         (await this.getStateAsync(`${deviceName}.devStatus.colorTemInKelvin`))?.val ?? 0,
                 );
-                const kelvinValue =
-                        typeof status.colorTemInKelvin === 'number' && status.colorTemInKelvin > 0
-                                ? status.colorTemInKelvin
-                                : previousKelvin;
-                if (status.colorTemInKelvin === 0 && previousKelvin > 0 && this.config.extendedLogging) {
-                        this.log.info(
-                                `Received 0K from device ${deviceName}, keeping previous value ${previousKelvin}K to avoid invalid temperature updates`,
-                        );
-                }
-                if (kelvinValue > 0) {
+                const kelvinValue = this.sanitizeKelvinValue(deviceName, status.colorTemInKelvin, previousKelvin);
+                if (kelvinValue !== undefined) {
                         await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, kelvinValue);
                 }
 
@@ -380,7 +404,7 @@ export class GoveeLocal extends utils.Adapter {
                         },
                         native: {},
                 });
-                if (kelvinValue > 0) {
+                if (kelvinValue !== undefined) {
                         await this.updateStateAsync(
                                 `${deviceName}.devStatus.colorTemperature`,
                                 kelvinToMired(kelvinValue),

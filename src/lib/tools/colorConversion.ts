@@ -81,12 +81,27 @@ export function hslToRgb(hue: number, saturation: number, lightness: number): {
  * Converts a color temperature value in Kelvin to mired (micro reciprocal degrees).
  */
 export function kelvinToMired(kelvin: number): number {
-        return Math.round(1000000 / Math.max(1, kelvin));
+        const mired = Math.round(1000000 / Math.max(1, kelvin));
+        return clampMired(mired);
 }
 
 /**
  * Converts a color temperature value in mired (micro reciprocal degrees) to Kelvin.
  */
 export function miredToKelvin(mired: number): number {
-        return Math.round(1000000 / Math.max(1, mired));
+        const clampedMired = clampMired(mired);
+        return Math.round(1000000 / Math.max(1, clampedMired));
+}
+
+const MIRED_MIN = 140;
+const MIRED_MAX = 600;
+
+/**
+ * Clamp mired values to the supported HomeKit range to avoid runaway conversions.
+ */
+function clampMired(mired: number): number {
+        if (!Number.isFinite(mired)) {
+                return MIRED_MIN;
+        }
+        return Math.max(MIRED_MIN, Math.min(MIRED_MAX, Math.round(mired)));
 }

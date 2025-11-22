@@ -79,10 +79,20 @@ function hslToRgb(hue, saturation, lightness) {
   return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
 }
 function kelvinToMired(kelvin) {
-  return Math.round(1e6 / Math.max(1, kelvin));
+  const mired = Math.round(1e6 / Math.max(1, kelvin));
+  return clampMired(mired);
 }
 function miredToKelvin(mired) {
-  return Math.round(1e6 / Math.max(1, mired));
+  const clampedMired = clampMired(mired);
+  return Math.round(1e6 / Math.max(1, clampedMired));
+}
+const MIRED_MIN = 140;
+const MIRED_MAX = 600;
+function clampMired(mired) {
+  if (!Number.isFinite(mired)) {
+    return MIRED_MIN;
+  }
+  return Math.max(MIRED_MIN, Math.min(MIRED_MAX, Math.round(mired)));
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

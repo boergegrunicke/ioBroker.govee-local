@@ -109,6 +109,11 @@ class GoveeLocal extends utils.Adapter {
     }
     void this.subscribeStates("*.devStatus.*");
   }
+  logExtended(message) {
+    if (this.config.extendedLogging) {
+      this.log.info(message);
+    }
+  }
   /**
    * Called if a subscribed state changes (e.g. user toggles a switch in ioBroker UI).
    * Forwards the change to the GoveeService for device communication.
@@ -287,6 +292,9 @@ class GoveeLocal extends utils.Adapter {
       native: {}
     });
     const { hue, saturation } = (0, import_colorConversion.rgbToHsl)((0, import_hexTool.hexToRgb)(status.color));
+    this.logExtended(
+      `Calculated HSL from device color ${status.color}: hue=${hue.toFixed(2)}, saturation=${saturation.toFixed(2)}`
+    );
     await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
     await this.setObjectNotExistsAsync(`${deviceName}.devStatus.saturation`, {
       type: "state",
@@ -314,7 +322,18 @@ class GoveeLocal extends utils.Adapter {
       },
       native: {}
     });
-    await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
+    const previousKelvin = Number(
+      (_b = (_a = await this.getStateAsync(`${deviceName}.devStatus.colorTemInKelvin`)) == null ? void 0 : _a.val) != null ? _b : 0
+    );
+    const kelvinValue = typeof status.colorTemInKelvin === "number" && status.colorTemInKelvin > 0 ? status.colorTemInKelvin : previousKelvin;
+    if (status.colorTemInKelvin === 0 && previousKelvin > 0 && this.config.extendedLogging) {
+      this.log.info(
+        `Received 0K from device ${deviceName}, keeping previous value ${previousKelvin}K to avoid invalid temperature updates`
+      );
+    }
+    if (kelvinValue > 0) {
+      await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, kelvinValue);
+    }
     await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemperature`, {
       type: "state",
       common: {
@@ -329,10 +348,15 @@ class GoveeLocal extends utils.Adapter {
       },
       native: {}
     });
-    await this.updateStateAsync(
-      `${deviceName}.devStatus.colorTemperature`,
-      (0, import_colorConversion.kelvinToMired)(status.colorTemInKelvin)
-    );
+    if (kelvinValue > 0) {
+      await this.updateStateAsync(
+        `${deviceName}.devStatus.colorTemperature`,
+        (0, import_colorConversion.kelvinToMired)(kelvinValue)
+      );
+      this.logExtended(
+        `Converted Kelvin ${kelvinValue} to mired ${(0, import_colorConversion.kelvinToMired)(kelvinValue)} for device ${deviceName}`
+      );
+    }
   }
   /**
    * Handles changes for HomeKit-style color temperature (mired) values.
@@ -340,6 +364,9 @@ class GoveeLocal extends utils.Adapter {
   async handleColorTemperatureChange(deviceName, state, receiver) {
     const miredValue = Number(state.val);
     const kelvin = (0, import_colorConversion.miredToKelvin)(miredValue);
+    this.logExtended(
+      `Received mired ${miredValue} for ${deviceName}, converted to Kelvin ${kelvin} before sending to ${receiver}`
+    );
     this.goveeService.sendColorTempCommand(receiver, kelvin);
     await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, kelvin);
   }
@@ -353,6 +380,9 @@ class GoveeLocal extends utils.Adapter {
     const brightness = Number((_f = (_e = await this.getStateAsync(`${deviceName}.devStatus.brightness`)) == null ? void 0 : _e.val) != null ? _f : 50);
     const { r, g, b } = (0, import_colorConversion.hslToRgb)(hueState, saturationState, brightness);
     const hexColor = `#${(0, import_hexTool.componentToHex)(r)}${(0, import_hexTool.componentToHex)(g)}${(0, import_hexTool.componentToHex)(b)}`;
+    this.logExtended(
+      `HSL input for ${deviceName}: hue=${hueState}, saturation=${saturationState}, brightness=${brightness} -> RGB (${r}, ${g}, ${b}) / ${hexColor}`
+    );
     this.goveeService.sendColorCommand(receiver, hexColor);
   }
 }

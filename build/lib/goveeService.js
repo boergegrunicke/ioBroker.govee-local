@@ -173,7 +173,13 @@ class GoveeService extends import_node_events.EventEmitter {
    * @param receiver The IP address or hostname of the device.
    */
   requestDeviceStatus(receiver) {
+    var _a;
     const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(GoveeService.requestStatusMessage));
+    if (this.options.extendedLogging) {
+      (_a = this.options.logger) == null ? void 0 : _a.info(
+        `Sending status request to ${receiver}: ${JSON.stringify(GoveeService.requestStatusMessage)}`
+      );
+    }
     this.socket.send(
       requestDeviceStatusBuffer,
       0,
@@ -282,8 +288,12 @@ class GoveeService extends import_node_events.EventEmitter {
    * @param value true for on, false for off
    */
   sendTurnCommand(receiver, value) {
+    var _a;
     const turnMessage = { msg: { cmd: "turn", data: { value: value ? 1 : 0 } } };
     const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
+    if (this.options.extendedLogging) {
+      (_a = this.options.logger) == null ? void 0 : _a.info(`Sending turn command to ${receiver}: ${JSON.stringify(turnMessage)}`);
+    }
     this.socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
   }
   /**
@@ -293,8 +303,14 @@ class GoveeService extends import_node_events.EventEmitter {
    * @param value Brightness value
    */
   sendBrightnessCommand(receiver, value) {
+    var _a;
     const brightnessMessage = { msg: { cmd: "brightness", data: { value } } };
     const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
+    if (this.options.extendedLogging) {
+      (_a = this.options.logger) == null ? void 0 : _a.info(
+        `Sending brightness command to ${receiver}: ${JSON.stringify(brightnessMessage)}`
+      );
+    }
     this.socket.send(
       brightnessMessageBuffer,
       0,
@@ -310,6 +326,7 @@ class GoveeService extends import_node_events.EventEmitter {
    * @param kelvin Color temperature in Kelvin
    */
   sendColorTempCommand(receiver, kelvin) {
+    var _a;
     const colorTempMessageBuffer = Buffer.from(
       JSON.stringify({
         msg: {
@@ -318,6 +335,11 @@ class GoveeService extends import_node_events.EventEmitter {
         }
       })
     );
+    if (this.options.extendedLogging) {
+      (_a = this.options.logger) == null ? void 0 : _a.info(
+        `Sending color temperature command to ${receiver}: ${JSON.stringify({ kelvin })}`
+      );
+    }
     this.socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
   }
   /**
@@ -327,9 +349,13 @@ class GoveeService extends import_node_events.EventEmitter {
    * @param hexColor Color as hex string (e.g. #FFAABB)
    */
   sendColorCommand(receiver, hexColor) {
+    var _a;
     const rgb = (0, import_hexTool.hexToRgb)(hexColor);
     const colorMessage = { msg: { cmd: "colorwc", data: { color: rgb } } };
     const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+    if (this.options.extendedLogging) {
+      (_a = this.options.logger) == null ? void 0 : _a.info(`Sending color command to ${receiver}: ${JSON.stringify(colorMessage)}`);
+    }
     this.socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
   }
   /**

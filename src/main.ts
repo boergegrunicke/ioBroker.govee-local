@@ -12,8 +12,10 @@ import { componentToHex, hexToRgb } from './lib/tools/hexTool';
  * Handles initialization, event wiring, and communication with GoveeService.
  */
 export class GoveeLocal extends utils.Adapter {
-	/** Instance of GoveeService for device communication */
-	private goveeService!: GoveeService;
+        private static readonly PENDING_HSL_TIMEOUT_MS = 10000;
+        /** Instance of GoveeService for device communication */
+        private goveeService!: GoveeService;
+        private pendingHslCommands = new Map<string, { hue: number; saturation: number; timestamp: number }>();
 	/**
 	 * Adapter constructor. Registers lifecycle event handlers.
 	 *
@@ -314,9 +316,9 @@ export class GoveeLocal extends utils.Adapter {
 			},
 			native: {},
 		});
-		await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
+                await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
 
-		// Create and update color state
+                // Create and update color state
                 await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
                         type: 'state',
                         common: {
@@ -328,7 +330,6 @@ export class GoveeLocal extends utils.Adapter {
                         },
                         native: {},
                 });
-                await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
 
                 // Create and update hue state
                 await this.setObjectNotExistsAsync(`${deviceName}.devStatus.hue`, {
@@ -346,13 +347,6 @@ export class GoveeLocal extends utils.Adapter {
                         native: {},
                 });
 
-                const { hue, saturation } = rgbToHsl(hexToRgb(status.color));
-                this.logExtended(
-                        `Calculated HSL from device color ${status.color}: hue=${hue.toFixed(2)}, saturation=${saturation.toFixed(2)}`,
-                );
-                await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
-
-                // Create and update saturation state
                 await this.setObjectNotExistsAsync(`${deviceName}.devStatus.saturation`, {
                         type: 'state',
                         common: {
@@ -367,7 +361,35 @@ export class GoveeLocal extends utils.Adapter {
                         },
                         native: {},
                 });
-                await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
+
+                const { hue, saturation } = rgbToHsl(hexToRgb(status.color));
+                const pendingHsl = this.pendingHslCommands.get(deviceName);
+                const now = Date.now();
+                const pendingExpired =
+                        !pendingHsl || now - pendingHsl.timestamp > GoveeLocal.PENDING_HSL_TIMEOUT_MS;
+                const pendingMatches =
+                        pendingHsl &&
+                        Math.round(hue) === Math.round(pendingHsl.hue) &&
+                        Math.round(saturation) === Math.round(pendingHsl.saturation);
+
+                if (!pendingExpired && !pendingMatches) {
+                        this.logExtended(
+                                `Skipping HSL update for ${deviceName} (pending hue=${pendingHsl.hue}, saturation=${pendingHsl.saturation}; device reported hue=${hue.toFixed(2)}, saturation=${saturation.toFixed(2)})`,
+                        );
+                } else {
+                        this.logExtended(
+                                `Calculated HSL from device color ${status.color}: hue=${hue.toFixed(2)}, saturation=${saturation.toFixed(2)}`,
+                        );
+                        if (!pendingExpired && pendingMatches) {
+                                this.pendingHslCommands.delete(deviceName);
+                        } else if (pendingExpired && pendingHsl) {
+                                this.pendingHslCommands.delete(deviceName);
+                        }
+                        await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
+                        await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
+
+                        await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
+                }
 
                 // Create and update color temperature state
                 await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
@@ -453,6 +475,11 @@ export class GoveeLocal extends utils.Adapter {
 
                 const { r, g, b } = hslToRgb(hueState, saturationState, brightness);
                 const hexColor = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+                this.pendingHslCommands.set(deviceName, {
+                        hue: hueState,
+                        saturation: saturationState,
+                        timestamp: Date.now(),
+                });
                 this.logExtended(
                         `HSL input for ${deviceName}: hue=${hueState}, saturation=${saturationState}, brightness=${brightness} -> RGB (${r}, ${g}, ${b}) / ${hexColor}`,
                 );

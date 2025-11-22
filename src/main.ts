@@ -472,8 +472,9 @@ export class GoveeLocal extends utils.Adapter {
                                 ? Number(state.val)
                                 : Number((await this.getStateAsync(`${deviceName}.devStatus.saturation`))?.val ?? 0);
                 const brightness = Number((await this.getStateAsync(`${deviceName}.devStatus.brightness`))?.val ?? 50);
+                const lightnessForHsl = Math.max(0, Math.min(100, brightness)) / 2;
 
-                const { r, g, b } = hslToRgb(hueState, saturationState, brightness);
+                const { r, g, b } = hslToRgb(hueState, saturationState, lightnessForHsl);
                 const hexColor = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
                 this.pendingHslCommands.set(deviceName, {
                         hue: hueState,
@@ -481,7 +482,7 @@ export class GoveeLocal extends utils.Adapter {
                         timestamp: Date.now(),
                 });
                 this.logExtended(
-                        `HSL input for ${deviceName}: hue=${hueState}, saturation=${saturationState}, brightness=${brightness} -> RGB (${r}, ${g}, ${b}) / ${hexColor}`,
+                        `HSL input for ${deviceName}: hue=${hueState}, saturation=${saturationState}, brightness=${brightness} (lightness=${lightnessForHsl}) -> RGB (${r}, ${g}, ${b}) / ${hexColor}`,
                 );
                 this.goveeService.sendColorCommand(receiver, hexColor);
         }

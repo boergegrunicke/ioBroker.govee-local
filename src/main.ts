@@ -4,6 +4,8 @@
 
 import * as utils from '@iobroker/adapter-core';
 import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
+import { hslToRgb, kelvinToMired, miredToKelvin, rgbToHsl } from './lib/tools/colorConversion';
+import { componentToHex, hexToRgb } from './lib/tools/hexTool';
 
 /**
  * Main adapter class for ioBroker Govee Local.
@@ -96,13 +98,19 @@ export class GoveeLocal extends utils.Adapter {
 		// Start device discovery and status polling
 		this.goveeService.start();
 
-		if (this.config.extendedLogging) {
-			this.log.debug('running with extended logging');
-		}
+                if (this.config.extendedLogging) {
+                        this.log.debug('running with extended logging');
+                }
 
 		// Subscribe to all device status state changes
-		void this.subscribeStates('*.devStatus.*');
-	}
+                void this.subscribeStates('*.devStatus.*');
+        }
+
+        private logExtended(message: string): void {
+                if (this.config.extendedLogging) {
+                        this.log.info(message);
+                }
+        }
 
 	/**
 	 * Called if a subscribed state changes (e.g. user toggles a switch in ioBroker UI).
@@ -113,15 +121,26 @@ export class GoveeLocal extends utils.Adapter {
 	 */
 	private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
 		if (state && !state.ack) {
-			// Extract device name from state ID and get its IP address
-			const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
-			const receiver = ipOfDevice?.val?.toString();
-			if (typeof receiver === 'string') {
-				// Forward the state change to the GoveeService
-				this.goveeService.handleStateChange(id, state, receiver);
-			} else {
-				this.log.error('device not found or IP is not a string');
-			}
+                        const [deviceName, stateKey] = [id.split('.')[2], id.split('.')[4]];
+                        // Extract device name from state ID and get its IP address
+                        const ipOfDevice = await this.getStateAsync(`${deviceName}.deviceInfo.ip`);
+                        const receiver = ipOfDevice?.val?.toString();
+                        if (typeof receiver === 'string') {
+                                switch (stateKey) {
+                                        case 'colorTemperature':
+                                                await this.handleColorTemperatureChange(deviceName, state, receiver);
+                                                break;
+                                        case 'hue':
+                                        case 'saturation':
+                                                await this.handleHslChange(deviceName, stateKey, state, receiver);
+                                                break;
+                                        default:
+                                                // Forward the state change to the GoveeService
+                                                this.goveeService.handleStateChange(id, state, receiver);
+                                }
+                        } else {
+                                this.log.error('device not found or IP is not a string');
+                        }
 		}
 	}
 
@@ -234,8 +253,8 @@ export class GoveeLocal extends utils.Adapter {
 	 *
 	 * @param event The device status update event data.
 	 */
-	private async handleDeviceStatusUpdate(event: DeviceStatusEvent): Promise<void> {
-		const { deviceName, status } = event;
+        private async handleDeviceStatusUpdate(event: DeviceStatusEvent): Promise<void> {
+                const { deviceName, status } = event;
 
 		// Create and update onOff state
 		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.onOff`, {
@@ -266,33 +285,155 @@ export class GoveeLocal extends utils.Adapter {
 		await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
 
 		// Create and update color state
-		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
-			type: 'state',
-			common: {
-				name: 'Current showing color of the lamp',
-				type: 'string',
-				role: 'level.color.rgb',
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
-		await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
+                await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
+                        type: 'state',
+                        common: {
+                                name: 'Current showing color of the lamp',
+                                type: 'string',
+                                role: 'level.color.rgb',
+                                read: true,
+                                write: true,
+                        },
+                        native: {},
+                });
+                await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
 
-		// Create and update color temperature state
-		await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
-			type: 'state',
-			common: {
+                // Create and update hue state
+                await this.setObjectNotExistsAsync(`${deviceName}.devStatus.hue`, {
+                        type: 'state',
+                        common: {
+                                name: 'Hue of the lamp',
+                                type: 'number',
+                                role: 'level.color.hue',
+                                unit: '°',
+                                read: true,
+                                write: true,
+                                min: 0,
+                                max: 360,
+                        },
+                        native: {},
+                });
+
+                const { hue, saturation } = rgbToHsl(hexToRgb(status.color));
+                this.logExtended(
+                        `Calculated HSL from device color ${status.color}: hue=${hue.toFixed(2)}, saturation=${saturation.toFixed(2)}`,
+                );
+                await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
+
+                // Create and update saturation state
+                await this.setObjectNotExistsAsync(`${deviceName}.devStatus.saturation`, {
+                        type: 'state',
+                        common: {
+                                name: 'Saturation of the lamp',
+                                type: 'number',
+                                role: 'level.color.saturation',
+                                unit: '%',
+                                read: true,
+                                write: true,
+                                min: 0,
+                                max: 100,
+                        },
+                        native: {},
+                });
+                await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
+
+                // Create and update color temperature state
+                await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
+                        type: 'state',
+                        common: {
 				name: 'If staying in white light, the color temperature',
 				type: 'number',
 				role: 'level.color.temperature',
 				read: true,
 				write: true,
-			},
-			native: {},
-		});
-		await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
-	}
+                        },
+                        native: {},
+                });
+                const previousKelvin = Number(
+                        (await this.getStateAsync(`${deviceName}.devStatus.colorTemInKelvin`))?.val ?? 0,
+                );
+                const kelvinValue =
+                        typeof status.colorTemInKelvin === 'number' && status.colorTemInKelvin > 0
+                                ? status.colorTemInKelvin
+                                : previousKelvin;
+                if (status.colorTemInKelvin === 0 && previousKelvin > 0 && this.config.extendedLogging) {
+                        this.log.info(
+                                `Received 0K from device ${deviceName}, keeping previous value ${previousKelvin}K to avoid invalid temperature updates`,
+                        );
+                }
+                if (kelvinValue > 0) {
+                        await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, kelvinValue);
+                }
+
+                // Create and update color temperature in mired state for HomeKit
+                await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemperature`, {
+                        type: 'state',
+                        common: {
+                                name: 'Color temperature in mired (HomeKit compatible)',
+                                type: 'number',
+                                role: 'level.color.temperature',
+                                unit: 'mired',
+                                read: true,
+                                write: true,
+                                min: 140,
+                                max: 600,
+                        },
+                        native: {},
+                });
+                if (kelvinValue > 0) {
+                        await this.updateStateAsync(
+                                `${deviceName}.devStatus.colorTemperature`,
+                                kelvinToMired(kelvinValue),
+                        );
+                        this.logExtended(
+                                `Converted Kelvin ${kelvinValue} to mired ${kelvinToMired(kelvinValue)} for device ${deviceName}`,
+                        );
+                }
+        }
+
+        /**
+         * Handles changes for HomeKit-style color temperature (mired) values.
+         */
+        private async handleColorTemperatureChange(
+                deviceName: string,
+                state: ioBroker.State,
+                receiver: string,
+        ): Promise<void> {
+                const miredValue = Number(state.val);
+                const kelvin = miredToKelvin(miredValue);
+                this.logExtended(
+                        `Received mired ${miredValue} for ${deviceName}, converted to Kelvin ${kelvin} before sending to ${receiver}`,
+                );
+                this.goveeService.sendColorTempCommand(receiver, kelvin);
+                await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, kelvin);
+        }
+
+        /**
+         * Handles hue or saturation changes by converting HSL values to RGB hex commands.
+         */
+        private async handleHslChange(
+                deviceName: string,
+                stateKey: 'hue' | 'saturation',
+                state: ioBroker.State,
+                receiver: string,
+        ): Promise<void> {
+                const hueState =
+                        stateKey === 'hue'
+                                ? Number(state.val)
+                                : Number((await this.getStateAsync(`${deviceName}.devStatus.hue`))?.val ?? 0);
+                const saturationState =
+                        stateKey === 'saturation'
+                                ? Number(state.val)
+                                : Number((await this.getStateAsync(`${deviceName}.devStatus.saturation`))?.val ?? 0);
+                const brightness = Number((await this.getStateAsync(`${deviceName}.devStatus.brightness`))?.val ?? 50);
+
+                const { r, g, b } = hslToRgb(hueState, saturationState, brightness);
+                const hexColor = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+                this.logExtended(
+                        `HSL input for ${deviceName}: hue=${hueState}, saturation=${saturationState}, brightness=${brightness} -> RGB (${r}, ${g}, ${b}) / ${hexColor}`,
+                );
+                this.goveeService.sendColorCommand(receiver, hexColor);
+        }
 }
 
 // Export factory function for ioBroker or start instance directly

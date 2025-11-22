@@ -234,6 +234,7 @@ class GoveeLocal extends utils.Adapter {
    * @param event The device status update event data.
    */
   async handleDeviceStatusUpdate(event) {
+    var _a, _b;
     const { deviceName, status } = event;
     await this.setObjectNotExistsAsync(`${deviceName}.devStatus.onOff`, {
       type: "state",

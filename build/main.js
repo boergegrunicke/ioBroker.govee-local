@@ -314,13 +314,7 @@ class GoveeLocal extends utils.Adapter {
       },
       native: {}
     });
-    const previousKelvin = Number(
-      (_b = (_a = await this.getStateAsync(`${deviceName}.devStatus.colorTemInKelvin`)) == null ? void 0 : _a.val) != null ? _b : 0
-    );
-    const kelvinValue = typeof status.colorTemInKelvin === "number" && status.colorTemInKelvin > 0 ? status.colorTemInKelvin : previousKelvin;
-    if (kelvinValue > 0) {
-      await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, kelvinValue);
-    }
+    await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
     await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemperature`, {
       type: "state",
       common: {
@@ -335,12 +329,10 @@ class GoveeLocal extends utils.Adapter {
       },
       native: {}
     });
-    if (kelvinValue > 0) {
-      await this.updateStateAsync(
-        `${deviceName}.devStatus.colorTemperature`,
-        (0, import_colorConversion.kelvinToMired)(kelvinValue)
-      );
-    }
+    await this.updateStateAsync(
+      `${deviceName}.devStatus.colorTemperature`,
+      (0, import_colorConversion.kelvinToMired)(status.colorTemInKelvin)
+    );
   }
   /**
    * Handles changes for HomeKit-style color temperature (mired) values.

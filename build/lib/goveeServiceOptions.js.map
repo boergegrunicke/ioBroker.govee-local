@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/goveeServiceOptions.ts"],
+  "sourcesContent": ["/**\n * Configuration options for the GoveeService.\n */\nexport interface GoveeServiceOptions {\n\t/** Network interface to bind UDP socket to. */\n\tinterface: string;\n\t/** Interval in seconds for device search. */\n\tsearchInterval: number;\n\t/** Interval in seconds for device status refresh. */\n\tdeviceStatusRefreshInterval: number;\n\t/** Enable extended debug/info logging. */\n\textendedLogging?: boolean;\n\t/** RegExp for forbidden characters in device names. */\n\tforbiddenChars?: RegExp;\n\t/** Logger object with debug/info/error methods. */\n\tlogger?: { debug: (msg: string) => void; info: (msg: string) => void; error: (msg: string) => void };\n\t/** Array of manual IP addresses for devices that should be added without discovery. */\n\tmanualIpAddresses?: string[];\n\t/** Discovery scan mode: 'interval' (periodic), 'once' (on start), 'never' (manual only). */\n\tscanMode?: 'interval' | 'once' | 'never';\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;",
+  "names": []
+}

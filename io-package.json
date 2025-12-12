@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.4.5",
+    "version": "0.4.6",
     "news": {
+      "0.4.6": {
+        "en": "add HomeKit-compatible hue and saturation states with mired color temperature support",
+        "de": "HomeKit-kompatible Hue- und Sättigungszustände mit Unterstützung der Mired-Farbtemperatur hinzufügen",
+        "ru": "добавить совместимые с HomeKit состояния оттенка и насыщенности с поддержкой цветовой температуры mired",
+        "pt": "adicionar estados de tonalidade e saturação compatíveis com HomeKit com suporte à temperatura de cor mired",
+        "nl": "voeg HomeKit-compatibele tint- en verzadigingstoestanden toe met ondersteuning voor mired-kleurtemperatuur",
+        "fr": "ajouter des états de teinte et de saturation compatibles HomeKit avec prise en charge de la température de couleur mired",
+        "it": "aggiungere stati di tonalità e saturazione compatibili con HomeKit con supporto della temperatura di colore mired",
+        "es": "añadir estados de tono y saturación compatibles con HomeKit con soporte de temperatura de color mired",
+        "pl": "dodaj stany odcienia i nasycenia zgodne z HomeKit z obsługą temperatury barwowej mired",
+        "uk": "додати сумісні з HomeKit стани відтінку та насиченості з підтримкою температури кольору mired",
+        "zh-cn": "添加与 HomeKit 兼容的色调和饱和度状态，并支持 mired 色温"
+      },
       "0.4.5": {
         "en": "- fix scan mode inconsistency\n  enhance log output behavior",
         "de": "- scan-modus inkonsistenz beheben\ndas log ausgabeverhalten erhöhen",

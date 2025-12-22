@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../src/lib/tools/hexTool.ts"],
-  "sourcesContent": ["/**\n * Converts a number (0-255) to a two-digit hexadecimal string.\n *\n * @param c The number to convert.\n * @returns Hex string (e.g. '0A', 'FF').\n */\nexport function componentToHex(c: number): string {\n\tconst hex = c.toString(16).toUpperCase();\n\treturn hex.padStart(2, '0');\n}\n\n/**\n * Converts a hex color string (e.g. '#FFAABB') to an RGB object.\n *\n * @param hex The hex color string.\n * @returns An object with r, g, b properties.\n */\nexport function hexToRgb(hex: string): { r: number; g: number; b: number } {\n\t// Remove leading # if present\n\thex = hex.replace(/^#/, '');\n\tif (hex.length === 3) {\n\t\thex = hex\n\t\t\t.split('')\n\t\t\t.map((x) => x + x)\n\t\t\t.join('');\n\t}\n\tconst num = parseInt(hex, 16);\n\treturn {\n\t\tr: (num >> 16) & 255,\n\t\tg: (num >> 8) & 255,\n\t\tb: num & 255,\n\t};\n}\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAMO,SAAS,eAAe,GAAmB;AACjD,QAAM,MAAM,EAAE,SAAS,EAAE,EAAE,YAAY;AACvC,SAAO,IAAI,SAAS,GAAG,GAAG;AAC3B;AAQO,SAAS,SAAS,KAAkD;AAE1E,QAAM,IAAI,QAAQ,MAAM,EAAE;AAC1B,MAAI,IAAI,WAAW,GAAG;AACrB,UAAM,IACJ,MAAM,EAAE,EACR,IAAI,CAAC,MAAM,IAAI,CAAC,EAChB,KAAK,EAAE;AAAA,EACV;AACA,QAAM,MAAM,SAAS,KAAK,EAAE;AAC5B,SAAO;AAAA,IACN,GAAI,OAAO,KAAM;AAAA,IACjB,GAAI,OAAO,IAAK;AAAA,IAChB,GAAG,MAAM;AAAA,EACV;AACD;",
-  "names": []
-}

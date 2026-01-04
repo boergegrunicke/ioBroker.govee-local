@@ -209,11 +209,16 @@ export class GoveeService extends EventEmitter {
 	 *
 	 * @param receiver The IP address or hostname of the device.
 	 */
-	public requestDeviceStatus(receiver: string): void {
-		const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(GoveeService.requestStatusMessage));
-		this.socket.send(
-			requestDeviceStatusBuffer,
-			0,
+        public requestDeviceStatus(receiver: string): void {
+                const requestDeviceStatusBuffer = Buffer.from(JSON.stringify(GoveeService.requestStatusMessage));
+                if (this.options.extendedLogging) {
+                        this.options.logger?.info(
+                                `Sending status request to ${receiver}: ${JSON.stringify(GoveeService.requestStatusMessage)}`,
+                        );
+                }
+                this.socket.send(
+                        requestDeviceStatusBuffer,
+                        0,
 			requestDeviceStatusBuffer.length,
 			GoveeService.CONTROL_PORT,
 			receiver,
@@ -223,11 +228,11 @@ export class GoveeService extends EventEmitter {
 	/**
 	 * Send scan message to the UDP multicast address.
 	 */
-	public sendScan(): void {
-		if (this.options.extendedLogging) {
-			this.options.logger?.debug('sending scan message');
-		}
-		const scanMessageBuffer = Buffer.from(JSON.stringify(GoveeService.scanMessage));
+        public sendScan(): void {
+                if (this.options.extendedLogging) {
+                        this.options.logger?.debug('sending scan message');
+                }
+                const scanMessageBuffer = Buffer.from(JSON.stringify(GoveeService.scanMessage));
 		this.socket.send(
 			scanMessageBuffer,
 			0,
@@ -327,11 +332,14 @@ export class GoveeService extends EventEmitter {
 	 * @param receiver IP address or hostname
 	 * @param value true for on, false for off
 	 */
-	public sendTurnCommand(receiver: string, value: boolean): void {
-		const turnMessage = { msg: { cmd: 'turn', data: { value: value ? 1 : 0 } } };
-		const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
-		this.socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
-	}
+        public sendTurnCommand(receiver: string, value: boolean): void {
+                const turnMessage = { msg: { cmd: 'turn', data: { value: value ? 1 : 0 } } };
+                const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
+                if (this.options.extendedLogging) {
+                        this.options.logger?.info(`Sending turn command to ${receiver}: ${JSON.stringify(turnMessage)}`);
+                }
+                this.socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+        }
 
 	/**
 	 * Send a brightness command to a device.
@@ -339,12 +347,17 @@ export class GoveeService extends EventEmitter {
 	 * @param receiver IP address or hostname
 	 * @param value Brightness value
 	 */
-	public sendBrightnessCommand(receiver: string, value: number): void {
-		const brightnessMessage = { msg: { cmd: 'brightness', data: { value } } };
-		const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
-		this.socket.send(
-			brightnessMessageBuffer,
-			0,
+        public sendBrightnessCommand(receiver: string, value: number): void {
+                const brightnessMessage = { msg: { cmd: 'brightness', data: { value } } };
+                const brightnessMessageBuffer = Buffer.from(JSON.stringify(brightnessMessage));
+                if (this.options.extendedLogging) {
+                        this.options.logger?.info(
+                                `Sending brightness command to ${receiver}: ${JSON.stringify(brightnessMessage)}`,
+                        );
+                }
+                this.socket.send(
+                        brightnessMessageBuffer,
+                        0,
 			brightnessMessageBuffer.length,
 			GoveeService.CONTROL_PORT,
 			receiver,
@@ -357,17 +370,22 @@ export class GoveeService extends EventEmitter {
 	 * @param receiver IP address or hostname
 	 * @param kelvin Color temperature in Kelvin
 	 */
-	public sendColorTempCommand(receiver: string, kelvin: number): void {
-		const colorTempMessageBuffer = Buffer.from(
-			JSON.stringify({
-				msg: {
-					cmd: 'colorwc',
-					data: { color: { r: 0, g: 0, b: 0 }, colorTemInKelvin: kelvin },
-				},
-			}),
-		);
-		this.socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
-	}
+        public sendColorTempCommand(receiver: string, kelvin: number): void {
+                const colorTempMessageBuffer = Buffer.from(
+                        JSON.stringify({
+                                msg: {
+                                        cmd: 'colorwc',
+                                        data: { color: { r: 0, g: 0, b: 0 }, colorTemInKelvin: kelvin },
+                                },
+                        }),
+                );
+                if (this.options.extendedLogging) {
+                        this.options.logger?.info(
+                                `Sending color temperature command to ${receiver}: ${JSON.stringify({ kelvin })}`,
+                        );
+                }
+                this.socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+        }
 
 	/**
 	 * Send a color command to a device.
@@ -375,12 +393,15 @@ export class GoveeService extends EventEmitter {
 	 * @param receiver IP address or hostname
 	 * @param hexColor Color as hex string (e.g. #FFAABB)
 	 */
-	public sendColorCommand(receiver: string, hexColor: string): void {
-		const rgb = hexToRgb(hexColor);
-		const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
-		const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
-		this.socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
-	}
+        public sendColorCommand(receiver: string, hexColor: string): void {
+                const rgb = hexToRgb(hexColor);
+                const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
+                const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
+                if (this.options.extendedLogging) {
+                        this.options.logger?.info(`Sending color command to ${receiver}: ${JSON.stringify(colorMessage)}`);
+                }
+                this.socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+        }
 
 	/**
 	 * Emit device status update event with parsed status data.

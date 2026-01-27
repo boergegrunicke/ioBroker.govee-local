@@ -24,6 +24,10 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- add HomeKit-compatible hue and saturation states with mired color temperature support
+
 ### 0.4.5 (2025-11-16)
 
 - fix scan mode inconsistency

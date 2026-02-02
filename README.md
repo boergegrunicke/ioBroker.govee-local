@@ -27,7 +27,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 
 ### **WORK IN PROGRESS**
 
-- update dependensies
+- update dependencies
 
 ### 0.4.5 (2025-11-16)
 

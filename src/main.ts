@@ -81,11 +81,17 @@ export class GoveeLocal extends utils.Adapter {
 
 		// Listen for device discovery and status update events
 		this.goveeService.on('deviceDiscovered', (data) => {
-			void this.handleDeviceDiscovered(data);
+			this.handleDeviceDiscovered(data).catch((err: unknown) => {
+				this.log.error(`Error handling device discovery: ${err instanceof Error ? err.message : String(err)}`);
+			});
 		});
 
 		this.goveeService.on('deviceStatusUpdate', (data) => {
-			void this.handleDeviceStatusUpdate(data);
+			this.handleDeviceStatusUpdate(data).catch((err: unknown) => {
+				this.log.error(
+					`Error handling device status update: ${err instanceof Error ? err.message : String(err)}`,
+				);
+			});
 		});
 
 		// Listen for serviceStarted event to set connection state to true
@@ -101,7 +107,7 @@ export class GoveeLocal extends utils.Adapter {
 		}
 
 		// Subscribe to all device status state changes
-		void this.subscribeStates('*.devStatus.*');
+		this.subscribeStates('*.devStatus.*');
 	}
 
 	/**
@@ -137,7 +143,11 @@ export class GoveeLocal extends utils.Adapter {
 				this.goveeService.stop();
 			}
 			// Set connection state to false
-			void this.updateStateAsync('info.connection', false);
+			void this.updateStateAsync('info.connection', false).catch((err: unknown) => {
+				this.log.error(
+					`Failed to update connection state during unload: ${err instanceof Error ? err.message : String(err)}`,
+				);
+			});
 			callback();
 		} catch (e: unknown) {
 			this.log.error(e instanceof Error ? e.message : String(e));

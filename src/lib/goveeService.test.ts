@@ -1,23 +1,18 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
+import { GoveeServiceTestHelper } from '../../test/helpers/goveeServiceTestHelper';
 import { GoveeService } from '../lib/goveeService';
 
 describe('GoveeService scanMode logic', () => {
 	let service: GoveeService;
-	let logger: any;
 	let options: any;
 
 	beforeEach(() => {
-		logger = {
-			debug: sinon.spy(),
-			info: sinon.spy(),
-			error: sinon.spy(),
-		};
 		options = {
 			interface: '127.0.0.1',
 			searchInterval: 60,
 			deviceStatusRefreshInterval: 60,
-			logger,
+			logger: GoveeServiceTestHelper.createMockLogger(),
 			manualIpAddresses: ['192.168.1.50'],
 		};
 	});
@@ -26,19 +21,14 @@ describe('GoveeService scanMode logic', () => {
 		if (service) {
 			service.stop();
 		}
+		GoveeServiceTestHelper.cleanup();
 	});
 
 	it('should not start scan or interval if scanMode is never, but add manual devices', () => {
 		options.scanMode = 'never';
 		service = new GoveeService(options);
 		const sendScanSpy = sinon.spy(service, 'sendScan');
-		sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => cb());
-		sinon.stub((service as any).socket, 'setBroadcast');
-		sinon.stub((service as any).socket, 'setMulticastTTL');
-		sinon.stub((service as any).socket, 'setMulticastInterface');
-		sinon.stub((service as any).socket, 'addMembership');
-		sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
-		sinon.stub((service as any).socket, 'send');
+		GoveeServiceTestHelper.stubSocketMethods(service);
 		service.start();
 		// No scan should be triggered
 		sinon.assert.notCalled(sendScanSpy);
@@ -51,13 +41,7 @@ describe('GoveeService scanMode logic', () => {
 		options.scanMode = 'once';
 		service = new GoveeService(options);
 		const sendScanSpy = sinon.spy(service, 'sendScan');
-		sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => cb());
-		sinon.stub((service as any).socket, 'setBroadcast');
-		sinon.stub((service as any).socket, 'setMulticastTTL');
-		sinon.stub((service as any).socket, 'setMulticastInterface');
-		sinon.stub((service as any).socket, 'addMembership');
-		sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
-		sinon.stub((service as any).socket, 'send');
+		GoveeServiceTestHelper.stubSocketMethods(service);
 		service.start();
 		sinon.assert.calledOnce(sendScanSpy);
 	});
@@ -67,13 +51,7 @@ describe('GoveeService scanMode logic', () => {
 		options.searchInterval = 0.01; // very short for test
 		service = new GoveeService(options);
 		const sendScanSpy = sinon.spy(service, 'sendScan');
-		sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => cb());
-		sinon.stub((service as any).socket, 'setBroadcast');
-		sinon.stub((service as any).socket, 'setMulticastTTL');
-		sinon.stub((service as any).socket, 'setMulticastInterface');
-		sinon.stub((service as any).socket, 'addMembership');
-		sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
-		sinon.stub((service as any).socket, 'send');
+		GoveeServiceTestHelper.stubSocketMethods(service);
 		service.start();
 		setTimeout(() => {
 			expect(sendScanSpy.callCount).to.be.greaterThan(1);
@@ -85,25 +63,15 @@ describe('GoveeService scanMode logic', () => {
 describe('GoveeService', () => {
 	let service: GoveeService;
 	let options: any;
-	let logger: any;
 
 	beforeEach(() => {
-		logger = {
-			debug: sinon.spy(),
-			info: sinon.spy(),
-			error: sinon.spy(),
-		};
-		options = {
-			interface: '127.0.0.1',
-			searchInterval: 60,
-			deviceStatusRefreshInterval: 60,
-			logger,
-		};
+		options = GoveeServiceTestHelper.createDefaultOptions();
 		service = new GoveeService(options);
 	});
 
 	afterEach(() => {
 		service.stop();
+		GoveeServiceTestHelper.cleanup();
 	});
 
 	it('should instantiate with options', () => {
@@ -116,6 +84,7 @@ describe('GoveeService', () => {
 
 	it('should call logger.error on UDP error', (done) => {
 		service.start(); // Error-Listener aktivieren
+		const logger = options.logger;
 		// Fehler abfangen, damit Mocha nicht abbricht
 		(service as any).socket.on('error', () => {
 			expect(logger.error.calledWithMatch('test error')).to.be.true;
@@ -140,6 +109,7 @@ describe('GoveeService', () => {
 	it('should log devStatus if extendedLogging is true', () => {
 		options.extendedLogging = true;
 		service = new GoveeService(options);
+		const logger = options.logger;
 		(service as any).devices['1.2.3.4'] = 'TestDevice';
 		const msg = {
 			msg: {
@@ -367,18 +337,7 @@ describe('GoveeService', () => {
 				}
 			});
 
-			// Stub socket methods to prevent actual network calls
-			sinon.stub((service as any).socket, 'send');
-			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
-				// Immediately call the callback to trigger serverBound
-				setImmediate(() => cb());
-			});
-			sinon.stub((service as any).socket, 'setBroadcast');
-			sinon.stub((service as any).socket, 'setMulticastTTL');
-			sinon.stub((service as any).socket, 'setMulticastInterface');
-			sinon.stub((service as any).socket, 'addMembership');
-			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
-
+			GoveeServiceTestHelper.stubSocketMethodsAsync(service);
 			service.start();
 		});
 
@@ -412,6 +371,7 @@ describe('GoveeService', () => {
 		});
 
 		it('should validate IP addresses and reject invalid ones', () => {
+			const logger = options.logger;
 			const invalidIps = [
 				'not-an-ip',
 				'999.999.999.999',
@@ -458,17 +418,7 @@ describe('GoveeService', () => {
 			options.scanMode = 'never';
 			service = new GoveeService(options);
 
-			// Stub socket methods
-			sinon.stub((service as any).socket, 'send');
-			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
-				setImmediate(() => cb());
-			});
-			sinon.stub((service as any).socket, 'setBroadcast');
-			sinon.stub((service as any).socket, 'setMulticastTTL');
-			sinon.stub((service as any).socket, 'setMulticastInterface');
-			sinon.stub((service as any).socket, 'addMembership');
-			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
-
+			GoveeServiceTestHelper.stubSocketMethodsAsync(service);
 			service.start();
 
 			setTimeout(() => {
@@ -481,16 +431,7 @@ describe('GoveeService', () => {
 			options.scanMode = 'interval';
 			service = new GoveeService(options);
 
-			// Stub socket methods
-			sinon.stub((service as any).socket, 'send');
-			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
-				setImmediate(() => cb());
-			});
-			sinon.stub((service as any).socket, 'setBroadcast');
-			sinon.stub((service as any).socket, 'setMulticastTTL');
-			sinon.stub((service as any).socket, 'setMulticastInterface');
-			sinon.stub((service as any).socket, 'addMembership');
-			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
+			GoveeServiceTestHelper.stubSocketMethodsAsync(service);
 
 			service.start();
 
@@ -512,17 +453,7 @@ describe('GoveeService', () => {
 				}
 			});
 
-			// Stub socket methods
-			sinon.stub((service as any).socket, 'send');
-			sinon.stub((service as any).socket, 'bind').callsFake((opts: any, cb: any) => {
-				setImmediate(() => cb());
-			});
-			sinon.stub((service as any).socket, 'setBroadcast');
-			sinon.stub((service as any).socket, 'setMulticastTTL');
-			sinon.stub((service as any).socket, 'setMulticastInterface');
-			sinon.stub((service as any).socket, 'addMembership');
-			sinon.stub((service as any).socket, 'address').returns({ address: '127.0.0.1', port: 4002 });
-
+			GoveeServiceTestHelper.stubSocketMethodsAsync(service);
 			service.start();
 
 			setTimeout(() => {

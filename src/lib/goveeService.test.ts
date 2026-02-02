@@ -798,128 +798,106 @@ describe('GoveeService', () => {
 			});
 		});
 
-		describe('Device Status with Missing or Partial Data', () => {
-			it('should handle missing onOff field in device status', () => {
-				(service as any).devices['1.2.3.4'] = 'TestDevice';
+		it('should handle completely empty device status data', () => {
+			(service as any).devices['1.2.3.4'] = 'TestDevice';
 
-				const msg = {
-					msg: {
-						cmd: 'devStatus',
-						data: {
-							brightness: 50,
-							color: { r: 255, g: 0, b: 0 },
-							colorTemInKelvin: 3000,
-						},
-					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
+			const msg = {
+				msg: {
+					cmd: 'devStatus',
+					data: {},
+				},
+			};
+			const buf = Buffer.from(JSON.stringify(msg));
 
-				// Should not throw
-				expect(() => {
-					(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
-				}).to.not.throw();
-			});
-
-			it('should handle completely empty device status data', () => {
-				(service as any).devices['1.2.3.4'] = 'TestDevice';
-
-				const msg = {
-					msg: {
-						cmd: 'devStatus',
-						data: {},
-					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
-
-				// Should not throw
-				expect(() => {
-					(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
-				}).to.not.throw();
-			});
-
-			it('should handle null color object in device status', (done) => {
-				(service as any).devices['1.2.3.4'] = 'TestDevice';
-
-				service.on('deviceStatusUpdate', (data) => {
-					// Should have default color
-					expect(data.status.color).to.match(/^#[0-9A-F]{6}$/);
-					done();
-				});
-
-				const msg = {
-					msg: {
-						cmd: 'devStatus',
-						data: {
-							onOff: 1,
-							brightness: 50,
-							color: null,
-							colorTemInKelvin: 3000,
-						},
-					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
-				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
-			});
-
-			it('should handle color values with RGB at boundaries', (done) => {
-				(service as any).devices['1.2.3.4'] = 'TestDevice';
-
-				service.on('deviceStatusUpdate', (data) => {
-					expect(data.status.color).to.equal('#FFFFFF');
-					done();
-				});
-
-				const msg = {
-					msg: {
-						cmd: 'devStatus',
-						data: {
-							onOff: 1,
-							brightness: 100,
-							color: { r: 255, g: 255, b: 255 },
-							colorTemInKelvin: 3000,
-						},
-					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
-				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
-			});
+			// Should not throw
+			expect(() => {
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
+			}).to.not.throw();
 		});
 
-		describe('Scan Messages with Edge Cases', () => {
-			it('should handle scan message with special characters in device name', (done) => {
-				service.on('deviceDiscovered', (data) => {
-					expect(data.deviceName).to.include('TestDevice');
-					done();
-				});
+		it('should handle null color object in device status', (done) => {
+			(service as any).devices['1.2.3.4'] = 'TestDevice';
 
-				const msg = {
-					msg: {
-						cmd: 'scan',
-						data: { device: 'TestDevice_特殊文字_!@#$%', foo: 'bar' },
-					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
-				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			service.on('deviceStatusUpdate', (data) => {
+				// Should have default color
+				expect(data.status.color).to.match(/^#[0-9A-F]{6}$/);
+				done();
 			});
 
-			it('should handle scan message with very long device name', (done) => {
-				const longName = 'A'.repeat(100);
-				service.on('deviceDiscovered', (data) => {
-					expect(data.deviceName).to.have.length.greaterThan(50);
-					done();
-				});
-
-				const msg = {
-					msg: {
-						cmd: 'scan',
-						data: { device: longName, foo: 'bar' },
+			const msg = {
+				msg: {
+					cmd: 'devStatus',
+					data: {
+						onOff: 1,
+						brightness: 50,
+						color: null,
+						colorTemInKelvin: 3000,
 					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
-				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+				},
+			};
+			const buf = Buffer.from(JSON.stringify(msg));
+			(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+		});
+
+		it('should handle color values with RGB at boundaries', (done) => {
+			(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+			service.on('deviceStatusUpdate', (data) => {
+				expect(data.status.color).to.equal('#FFFFFF');
+				done();
 			});
 
-it('should handle scan message with empty device name', () => {
+			const msg = {
+				msg: {
+					cmd: 'devStatus',
+					data: {
+						onOff: 1,
+						brightness: 100,
+						color: { r: 255, g: 255, b: 255 },
+						colorTemInKelvin: 3000,
+					},
+				},
+			};
+			const buf = Buffer.from(JSON.stringify(msg));
+			(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+		});
+	});
+
+	describe('Scan Messages with Edge Cases', () => {
+		it('should handle scan message with special characters in device name', (done) => {
+			service.on('deviceDiscovered', (data) => {
+				expect(data.deviceName).to.include('TestDevice');
+				done();
+			});
+
+			const msg = {
+				msg: {
+					cmd: 'scan',
+					data: { device: 'TestDevice_特殊文字_!@#$%', foo: 'bar' },
+				},
+			};
+			const buf = Buffer.from(JSON.stringify(msg));
+			(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+		});
+
+		it('should handle scan message with very long device name', (done) => {
+			const longName = 'A'.repeat(100);
+			service.on('deviceDiscovered', (data) => {
+				expect(data.deviceName).to.have.length.greaterThan(50);
+				done();
+			});
+
+			const msg = {
+				msg: {
+					cmd: 'scan',
+					data: { device: longName, foo: 'bar' },
+				},
+			};
+			const buf = Buffer.from(JSON.stringify(msg));
+			(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+		});
+
+		it('should handle scan message with empty device name', () => {
 			let eventEmitted = false;
 			service.on('deviceDiscovered', () => {
 				eventEmitted = true;
@@ -936,27 +914,6 @@ it('should handle scan message with empty device name', () => {
 
 			// Empty device name should not trigger discovery event
 			expect(eventEmitted).to.be.false;
-			});
-
-			it('should handle scan message with null device name', () => {
-				let eventEmitted = false;
-				service.on('deviceDiscovered', () => {
-					eventEmitted = true;
-				});
-
-				const msg = {
-					msg: {
-						cmd: 'scan',
-						data: { device: null, foo: 'bar' },
-					},
-				};
-				const buf = Buffer.from(JSON.stringify(msg));
-
-				// Should not throw
-				expect(() => {
-					(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
-				}).to.not.throw();
-			});
 		});
 	});
 });

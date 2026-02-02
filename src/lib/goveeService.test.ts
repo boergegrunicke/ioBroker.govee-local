@@ -463,4 +463,500 @@ describe('GoveeService', () => {
 			}, 100);
 		});
 	});
+
+	describe('Edge Cases - Command Boundary Values', () => {
+		let service: GoveeService;
+		let options: any;
+
+		beforeEach(() => {
+			options = GoveeServiceTestHelper.createDefaultOptions();
+			service = new GoveeService(options);
+			sinon.stub((service as any).socket, 'send');
+		});
+
+		afterEach(() => {
+			service.stop();
+			GoveeServiceTestHelper.cleanup();
+		});
+
+		describe('Brightness Boundary Values', () => {
+			it('should send brightness command with minimum value (0)', () => {
+				service.sendBrightnessCommand('192.168.1.100', 0);
+
+				const expectedMessage = { msg: { cmd: 'brightness', data: { value: 0 } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send brightness command with maximum value (100)', () => {
+				service.sendBrightnessCommand('192.168.1.100', 100);
+
+				const expectedMessage = { msg: { cmd: 'brightness', data: { value: 100 } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send brightness command with negative values (no validation)', () => {
+				service.sendBrightnessCommand('192.168.1.100', -50);
+
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+				expect(sendSpy.calledOnce).to.be.true;
+			});
+
+			it('should send brightness command with values exceeding 100 (no validation)', () => {
+				service.sendBrightnessCommand('192.168.1.100', 150);
+
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+				expect(sendSpy.calledOnce).to.be.true;
+			});
+
+			it('should send brightness command with float values', () => {
+				service.sendBrightnessCommand('192.168.1.100', 50.5);
+
+				const expectedMessage = { msg: { cmd: 'brightness', data: { value: 50.5 } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+		});
+
+		describe('Color Temperature Boundary Values', () => {
+			it('should send color temperature command with minimum valid value (2000K)', () => {
+				service.sendColorTempCommand('192.168.1.100', 2000);
+
+				const expectedMessage = {
+					msg: { cmd: 'colorwc', data: { color: { r: 0, g: 0, b: 0 }, colorTemInKelvin: 2000 } },
+				};
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color temperature command with maximum valid value (9000K)', () => {
+				service.sendColorTempCommand('192.168.1.100', 9000);
+
+				const expectedMessage = {
+					msg: { cmd: 'colorwc', data: { color: { r: 0, g: 0, b: 0 }, colorTemInKelvin: 9000 } },
+				};
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color temperature command below valid range (no validation)', () => {
+				service.sendColorTempCommand('192.168.1.100', 1000);
+
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+				expect(sendSpy.calledOnce).to.be.true;
+			});
+
+			it('should send color temperature command above valid range (no validation)', () => {
+				service.sendColorTempCommand('192.168.1.100', 10000);
+
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+				expect(sendSpy.calledOnce).to.be.true;
+			});
+
+			it('should send color temperature command with zero value', () => {
+				service.sendColorTempCommand('192.168.1.100', 0);
+
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+				expect(sendSpy.calledOnce).to.be.true;
+			});
+		});
+
+		describe('Color Boundary Values', () => {
+			it('should send color command with pure red (#FF0000)', () => {
+				service.sendColorCommand('192.168.1.100', '#FF0000');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 255, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with pure green (#00FF00)', () => {
+				service.sendColorCommand('192.168.1.100', '#00FF00');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 0, g: 255, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with pure blue (#0000FF)', () => {
+				service.sendColorCommand('192.168.1.100', '#0000FF');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 0, g: 0, b: 255 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with black (#000000)', () => {
+				service.sendColorCommand('192.168.1.100', '#000000');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 0, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with white (#FFFFFF)', () => {
+				service.sendColorCommand('192.168.1.100', '#FFFFFF');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 255, g: 255, b: 255 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with 3-digit hex format (#F00)', () => {
+				service.sendColorCommand('192.168.1.100', '#F00');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 255, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with lowercase hex format (#ff0000)', () => {
+				service.sendColorCommand('192.168.1.100', '#ff0000');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 255, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command without # prefix', () => {
+				service.sendColorCommand('192.168.1.100', 'FF0000');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 255, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with invalid hex string (defaults to black)', () => {
+				service.sendColorCommand('192.168.1.100', '#GGGGGG');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 0, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+
+			it('should send color command with empty hex string (defaults to black)', () => {
+				service.sendColorCommand('192.168.1.100', '');
+
+				const expectedMessage = { msg: { cmd: 'colorwc', data: { color: { r: 0, g: 0, b: 0 } } } };
+				const sendSpy = (service as any).socket.send as sinon.SinonStub;
+
+				expect(sendSpy.calledOnce).to.be.true;
+				const sentBuffer = sendSpy.getCall(0).args[0];
+				expect(JSON.parse(sentBuffer.toString())).to.deep.equal(expectedMessage);
+			});
+		});
+	});
+
+	describe('Edge Cases - Message Processing', () => {
+		let service: GoveeService;
+		let options: any;
+
+		beforeEach(() => {
+			options = GoveeServiceTestHelper.createDefaultOptions();
+			service = new GoveeService(options);
+		});
+
+		afterEach(() => {
+			service.stop();
+			GoveeServiceTestHelper.cleanup();
+		});
+
+		describe('Device Status with Extreme Values', () => {
+			it('should handle brightness value of 0 in device status', (done) => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				service.on('deviceStatusUpdate', (data) => {
+					expect(data.status.brightness).to.equal(0);
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							onOff: 0,
+							brightness: 0,
+							color: { r: 0, g: 0, b: 0 },
+							colorTemInKelvin: 2000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+
+			it('should handle brightness value of 100 in device status', (done) => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				service.on('deviceStatusUpdate', (data) => {
+					expect(data.status.brightness).to.equal(100);
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							onOff: 1,
+							brightness: 100,
+							color: { r: 255, g: 255, b: 255 },
+							colorTemInKelvin: 9000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+
+			it('should handle color temperature at minimum value (2000K)', (done) => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				service.on('deviceStatusUpdate', (data) => {
+					expect(data.status.colorTemInKelvin).to.equal(2000);
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							onOff: 1,
+							brightness: 50,
+							color: { r: 255, g: 200, b: 100 },
+							colorTemInKelvin: 2000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+
+			it('should handle color temperature at maximum value (9000K)', (done) => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				service.on('deviceStatusUpdate', (data) => {
+					expect(data.status.colorTemInKelvin).to.equal(9000);
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							onOff: 1,
+							brightness: 50,
+							color: { r: 100, g: 150, b: 200 },
+							colorTemInKelvin: 9000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+		});
+
+		describe('Device Status with Missing or Partial Data', () => {
+			it('should handle missing onOff field in device status', () => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							brightness: 50,
+							color: { r: 255, g: 0, b: 0 },
+							colorTemInKelvin: 3000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+
+				// Should not throw
+				expect(() => {
+					(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
+				}).to.not.throw();
+			});
+
+			it('should handle completely empty device status data', () => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+
+				// Should not throw
+				expect(() => {
+					(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
+				}).to.not.throw();
+			});
+
+			it('should handle null color object in device status', (done) => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				service.on('deviceStatusUpdate', (data) => {
+					// Should have default color
+					expect(data.status.color).to.match(/^#[0-9A-F]{6}$/);
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							onOff: 1,
+							brightness: 50,
+							color: null,
+							colorTemInKelvin: 3000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+
+			it('should handle color values with RGB at boundaries', (done) => {
+				(service as any).devices['1.2.3.4'] = 'TestDevice';
+
+				service.on('deviceStatusUpdate', (data) => {
+					expect(data.status.color).to.equal('#FFFFFF');
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'devStatus',
+						data: {
+							onOff: 1,
+							brightness: 100,
+							color: { r: 255, g: 255, b: 255 },
+							colorTemInKelvin: 3000,
+						},
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+		});
+
+		describe('Scan Messages with Edge Cases', () => {
+			it('should handle scan message with special characters in device name', (done) => {
+				service.on('deviceDiscovered', (data) => {
+					expect(data.deviceName).to.include('TestDevice');
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'scan',
+						data: { device: 'TestDevice_特殊文字_!@#$%', foo: 'bar' },
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+
+			it('should handle scan message with very long device name', (done) => {
+				const longName = 'A'.repeat(100);
+				service.on('deviceDiscovered', (data) => {
+					expect(data.deviceName).to.have.length.greaterThan(50);
+					done();
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'scan',
+						data: { device: longName, foo: 'bar' },
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+				(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+			});
+
+it('should handle scan message with empty device name', () => {
+			let eventEmitted = false;
+			service.on('deviceDiscovered', () => {
+				eventEmitted = true;
+			});
+
+			const msg = {
+				msg: {
+					cmd: 'scan',
+					data: { device: '', foo: 'bar' },
+				},
+			};
+			const buf = Buffer.from(JSON.stringify(msg));
+			(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 } as any);
+
+			// Empty device name should not trigger discovery event
+			expect(eventEmitted).to.be.false;
+			});
+
+			it('should handle scan message with null device name', () => {
+				let eventEmitted = false;
+				service.on('deviceDiscovered', () => {
+					eventEmitted = true;
+				});
+
+				const msg = {
+					msg: {
+						cmd: 'scan',
+						data: { device: null, foo: 'bar' },
+					},
+				};
+				const buf = Buffer.from(JSON.stringify(msg));
+
+				// Should not throw
+				expect(() => {
+					(service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
+				}).to.not.throw();
+			});
+		});
+	});
 });

@@ -1,7 +1,7 @@
 {
   "all": true,
   "include": [
-    "build/**/*.js"
+    "build/lib/**/*.js"
   ],
   "exclude": [
     "build/**/*.test.js",

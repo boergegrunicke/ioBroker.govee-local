@@ -67,7 +67,7 @@
     "test:package": "mocha test/package --exit",
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:ts && npm run test:package",
-    "test:coverage": "nyc npm run test",
+    "test:coverage": "npm run build:ts && nyc --reporter=html --reporter=lcov --reporter=text npm run test",
     "check": "tsc --noEmit",
     "lint": "eslint --ext .ts src/",
     "translate": "translate-adapter",

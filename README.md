@@ -10,8 +10,10 @@
 [![NPM](https://nodei.co/npm/iobroker.govee-local.png?downloads=true)](https://nodei.co/npm/iobroker.govee-local/)
 
 **Tests:** ![Test and Release](https://github.com/boergegrunicke/ioBroker.govee-local/workflows/Test%20and%20Release/badge.svg)
+**Coverage:** [![codecov](https://codecov.io/gh/boergegrunicke/ioBroker.govee-local/branch/main/graph/badge.svg)](https://codecov.io/gh/boergegrunicke/ioBroker.govee-local)
 
 Control Govee devices via local access (no cloud)
+
 
 To be able to control govee deivce locally, the feature needs to be explicitely turned on in the settings of the govve application settings as described in their [documentation](<https://app-h5.govee.com/user-manual/wlan-guide#:~:text=Supported%20Product%20Models%20(continually%20updated)>)
 As I currently only have the H6051 lamp, this is the only device I can test with.

@@ -1,0 +1,23 @@
+{
+  "all": true,
+  "include": [
+    "build/lib/**/*.js"
+  ],
+  "exclude": [
+    "build/**/*.test.js",
+    "build/**/*.d.ts",
+    "node_modules/",
+    "test/",
+    ".nyc_output/"
+  ],
+  "report-dir": "coverage",
+  "reporter": [
+    "text",
+    "text-summary",
+    "html",
+    "lcov"
+  ],
+  "temp-dir": ".nyc_output",
+  "sourceMap": true,
+  "instrument": true
+}

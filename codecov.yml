@@ -1,0 +1,24 @@
+codecov:
+  require_ci_to_pass: yes
+  precision: 2
+  max_report_age: 24
+  
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  
+ignore:
+  - "node_modules"
+  - "test"
+  - "**/*.test.ts"
+  - "**/*.d.ts"
+  
+comment:
+  layout: "reach,diff,flags,files,footer"
+  behavior: default
+  require_changes: no
+  require_base: no
+  require_head: yes
+  branches:
+    - main

@@ -93,10 +93,16 @@ class GoveeLocal extends utils.Adapter {
       }
     });
     this.goveeService.on("deviceDiscovered", (data) => {
-      void this.handleDeviceDiscovered(data);
+      this.handleDeviceDiscovered(data).catch((err) => {
+        this.log.error(`Error handling device discovery: ${err instanceof Error ? err.message : String(err)}`);
+      });
     });
     this.goveeService.on("deviceStatusUpdate", (data) => {
-      void this.handleDeviceStatusUpdate(data);
+      this.handleDeviceStatusUpdate(data).catch((err) => {
+        this.log.error(
+          `Error handling device status update: ${err instanceof Error ? err.message : String(err)}`
+        );
+      });
     });
     this.goveeService.on("serviceStarted", () => {
       void this.setState("info.connection", { val: true, ack: true });
@@ -105,7 +111,7 @@ class GoveeLocal extends utils.Adapter {
     if (this.config.extendedLogging) {
       this.log.debug("running with extended logging");
     }
-    void this.subscribeStates("*.devStatus.*");
+    this.subscribeStates("*.devStatus.*");
   }
   /**
    * Called if a subscribed state changes (e.g. user toggles a switch in ioBroker UI).
@@ -137,7 +143,11 @@ class GoveeLocal extends utils.Adapter {
         this.goveeService.removeAllListeners();
         this.goveeService.stop();
       }
-      void this.updateStateAsync("info.connection", false);
+      void this.updateStateAsync("info.connection", false).catch((err) => {
+        this.log.error(
+          `Failed to update connection state during unload: ${err instanceof Error ? err.message : String(err)}`
+        );
+      });
       callback();
     } catch (e) {
       this.log.error(e instanceof Error ? e.message : String(e));

@@ -16,6 +16,9 @@
 		"outDir": "./build/",
 		"removeComments": false,
 
+		// Include Node.js and Mocha types explicitly for TypeScript 6.0+
+		"types": ["node", "mocha"],
+
 		// This is necessary for the automatic typing of the adapter config
 		"resolveJsonModule": true,
 

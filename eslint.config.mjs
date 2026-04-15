@@ -4,7 +4,7 @@ import iobroker from '@iobroker/eslint-config';
 export default [
 	...iobroker,
 	{
-		ignores: ['build/', '.prettierrc.js', '**/.eslintrc.js'],
+		ignores: ['build/', '**/.eslintrc.js'],
 	},
 	{
 		rules: {

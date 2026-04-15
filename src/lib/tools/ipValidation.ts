@@ -17,10 +17,10 @@
  * ```
  */
 export function isValidIpAddress(ip: string): boolean {
-	// IPv4 pattern: four octets (0-255) separated by dots
-	const ipv4Pattern =
-		/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-	return ipv4Pattern.test(ip);
+  // IPv4 pattern: four octets (0-255) separated by dots
+  const ipv4Pattern =
+    /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  return ipv4Pattern.test(ip);
 }
 
 /**
@@ -37,22 +37,25 @@ export function isValidIpAddress(ip: string): boolean {
  * filterValidIpAddresses(['  192.168.1.1  ', '']); // ['192.168.1.1']
  * ```
  */
-export function filterValidIpAddresses(ipAddresses: string[], trimWhitespace = true): string[] {
-	const validIps: string[] = [];
+export function filterValidIpAddresses(
+  ipAddresses: string[],
+  trimWhitespace = true,
+): string[] {
+  const validIps: string[] = [];
 
-	for (const ip of ipAddresses) {
-		if (!ip || (trimWhitespace && ip.trim().length === 0)) {
-			continue;
-		}
+  for (const ip of ipAddresses) {
+    if (!ip || (trimWhitespace && ip.trim().length === 0)) {
+      continue;
+    }
 
-		const processedIp = trimWhitespace ? ip.trim() : ip;
+    const processedIp = trimWhitespace ? ip.trim() : ip;
 
-		if (isValidIpAddress(processedIp)) {
-			validIps.push(processedIp);
-		}
-	}
+    if (isValidIpAddress(processedIp)) {
+      validIps.push(processedIp);
+    }
+  }
 
-	return validIps;
+  return validIps;
 }
 
 /**
@@ -71,25 +74,25 @@ export function filterValidIpAddresses(ipAddresses: string[], trimWhitespace = t
  * ```
  */
 export function validateIpAddresses(
-	ipAddresses: string[],
-	trimWhitespace = true,
+  ipAddresses: string[],
+  trimWhitespace = true,
 ): { valid: string[]; invalid: string[] } {
-	const valid: string[] = [];
-	const invalid: string[] = [];
+  const valid: string[] = [];
+  const invalid: string[] = [];
 
-	for (const ip of ipAddresses) {
-		if (!ip || (trimWhitespace && ip.trim().length === 0)) {
-			continue;
-		}
+  for (const ip of ipAddresses) {
+    if (!ip || (trimWhitespace && ip.trim().length === 0)) {
+      continue;
+    }
 
-		const processedIp = trimWhitespace ? ip.trim() : ip;
+    const processedIp = trimWhitespace ? ip.trim() : ip;
 
-		if (isValidIpAddress(processedIp)) {
-			valid.push(processedIp);
-		} else {
-			invalid.push(processedIp);
-		}
-	}
+    if (isValidIpAddress(processedIp)) {
+      valid.push(processedIp);
+    } else {
+      invalid.push(processedIp);
+    }
+  }
 
-	return { valid, invalid };
+  return { valid, invalid };
 }

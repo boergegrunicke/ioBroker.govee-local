@@ -1,148 +1,148 @@
 {
-	"i18n": true,
-	"type": "panel",
-	"items": {
-		"networkHeader": {
-			"type": "header",
-			"text": "Network",
-			"size": 2,
-			"xs": 12
-		},
-		"networkHint": {
-			"type": "staticText",
-			"text": "_networkHint",
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12
-		},
-		"interface": {
-			"type": "ip",
-			"listenOnAllPorts": true,
-			"onlyIp4": true,
-			"label": "_networkInterface",
-			"newLine": true,
-			"xs": 12,
-			"sm": 12,
-			"md": 6,
-			"lg": 4,
-			"xl": 4
-		},
-		"intervalsHeader": {
-			"type": "header",
-			"text": "_scanMode",
-			"size": 2,
-			"xs": 12
-		},
-		"scanMode": {
-			"type": "select",
-			"label": "_scanMode",
-			"options": [
-				{ "value": "interval", "label": "_scanModeInterval" },
-				{ "value": "once", "label": "_scanModeOnce" },
-				{ "value": "never", "label": "_scanModeNever" }
-			],
-			"default": "interval",
-			"xs": 12,
-			"sm": 12,
-			"md": 6,
-			"lg": 4,
-			"xl": 4
-		},
-		"searchInterval": {
-			"type": "number",
-			"min": 1,
-			"max": 1000,
-			"xs": 12,
-			"sm": 6,
-			"md": 3,
-			"lg": 2,
-			"xl": 2,
-			"label": "_searchIntervalHint"
-		},
-		"deviceStatusRefreshInterval": {
-			"type": "number",
-			"min": 1,
-			"max": 1000,
-			"xs": 12,
-			"sm": 6,
-			"md": 3,
-			"lg": 2,
-			"xl": 2,
-			"label": "_deviceStatusRefreshInterval"
-		},
-		"manualIpHeader": {
-			"type": "header",
-			"text": "_manualIpAddresses",
-			"size": 2,
-			"xs": 12
-		},
-		"manualIpHint": {
-			"type": "staticText",
-			"text": "_manualIpHint",
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12
-		},
-		"discoveredDevicesHint": {
-			"type": "staticText",
-			"text": "_discoveredDevicesHint",
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12,
-			"newLine": true
-		},
-		"discoveredDevicesState": {
-			"type": "state",
-			"oid": "info.discoveredDevices",
-			"system": true,
-			"control": "html",
-			"label": "_discoveredDevices",
-			"readOnly": true,
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12,
-			"newLine": true
-		},
-		"manualIpTable": {
-			"type": "chips",
-			"label": "_manualIpAddresses",
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12
-		},
-		"loggingHeader": {
-			"type": "header",
-			"text": "Logging",
-			"size": 2,
-			"xs": 12
-		},
-		"_descriptionExtendedLogging": {
-			"type": "staticText",
-			"xs": 12,
-			"sm": 12,
-			"md": 12,
-			"lg": 12,
-			"xl": 12,
-			"text": "_extendedLoggingDescription"
-		},
-		"extendedLogging": {
-			"type": "checkbox",
-			"xs": 12,
-			"sm": 12,
-			"md": 6,
-			"lg": 3,
-			"xl": 3,
-			"label": "_extendedLogging"
-		}
-	}
+  "i18n": true,
+  "type": "panel",
+  "items": {
+    "networkHeader": {
+      "type": "header",
+      "text": "Network",
+      "size": 2,
+      "xs": 12
+    },
+    "networkHint": {
+      "type": "staticText",
+      "text": "_networkHint",
+      "xs": 12,
+      "sm": 12,
+      "md": 12,
+      "lg": 12,
+      "xl": 12
+    },
+    "interface": {
+      "type": "ip",
+      "listenOnAllPorts": true,
+      "onlyIp4": true,
+      "label": "_networkInterface",
+      "newLine": true,
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
+    },
+    "intervalsHeader": {
+      "type": "header",
+      "text": "_scanMode",
+      "size": 2,
+      "xs": 12
+    },
+    "scanMode": {
+      "type": "select",
+      "label": "_scanMode",
+      "options": [
+        { "value": "interval", "label": "_scanModeInterval" },
+        { "value": "once", "label": "_scanModeOnce" },
+        { "value": "never", "label": "_scanModeNever" }
+      ],
+      "default": "interval",
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 4,
+      "xl": 4
+    },
+    "searchInterval": {
+      "type": "number",
+      "min": 1,
+      "max": 1000,
+      "xs": 12,
+      "sm": 6,
+      "md": 3,
+      "lg": 2,
+      "xl": 2,
+      "label": "_searchIntervalHint"
+    },
+    "deviceStatusRefreshInterval": {
+      "type": "number",
+      "min": 1,
+      "max": 1000,
+      "xs": 12,
+      "sm": 6,
+      "md": 3,
+      "lg": 2,
+      "xl": 2,
+      "label": "_deviceStatusRefreshInterval"
+    },
+    "manualIpHeader": {
+      "type": "header",
+      "text": "_manualIpAddresses",
+      "size": 2,
+      "xs": 12
+    },
+    "manualIpHint": {
+      "type": "staticText",
+      "text": "_manualIpHint",
+      "xs": 12,
+      "sm": 12,
+      "md": 12,
+      "lg": 12,
+      "xl": 12
+    },
+    "discoveredDevicesHint": {
+      "type": "staticText",
+      "text": "_discoveredDevicesHint",
+      "xs": 12,
+      "sm": 12,
+      "md": 12,
+      "lg": 12,
+      "xl": 12,
+      "newLine": true
+    },
+    "discoveredDevicesState": {
+      "type": "state",
+      "oid": "info.discoveredDevices",
+      "system": true,
+      "control": "html",
+      "label": "_discoveredDevices",
+      "readOnly": true,
+      "xs": 12,
+      "sm": 12,
+      "md": 12,
+      "lg": 12,
+      "xl": 12,
+      "newLine": true
+    },
+    "manualIpTable": {
+      "type": "chips",
+      "label": "_manualIpAddresses",
+      "xs": 12,
+      "sm": 12,
+      "md": 12,
+      "lg": 12,
+      "xl": 12
+    },
+    "loggingHeader": {
+      "type": "header",
+      "text": "Logging",
+      "size": 2,
+      "xs": 12
+    },
+    "_descriptionExtendedLogging": {
+      "type": "staticText",
+      "xs": 12,
+      "sm": 12,
+      "md": 12,
+      "lg": 12,
+      "xl": 12,
+      "text": "_extendedLoggingDescription"
+    },
+    "extendedLogging": {
+      "type": "checkbox",
+      "xs": 12,
+      "sm": 12,
+      "md": 6,
+      "lg": 3,
+      "xl": 3,
+      "label": "_extendedLogging"
+    }
+  }
 }

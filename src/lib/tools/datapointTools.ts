@@ -6,12 +6,12 @@
  * @returns The description to be set to the datapoint
  */
 const datapointDescriptions: Record<string, string> = {
-	model: 'Specific model of the Lamp',
-	ip: 'IP address of the Lamp',
-	bleVersionHard: 'Bluetooth Low Energy Hardware Version',
-	bleVersionSoft: 'Bluetooth Low Energy Software Version',
-	wifiVersionHard: 'WiFi Hardware Version',
-	wifiVersionSoft: 'WiFi Software Version',
+  model: "Specific model of the Lamp",
+  ip: "IP address of the Lamp",
+  bleVersionHard: "Bluetooth Low Energy Hardware Version",
+  bleVersionSoft: "Bluetooth Low Energy Software Version",
+  wifiVersionHard: "WiFi Hardware Version",
+  wifiVersionSoft: "WiFi Software Version",
 };
 
 /**
@@ -22,12 +22,12 @@ const datapointDescriptions: Record<string, string> = {
  * @returns The description to be set to the datapoint
  */
 export function getDatapointDescription(name: string): string {
-	const desc = datapointDescriptions[name];
-	if (desc !== undefined) {
-		return desc;
-	}
-	if (process.env.NODE_ENV !== 'production') {
-		console.debug(`[datapointTools] Unknown datapoint: ${name}`);
-	}
-	return '';
+  const desc = datapointDescriptions[name];
+  if (desc !== undefined) {
+    return desc;
+  }
+  if (process.env.NODE_ENV !== "production") {
+    console.debug(`[datapointTools] Unknown datapoint: ${name}`);
+  }
+  return "";
 }

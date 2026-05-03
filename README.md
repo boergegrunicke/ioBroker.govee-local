@@ -147,6 +147,8 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 - frequently searching for devices and requesting their specific state
 - on / off state, brightness and and color temperature can be controlled
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License

@@ -26,6 +26,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 -->
 
 ### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
 
 - update dependencies: @types/node (25.5.0), eslint (10.1.0), @alcalzone/release-script (5.1.1), admin (7.6.20)
 

@@ -24,7 +24,9 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+
 ### 0.4.6 (2026-05-18)
+
 - Adapter requires node.js >= 22 now
 - Fixed multiple security vulnerabilities in dev dependencies:
   - Updated `@iobroker/testing` to resolve axios, esbuild, and mocha-related CVEs

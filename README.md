@@ -1,6 +1,6 @@
 ![Logo](admin/govee-local.png)
 
-## govee-local adapter for ioBroker
+# govee-local adapter for ioBroker
 
 [![NPM version](https://img.shields.io/npm/v/iobroker.govee-local.svg)](https://www.npmjs.com/package/iobroker.govee-local)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.govee-local.svg)](https://www.npmjs.com/package/iobroker.govee-local)
@@ -53,6 +53,8 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 
 - update dependencies
 - fix device name / model identifier in the objects
+
+Older entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
 
 ## License
 

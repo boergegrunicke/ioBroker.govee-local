@@ -26,8 +26,5 @@ export function getDatapointDescription(name: string): string {
   if (desc !== undefined) {
     return desc;
   }
-  if (process.env.NODE_ENV !== "production") {
-    console.debug(`[datapointTools] Unknown datapoint: ${name}`);
-  }
   return "";
 }

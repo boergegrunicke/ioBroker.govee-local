@@ -59,7 +59,7 @@
       "md": 3,
       "lg": 2,
       "xl": 2,
-      "label": "_searchIntervalHint"
+      "label": "searchIntervalHint"
     },
     "deviceStatusRefreshInterval": {
       "type": "number",

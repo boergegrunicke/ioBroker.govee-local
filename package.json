@@ -32,8 +32,8 @@
     "@iobroker/adapter-dev": "^1.5.0",
     "@iobroker/eslint-config": "^2.2.0",
     "@iobroker/testing": "^5.2.2",
-    "@tsconfig/node14": "^14.1.5",
-    "@tsconfig/node18": "^18.2.4",
+    "@tsconfig/node14": "^14.1.8",
+    "@tsconfig/node18": "^18.2.6",
     "@tsconfig/node20": "^20.1.9",
     "@types/node": "^22.0.0",
     "@types/proxyquire": "^1.3.31",
@@ -48,6 +48,9 @@
       "diff": "^8.0.3",
       "serialize-javascript": "^7.0.5"
     }
+  },
+  "publishConfig": {
+    "provenance": true
   },
   "main": "build/main.js",
   "files": [

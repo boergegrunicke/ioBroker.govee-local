@@ -49,9 +49,6 @@
       "serialize-javascript": "^7.0.5"
     }
   },
-  "publishConfig": {
-    "provenance": true
-  },
   "main": "build/main.js",
   "files": [
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).json",

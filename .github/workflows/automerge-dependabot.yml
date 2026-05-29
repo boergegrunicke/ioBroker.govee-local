@@ -10,6 +10,9 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
@@ -21,8 +24,12 @@ jobs:
       pull-requests: write
       
     steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
       - name: Auto-merge Dependabot PRs
-        uses: iobroker-bot-orga/action-automerge-dependabot@v1
+        uses: iobroker-bot-orga/action-automerge-dependabot@v1.1.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           # Optional: Path to your auto-merge configuration file

@@ -16,6 +16,9 @@
 		"outDir": "./build/",
 		"removeComments": false,
 
+		// Keep eslint/typescript-eslint parser compatibility (avoids es2025.iterator parsing issue)
+		"lib": ["ES2024"],
+
 		// Include Node.js and Mocha types explicitly for TypeScript 6.0+
 		"types": ["node", "mocha"],
 

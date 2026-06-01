@@ -64,8 +64,8 @@ export class GoveeService extends EventEmitter {
     private devices: { [ip: string]: string } = {};
     private loggedDevices: string[] = [];
     private lastStatusLog: { [ip: string]: string } = {};
-    private searchInterval?: NodeJS.Timeout;
-    private refreshInterval?: NodeJS.Timeout;
+    private searchInterval?: unknown;
+    private refreshInterval?: unknown;
     private scanMode: 'interval' | 'once' | 'never' = 'interval';
 
     static readonly LOCAL_PORT = 4002;
@@ -126,13 +126,15 @@ export class GoveeService extends EventEmitter {
         // Start discovery according to scanMode
         this.options.logger?.debug(`Device discovery mode: "${this.scanMode}"`);
 
+        const setIntervalFn = this.options.setInterval ?? setInterval;
+
         if (this.scanMode === 'interval') {
-            this.searchInterval = setInterval(() => this.sendScan(), this.options.searchInterval * 1000);
+            this.searchInterval = setIntervalFn(() => this.sendScan(), this.options.searchInterval * 1000);
         } else if (this.scanMode === 'once') {
             this.sendScan();
         }
 
-        this.refreshInterval = setInterval(
+        this.refreshInterval = setIntervalFn(
             () => this.refreshAllDevices(),
             this.options.deviceStatusRefreshInterval * 1000,
         );
@@ -281,11 +283,13 @@ export class GoveeService extends EventEmitter {
      */
     public stop(): void {
         this.options.logger?.debug('Stopping GoveeService and closing UDP socket.');
+        const clearIntervalFn = this.options.clearInterval ?? (clearInterval as (t: unknown) => void);
+
         if (this.searchInterval) {
-            clearInterval(this.searchInterval);
+            clearIntervalFn(this.searchInterval);
         }
         if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
+            clearIntervalFn(this.refreshInterval);
         }
         this.socket.close();
     }

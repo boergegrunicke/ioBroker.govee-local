@@ -72,6 +72,8 @@ export class GoveeLocal extends utils.Adapter {
             forbiddenChars: this.FORBIDDEN_CHARS,
             manualIpAddresses: this.config.manualIpTable,
             scanMode: this.config.scanMode,
+            setInterval: (callback: () => void, ms: number) => this.setInterval(callback, ms),
+            clearInterval: (timeout: unknown) => this.clearInterval(timeout as ioBroker.Interval | undefined),
             logger: {
                 debug: msg => this.log.debug(msg),
                 info: msg => this.log.info(msg),

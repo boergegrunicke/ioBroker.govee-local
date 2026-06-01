@@ -22,4 +22,8 @@ export interface GoveeServiceOptions {
     manualIpAddresses?: string[];
     /** Discovery scan mode: 'interval' (periodic), 'once' (on start), 'never' (manual only). */
     scanMode?: 'interval' | 'once' | 'never';
+    /** Custom setInterval implementation (e.g. adapter.setInterval). Defaults to global setInterval. */
+    setInterval?: (callback: () => void, ms: number) => unknown;
+    /** Custom clearInterval implementation (e.g. adapter.clearInterval). Defaults to global clearInterval. */
+    clearInterval?: (timeout: unknown) => void;
 }

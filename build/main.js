@@ -86,6 +86,8 @@ class GoveeLocal extends utils.Adapter {
       forbiddenChars: this.FORBIDDEN_CHARS,
       manualIpAddresses: this.config.manualIpTable,
       scanMode: this.config.scanMode,
+      setInterval: (callback, ms) => this.setInterval(callback, ms),
+      clearInterval: (timeout) => this.clearInterval(timeout),
       logger: {
         debug: (msg) => this.log.debug(msg),
         info: (msg) => this.log.info(msg),
@@ -94,9 +96,7 @@ class GoveeLocal extends utils.Adapter {
     });
     this.goveeService.on("deviceDiscovered", (data) => {
       this.handleDeviceDiscovered(data).catch((err) => {
-        this.log.error(
-          `Error handling device discovery: ${err instanceof Error ? err.message : String(err)}`
-        );
+        this.log.error(`Error handling device discovery: ${err instanceof Error ? err.message : String(err)}`);
       });
     });
     this.goveeService.on("deviceStatusUpdate", (data) => {
@@ -125,9 +125,7 @@ class GoveeLocal extends utils.Adapter {
   async onStateChange(id, state) {
     var _a;
     if (state && !state.ack) {
-      const ipOfDevice = await this.getStateAsync(
-        `${id.split(".")[2]}.deviceInfo.ip`
-      );
+      const ipOfDevice = await this.getStateAsync(`${id.split(".")[2]}.deviceInfo.ip`);
       const receiver = (_a = ipOfDevice == null ? void 0 : ipOfDevice.val) == null ? void 0 : _a.toString();
       if (typeof receiver === "string") {
         this.goveeService.handleStateChange(id, state, receiver);
@@ -147,13 +145,11 @@ class GoveeLocal extends utils.Adapter {
         this.goveeService.removeAllListeners();
         this.goveeService.stop();
       }
-      void this.updateStateAsync("info.connection", false).catch(
-        (err) => {
-          this.log.error(
-            `Failed to update connection state during unload: ${err instanceof Error ? err.message : String(err)}`
-          );
-        }
-      );
+      void this.updateStateAsync("info.connection", false).catch((err) => {
+        this.log.error(
+          `Failed to update connection state during unload: ${err instanceof Error ? err.message : String(err)}`
+        );
+      });
       callback();
     } catch (e) {
       this.log.error(e instanceof Error ? e.message : String(e));
@@ -261,10 +257,7 @@ class GoveeLocal extends utils.Adapter {
       },
       native: {}
     });
-    await this.updateStateAsync(
-      `${deviceName}.devStatus.brightness`,
-      status.brightness
-    );
+    await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
     await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
       type: "state",
       common: {
@@ -277,24 +270,18 @@ class GoveeLocal extends utils.Adapter {
       native: {}
     });
     await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
-    await this.setObjectNotExistsAsync(
-      `${deviceName}.devStatus.colorTemInKelvin`,
-      {
-        type: "state",
-        common: {
-          name: "If staying in white light, the color temperature",
-          type: "number",
-          role: "level.color.temperature",
-          read: true,
-          write: true
-        },
-        native: {}
-      }
-    );
-    await this.updateStateAsync(
-      `${deviceName}.devStatus.colorTemInKelvin`,
-      status.colorTemInKelvin
-    );
+    await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
+      type: "state",
+      common: {
+        name: "If staying in white light, the color temperature",
+        type: "number",
+        role: "level.color.temperature",
+        read: true,
+        write: true
+      },
+      native: {}
+    });
+    await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
   }
 }
 if (require.main !== module) {

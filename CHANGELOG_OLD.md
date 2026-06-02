@@ -1,4 +1,9 @@
 # Older changes
+## 0.4.2 (2025-11-08)
+
+- update dependencies
+- fix device name / model identifier in the objects
+
 ## 0.4.1 (2025-11-07)
 
 - fix logging

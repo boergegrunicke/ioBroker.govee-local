@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.4.6",
+    "version": "0.4.7",
     "news": {
+      "0.4.7": {
+        "en": "update dependencies\nmaintenance refactoring",
+        "de": "aktualisierung der abhängigkeiten\nwartung refactoring",
+        "ru": "обновление зависимостей\nрефакторинг технического обслуживания",
+        "pt": "atualizar dependências\nrefração de manutenção",
+        "nl": "afhankelijkheden bijwerken\nonderhoudsrefactoring",
+        "fr": "mettre à jour les dépendances\nréparation de l'entretien",
+        "it": "aggiornamento dipendenze\nmanutenzione refactoring",
+        "es": "dependencias de actualización\nrefactorización del mantenimiento",
+        "pl": "aktualizacji zależności\nrefaktoring konserwacji",
+        "uk": "оновлення залежності\nрефакторинг",
+        "zh-cn": "更新依赖关系\n维护重构"
+      },
       "0.4.6": {
         "en": "Adapter requires node.js >= 22 now\nFixed multiple security vulnerabilities in dev dependencies:\nUpdated `@iobroker/testing` to resolve axios, esbuild, and mocha-related CVEs\nAdded npm overrides for `mocha` subdependencies: `diff` (^8.0.3) and `serialize-javascript` (^7.0.5)\nAll npm audit checks now pass with zero vulnerabilities\n\nupdate dependencies: @types/node (25.5.0), eslint (10.1.0), @alcalzone/release-script (5.1.1), admin (7.6.20)\nupdate dependencies: @alcalzone/release-script (5.2.0), @alcalzone/release-script-plugin-iobroker (5.2.0), @alcalzone/release-script-plugin-license (5.2.0), @alcalzone/release-script-plugin-manual-review (5.2.0), @iobroker/eslint-config (2.3.4), @types/node (25.6.2), eslint (10.3.0), prettier (3.8.3), typescript (6.0.3)",
         "de": "Adapter benötigt node.js >= 22 jetzt\nBehoben mehrere Sicherheitslücken in dev Abhängigkeiten:\nAktualisiert `@iobroker/testing`, um axios, esbuild und mocha-bezogene CVEs zu lösen\nNpm Overrides für `mocha` Subdependencies: `diff` (^8.0.3) und `serialize-javascript` (^7.0.5)\nAlle npm Audit-Prüfungen gehen jetzt mit null Schwachstellen durch\n\nupdate abhängigkeiten: @types/node (25.5.0), eslint (10.1.0), @alcalzone/release-script (5.1.1), admin (7.6.20)\nupdate-abhängigkeiten: @alcalzone/release-script (5.2.0), @alcalzone/release-script-plugin-iobroker (5.2.0), @alcalzone/release-script-plugin-license (5.2.0), @alcalzone/release-script-plugin-manual-review (5.2.0), @iobroker/eslint-config (2.3.2) (2.3",
@@ -80,19 +93,6 @@
         "pl": "naprawić logowanie\nstan połączenia",
         "uk": "фіксувати забір\nфіксувати стан з'єднання",
         "zh-cn": "固定记录\n固定连接状态"
-      },
-      "0.4.0": {
-        "en": "Updated translations for datapoint descriptions in all supported languages\nRefreshed and modernized the admin UI: clearer sections, manual IP address list, Windows hint, and option to disable auto-discovery\nPossibility to manually add devices via IP-Address and Option to disable auto discovery\nSave auto discovered devices in info datapoint and show in admin UI",
-        "de": "Aktualisierte Übersetzungen für Datapoint-Beschreibungen in allen unterstützten Sprachen\nErfrischt und modernisiert den Admin UI: klarere Abschnitte, manuelle IP-Adressenliste, Windows-Hinweis und Option, Auto-Entdeckung deaktivieren\nMöglichkeit, manuell Geräte über IP-Adresse und Option hinzuzufügen, um die automatische Entdeckung zu deaktivieren\nSpeichern Sie Auto entdeckte Geräte in Info-Datenpunkt und zeigen Sie in admin UI",
-        "ru": "Обновленные переводы для описания точек данных на всех поддерживаемых языках\nОбновленный и модернизированный пользовательский интерфейс администратора: более четкие разделы, ручной список IP-адресов, подсказка Windows и возможность отключения автоматического обнаружения\nВозможность вручную добавлять устройства через IP-адрес и опцию для отключения автоматического обнаружения\nСохранить автоматически обнаруженные устройства в точке данных info и показать в admin UI",
-        "pt": "Traduções atualizadas para descrições de pontos de dados em todos os idiomas suportados\nAtualizada e modernizada a interface de administração: seções mais claras, lista de endereços IP manuais, dica do Windows e opção para desativar a descoberta automática\nPossibilidade de adicionar dispositivos manualmente via endereço IP e opção para desativar a descoberta automática\nSalve os dispositivos auto descobertos no ponto de dados de informação e mostrar na interface de administração",
-        "nl": "Bijgewerkte vertalingen voor gegevenspuntenbeschrijvingen in alle ondersteunde talen\nVernieuwde en gemoderniseerde admin UI: duidelijkere secties, handmatige IP-adreslijst, Windows-hint en optie om auto-ontdekking uit te schakelen\nMogelijkheid om handmatig apparaten toe te voegen via IP-adres en optie om automatische ontdekking uit te schakelen\nOpslaan automatisch ontdekte apparaten in info datapoint en tonen in admin UI",
-        "fr": "Traductions actualisées pour les descriptions de points de données dans toutes les langues prises en charge\nRafraîchi et modernisé l'interface utilisateur admin: sections plus claires, liste d'adresses IP manuelle, conseils de Windows, et option pour désactiver la découverte automatique\nPossibilité d'ajouter manuellement des périphériques via IP-Adresse et Option pour désactiver la découverte automatique\nEnregistrer les périphériques découverts automatiquement dans info datapoint et afficher dans admin UI",
-        "it": "Traduzioni aggiornate per le descrizioni dei datapoint in tutte le lingue supportate\nAggiornato e modernizzato l'interfaccia utente di amministrazione: sezioni più chiare, elenco di indirizzi IP manuale, suggerimento di Windows e l'opzione per disabilitare l'auto-scoprimento\nPossibilità di aggiungere manualmente i dispositivi tramite IP-Address e Opzione per disabilitare la scoperta automatica\nSalvare i dispositivi auto scoperti in datapoint info e mostrare in admin UI",
-        "es": "Traducciones actualizadas para descripciones de puntos de datos en todos los idiomas compatibles\nActualizado y modernizado el administrador UI: secciones más claras, lista manual de direcciones IP, insinuación de Windows y opción para desactivar el auto-descubrimiento\nPosibilidad de añadir manualmente dispositivos a través de IP-Address y Option para desactivar el descubrimiento automático\nGuardar dispositivos auto descubiertos en info datapoint y mostrar en admin UI",
-        "pl": "Aktualizacja tłumaczeń opisów punktów danych we wszystkich obsługiwanych językach\nOdśwież i zmodernizuj interfejs administracyjny: jaśniejsze sekcje, ręczną listę adresów IP, podpowiedź systemu Windows oraz opcję wyłączenia autoodkrycia\nMożliwość ręcznego dodawania urządzeń poprzez adres IP- i opcja wyłączenia automatycznego wyszukiwania\nZapisz automatycznie odkryte urządzenia w info datapoint i pokaż w UI admin",
-        "uk": "Оновлено переклади для описів точок даних у всіх підтриманих мовах\nВідновлений і модернізований адміністратор UI: чіткі розділи, ручний IP-адресний список, підказка для Windows, і опція для вимкнення автоматично-розкриття\nМожливість вручну додати пристрої через IP-адресу та можливість вимкнути автоматичне відкриття\nЗаощаджуйте автовідкриті пристрої в інформаційній точці та покажете в адмін UI",
-        "zh-cn": "更新所有支持语言的数据点描述翻译\n更新和现代化管理 UI: 更清晰的段落、 手动 IP 地址列表、 Windows 提示和禁用自动发现选项\n通过 IP- Address和选项手动添加设备以禁用自动发现的可能性\n在信息数据点中保存自动发现的设备, 并在 admin UI 中显示"
       }
     },
     "titleLang": {

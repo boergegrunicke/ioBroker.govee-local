@@ -24,8 +24,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.4.7 (2026-06-02)
 
 - update dependencies
 - maintenance refactoring
@@ -56,14 +55,7 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 - revert forbidden characters checking
 - update dependencies
 
-### 0.4.2 (2025-11-08)
-
-- update dependencies
-- fix device name / model identifier in the objects
-
-Older entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).
-
-## License
+Older entries are available in [CHANGELOG_OLD.md](CHANGELOG_OLD.md).## License
 
 MIT License
 

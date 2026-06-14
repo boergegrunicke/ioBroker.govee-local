@@ -177,7 +177,7 @@ export class GoveeService extends EventEmitter {
                         ip: remote.address,
                         deviceName: deviceName,
                         deviceModel: messageObject.msg.data.sku,
-                    } as DeviceDiscoveryEvent);
+                    });
                 }
                 break;
             }
@@ -271,7 +271,7 @@ export class GoveeService extends EventEmitter {
             this.emit('deviceDiscovered', {
                 ip: trimmedIp,
                 deviceName: deviceName,
-            } as DeviceDiscoveryEvent);
+            });
 
             // Request initial status
             this.requestDeviceStatus(trimmedIp);
@@ -418,6 +418,6 @@ export class GoveeService extends EventEmitter {
                 color: colorString,
                 colorTemInKelvin: deviceData.colorTemInKelvin,
             },
-        } as DeviceStatusEvent);
+        });
     }
 }

@@ -31,7 +31,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version: '24.x'
             - uses: ioBroker/testing-action-check@v2
@@ -55,7 +55,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version: ${{ matrix.node-version }}
             - uses: ioBroker/testing-action-adapter@v1
@@ -82,7 +82,7 @@ jobs:
             id-token: write
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version: '24.x'
             - uses: ioBroker/testing-action-deploy@v1

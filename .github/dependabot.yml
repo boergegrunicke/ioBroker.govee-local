@@ -21,6 +21,11 @@ updates:
       - dependency-name: '@types/node'
         update-types:
           - 'version-update:semver-major'
+      # TypeScript 7 breaks typescript-eslint and ts-node (both still pin <7 support).
+      # Remove once those tools add TS7 support.
+      - dependency-name: 'typescript'
+        update-types:
+          - 'version-update:semver-major'
 
   - package-ecosystem: 'github-actions'
     directory: '/'

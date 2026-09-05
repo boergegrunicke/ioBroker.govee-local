@@ -4,7 +4,7 @@
 
 import * as utils from '@iobroker/adapter-core';
 import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
-import { hslToRgb, kelvinToMired, rgbToHsl } from './lib/tools/colorConversion';
+import { hsvToRgb, kelvinToMired, rgbToHsv } from './lib/tools/colorConversion';
 import { componentToHex, hexToRgb } from './lib/tools/hexTool';
 
 /**
@@ -13,11 +13,12 @@ import { componentToHex, hexToRgb } from './lib/tools/hexTool';
  */
 export class GoveeLocal extends utils.Adapter {
     /**
-     * Lightness used when converting a hue/saturation change back to RGB.
-     * 50 is the midpoint of the HSL model where colors reach full saturation; overall
-     * brightness is controlled separately via the device's own brightness command.
+     * Value (the V in HSV) used when converting a hue/saturation change back to RGB.
+     * Kept at 100 so the color is always sent at full scale and the peak RGB channel
+     * stays 255 regardless of saturation; overall output is controlled separately via
+     * the device's own brightness command.
      */
-    private static readonly FULL_COLOR_LIGHTNESS = 50;
+    private static readonly FULL_COLOR_VALUE = 100;
     /** Instance of GoveeService for device communication */
     private goveeService!: GoveeService;
     /**
@@ -149,8 +150,8 @@ export class GoveeLocal extends utils.Adapter {
 
     /**
      * Handles a hue or saturation change by combining it with the sibling state and
-     * sending the resulting color as an RGB command. Lightness is fixed at a saturated
-     * midpoint; overall brightness is controlled separately via the brightness state.
+     * sending the resulting color as an RGB command. The HSV value is fixed at full scale;
+     * overall brightness is controlled separately via the brightness state.
      *
      * @param deviceName The sanitized device name.
      * @param changedKey Which of the two states triggered the change.
@@ -168,7 +169,12 @@ export class GoveeLocal extends utils.Adapter {
         const hue = Number(changedKey === 'hue' ? state.val : (otherState?.val ?? 0));
         const saturation = Number(changedKey === 'saturation' ? state.val : (otherState?.val ?? 0));
 
-        const { r, g, b } = hslToRgb(hue, saturation, GoveeLocal.FULL_COLOR_LIGHTNESS);
+        if (!Number.isFinite(hue) || !Number.isFinite(saturation)) {
+            this.log.error(`Ignoring ${changedKey} change for ${deviceName}: hue/saturation is not a number`);
+            return;
+        }
+
+        const { r, g, b } = hsvToRgb(hue, saturation, GoveeLocal.FULL_COLOR_VALUE);
         this.goveeService.sendColorCommand(receiver, `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`);
     }
 
@@ -362,7 +368,7 @@ export class GoveeLocal extends utils.Adapter {
             native: {},
         });
 
-        const { hue, saturation } = rgbToHsl(hexToRgb(status.color));
+        const { hue, saturation } = rgbToHsv(hexToRgb(status.color));
         await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
         await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
 
@@ -406,8 +412,12 @@ export class GoveeLocal extends utils.Adapter {
 
 // Export factory function for ioBroker or start instance directly
 if (require.main !== module) {
-    // Export factory function for ioBroker, also available as ES6 export
-    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options);
+    // Export factory function for ioBroker. GoveeLocal is attached to the same function
+    // object so it stays available as a named export (`import { GoveeLocal } from './main'`)
+    // for tests, instead of being lost when module.exports is replaced.
+    module.exports = Object.assign((options: Partial<utils.AdapterOptions> | undefined) => new GoveeLocal(options), {
+        GoveeLocal,
+    });
 } else {
     // Otherwise start the instance directly
     (() => new GoveeLocal())();

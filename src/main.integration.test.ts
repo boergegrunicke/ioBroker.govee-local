@@ -117,6 +117,39 @@ describe('GoveeLocal Integration Tests', () => {
         expect(updateStateStub.calledWith('TestLamp.devStatus.brightness', 80)).to.be.true;
         expect(updateStateStub.calledWith('TestLamp.devStatus.color', '#FF0000')).to.be.true;
         expect(updateStateStub.calledWith('TestLamp.devStatus.colorTemInKelvin', 3000)).to.be.true;
+
+        // Verify HomeKit-compatible hue/saturation and mired color temperature were derived
+        expect(setObjectStub.calledWith('TestLamp.devStatus.hue')).to.be.true;
+        expect(setObjectStub.calledWith('TestLamp.devStatus.saturation')).to.be.true;
+        expect(setObjectStub.calledWith('TestLamp.devStatus.colorTemperature')).to.be.true;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.hue', 0)).to.be.true;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.saturation', 100)).to.be.true;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.colorTemperature', 333)).to.be.true;
+    });
+
+    it('should skip mired color temperature update while device is in RGB color mode', async () => {
+        const setObjectStub = sinon.stub();
+        const updateStateStub = sinon.stub();
+        (adapter as any).setObjectNotExistsAsync = setObjectStub;
+        (adapter as any).updateStateAsync = updateStateStub;
+
+        const statusEvent = {
+            deviceName: 'TestLamp',
+            ip: '192.168.1.100',
+            status: {
+                onOff: true,
+                brightness: 80,
+                color: '#00FF00',
+                colorTemInKelvin: 0,
+            },
+        };
+
+        await (adapter as any).handleDeviceStatusUpdate(statusEvent);
+
+        // The object is still created so the state exists ...
+        expect(setObjectStub.calledWith('TestLamp.devStatus.colorTemperature')).to.be.true;
+        // ... but no meaningless mired value is pushed while colorTemInKelvin is 0
+        expect(updateStateStub.calledWith('TestLamp.devStatus.colorTemperature')).to.be.false;
     });
 
     it('should handle state changes and forward to service', async () => {
@@ -143,6 +176,68 @@ describe('GoveeLocal Integration Tests', () => {
         expect(handleStateChangeSpy.getCall(0).args[0]).to.equal('govee-local.0.TestLamp.devStatus.onOff');
         expect(handleStateChangeSpy.getCall(0).args[1]).to.deep.equal(stateChange);
         expect(handleStateChangeSpy.getCall(0).args[2]).to.equal('192.168.1.100');
+    });
+
+    it('should forward HomeKit-style color temperature (mired) changes to the service unmodified', async () => {
+        (adapter as any).setObjectNotExists = sinon.stub();
+        (adapter as any).subscribeStates = sinon.stub();
+        (adapter as any).getStateAsync = sinon.stub().resolves({ val: '192.168.1.100' });
+
+        await (adapter as any).onReady();
+
+        const handleStateChangeSpy = sinon.spy((adapter as any).goveeService, 'handleStateChange');
+
+        const stateChange = { val: 200, ack: false };
+        await (adapter as any).onStateChange('govee-local.0.TestLamp.devStatus.colorTemperature', stateChange);
+
+        expect(handleStateChangeSpy.calledOnce).to.be.true;
+        expect(handleStateChangeSpy.getCall(0).args[0]).to.equal('govee-local.0.TestLamp.devStatus.colorTemperature');
+    });
+
+    it('should combine a hue change with the stored saturation and send an RGB color command', async () => {
+        (adapter as any).setObjectNotExists = sinon.stub();
+        (adapter as any).subscribeStates = sinon.stub();
+        (adapter as any).getStateAsync = sinon.stub().callsFake((id: string) => {
+            if (id === 'TestLamp.deviceInfo.ip') {
+                return Promise.resolve({ val: '192.168.1.100' });
+            }
+            if (id === 'TestLamp.devStatus.saturation') {
+                return Promise.resolve({ val: 100 });
+            }
+            return Promise.resolve(undefined);
+        });
+
+        await (adapter as any).onReady();
+
+        const sendColorCommandSpy = sinon.spy((adapter as any).goveeService, 'sendColorCommand');
+
+        const stateChange = { val: 120, ack: false };
+        await (adapter as any).onStateChange('govee-local.0.TestLamp.devStatus.hue', stateChange);
+
+        expect(sendColorCommandSpy.calledOnceWith('192.168.1.100', '#00FF00')).to.be.true;
+    });
+
+    it('should combine a saturation change with the stored hue and send an RGB color command', async () => {
+        (adapter as any).setObjectNotExists = sinon.stub();
+        (adapter as any).subscribeStates = sinon.stub();
+        (adapter as any).getStateAsync = sinon.stub().callsFake((id: string) => {
+            if (id === 'TestLamp.deviceInfo.ip') {
+                return Promise.resolve({ val: '192.168.1.100' });
+            }
+            if (id === 'TestLamp.devStatus.hue') {
+                return Promise.resolve({ val: 240 });
+            }
+            return Promise.resolve(undefined);
+        });
+
+        await (adapter as any).onReady();
+
+        const sendColorCommandSpy = sinon.spy((adapter as any).goveeService, 'sendColorCommand');
+
+        const stateChange = { val: 100, ack: false };
+        await (adapter as any).onStateChange('govee-local.0.TestLamp.devStatus.saturation', stateChange);
+
+        expect(sendColorCommandSpy.calledOnceWith('192.168.1.100', '#0000FF')).to.be.true;
     });
 
     it('should clean up service on unload', () => {

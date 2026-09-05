@@ -4,12 +4,20 @@
 
 import * as utils from '@iobroker/adapter-core';
 import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
+import { hslToRgb, kelvinToMired, rgbToHsl } from './lib/tools/colorConversion';
+import { componentToHex, hexToRgb } from './lib/tools/hexTool';
 
 /**
  * Main adapter class for ioBroker Govee Local.
  * Handles initialization, event wiring, and communication with GoveeService.
  */
 export class GoveeLocal extends utils.Adapter {
+    /**
+     * Lightness used when converting a hue/saturation change back to RGB.
+     * 50 is the midpoint of the HSL model where colors reach full saturation; overall
+     * brightness is controlled separately via the device's own brightness command.
+     */
+    private static readonly FULL_COLOR_LIGHTNESS = 50;
     /** Instance of GoveeService for device communication */
     private goveeService!: GoveeService;
     /**
@@ -121,16 +129,47 @@ export class GoveeLocal extends utils.Adapter {
      */
     private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
         if (state && !state.ack) {
+            const deviceName = id.split('.')[2];
+            const stateKey = id.split('.')[4];
             // Extract device name from state ID and get its IP address
-            const ipOfDevice = await this.getStateAsync(`${id.split('.')[2]}.deviceInfo.ip`);
+            const ipOfDevice = await this.getStateAsync(`${deviceName}.deviceInfo.ip`);
             const receiver = ipOfDevice?.val?.toString();
             if (typeof receiver === 'string') {
-                // Forward the state change to the GoveeService
-                this.goveeService.handleStateChange(id, state, receiver);
+                if (stateKey === 'hue' || stateKey === 'saturation') {
+                    await this.handleHueSaturationChange(deviceName, stateKey, state, receiver);
+                } else {
+                    // Forward the state change to the GoveeService
+                    this.goveeService.handleStateChange(id, state, receiver);
+                }
             } else {
                 this.log.error('device not found or IP is not a string');
             }
         }
+    }
+
+    /**
+     * Handles a hue or saturation change by combining it with the sibling state and
+     * sending the resulting color as an RGB command. Lightness is fixed at a saturated
+     * midpoint; overall brightness is controlled separately via the brightness state.
+     *
+     * @param deviceName The sanitized device name.
+     * @param changedKey Which of the two states triggered the change.
+     * @param state The new state value.
+     * @param receiver The device IP address.
+     */
+    private async handleHueSaturationChange(
+        deviceName: string,
+        changedKey: 'hue' | 'saturation',
+        state: ioBroker.State,
+        receiver: string,
+    ): Promise<void> {
+        const otherKey = changedKey === 'hue' ? 'saturation' : 'hue';
+        const otherState = await this.getStateAsync(`${deviceName}.devStatus.${otherKey}`);
+        const hue = Number(changedKey === 'hue' ? state.val : (otherState?.val ?? 0));
+        const saturation = Number(changedKey === 'saturation' ? state.val : (otherState?.val ?? 0));
+
+        const { r, g, b } = hslToRgb(hue, saturation, GoveeLocal.FULL_COLOR_LIGHTNESS);
+        this.goveeService.sendColorCommand(receiver, `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`);
     }
 
     /**
@@ -291,6 +330,42 @@ export class GoveeLocal extends utils.Adapter {
         });
         await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
 
+        // Create and update hue state (HomeKit compatible)
+        await this.setObjectNotExistsAsync(`${deviceName}.devStatus.hue`, {
+            type: 'state',
+            common: {
+                name: 'Hue of the lamp (HomeKit compatible)',
+                type: 'number',
+                role: 'level.color.hue',
+                unit: '°',
+                min: 0,
+                max: 360,
+                read: true,
+                write: true,
+            },
+            native: {},
+        });
+
+        // Create and update saturation state (HomeKit compatible)
+        await this.setObjectNotExistsAsync(`${deviceName}.devStatus.saturation`, {
+            type: 'state',
+            common: {
+                name: 'Saturation of the lamp (HomeKit compatible)',
+                type: 'number',
+                role: 'level.color.saturation',
+                unit: '%',
+                min: 0,
+                max: 100,
+                read: true,
+                write: true,
+            },
+            native: {},
+        });
+
+        const { hue, saturation } = rgbToHsl(hexToRgb(status.color));
+        await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
+        await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
+
         // Create and update color temperature state
         await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
             type: 'state',
@@ -304,6 +379,28 @@ export class GoveeLocal extends utils.Adapter {
             native: {},
         });
         await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
+
+        // Create and update color temperature in mired (HomeKit compatible)
+        await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemperature`, {
+            type: 'state',
+            common: {
+                name: 'Color temperature of the lamp in mired (HomeKit compatible)',
+                type: 'number',
+                role: 'level.color.temperature',
+                unit: 'mired',
+                read: true,
+                write: true,
+            },
+            native: {},
+        });
+        // Govee devices report colorTemInKelvin as 0 while in RGB color mode; a mired value
+        // is only meaningful while the lamp is actually in white/temperature mode.
+        if (status.colorTemInKelvin > 0) {
+            await this.updateStateAsync(
+                `${deviceName}.devStatus.colorTemperature`,
+                kelvinToMired(status.colorTemInKelvin),
+            );
+        }
     }
 }
 

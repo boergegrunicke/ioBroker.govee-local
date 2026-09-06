@@ -6,6 +6,7 @@
 import * as dgram from 'node:dgram';
 import { EventEmitter } from 'node:events';
 import type { GoveeServiceOptions } from './goveeServiceOptions';
+import { miredToKelvin } from './tools/colorConversion';
 import { componentToHex, hexToRgb } from './tools/hexTool';
 import { isValidIpAddress } from './tools/ipValidation';
 
@@ -320,6 +321,13 @@ export class GoveeService extends EventEmitter {
             case 'colorTemInKelvin':
                 this.sendColorTempCommand(receiver, Number(state.val));
                 break;
+            case 'colorTemperature': {
+                const mired = Number(state.val);
+                if (Number.isFinite(mired) && mired > 0) {
+                    this.sendColorTempCommand(receiver, miredToKelvin(mired));
+                }
+                break;
+            }
             case 'color': {
                 const colorValue = state.val?.toString();
                 if (colorValue) {

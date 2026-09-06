@@ -279,6 +279,27 @@ describe('GoveeService', () => {
 
             expect((service.sendColorTempCommand as sinon.SinonStub).calledWith('192.168.1.100', 4000)).to.be.true;
         });
+
+        it('should handle HomeKit-style color temperature (mired) state change', () => {
+            const state = { val: 200, ack: false } as ioBroker.State;
+            service.handleStateChange('govee-local.0.device.devStatus.colorTemperature', state, '192.168.1.100');
+
+            expect((service.sendColorTempCommand as sinon.SinonStub).calledWith('192.168.1.100', 5000)).to.be.true;
+        });
+
+        it('should ignore non-positive mired values for color temperature state change', () => {
+            const state = { val: 0, ack: false } as ioBroker.State;
+            service.handleStateChange('govee-local.0.device.devStatus.colorTemperature', state, '192.168.1.100');
+
+            expect((service.sendColorTempCommand as sinon.SinonStub).called).to.be.false;
+        });
+
+        it('should ignore non-numeric mired values for color temperature state change', () => {
+            const state = { val: 'not-a-number', ack: false } as ioBroker.State;
+            service.handleStateChange('govee-local.0.device.devStatus.colorTemperature', state, '192.168.1.100');
+
+            expect((service.sendColorTempCommand as sinon.SinonStub).called).to.be.false;
+        });
     });
 
     describe('Error Handling', () => {

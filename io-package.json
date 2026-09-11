@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.4.7",
+    "version": "0.5.0",
     "news": {
+      "0.5.0": {
+        "en": "add HomeKit-compatible hue and saturation states, and a mired color temperature state\nAdapter requires node.js >= 22.19.0 now\nupdate dependencies: `@iobroker/testing` (6.2.1)\nremoved the now obsolete npm overrides for `mocha` subdependencies `diff` and `serialize-javascript`\nupdate dependencies",
+        "de": "HomeKit-kompatiblen Farbton, Sättigung und Farbtemperatur hinzufügen\nAdapter benötigt jetzt node.js >= 22.19.0\nUpdates: `@iobroker /testing` (6.2.1)\nentfernte die veralteten NPM-Überschreibungen für Mocha, Diff und Serialize-Javascript\nAbhängigkeiten updaten",
+        "ru": "добавьте совместимые с HomeKit состояния оттенка и насыщенности, а также состояние смешанной цветовой температуры\nТеперь для адаптера требуется файл node.js >= 22.19.0\nобновления зависимостей: `@iobroker /testing` (6.2.1)\nудалены устаревшие переопределения npm для подзависимостей `mocha` `diff` и `serialize-javascript`\nобновить зависимости",
+        "pt": "adicione estados de matiz e saturação compatíveis com o HomeKit\nO adaptador exige node.js >= 22.19.0\natualizar dependências: `@iobroker /testing` (6.2.1)\nremoveu as substituições npm obsoletas das subdependências `diff` e `serialize-javascript`\natualizar dependências",
+        "nl": "voeg tint- en verzadigingstoestanden toe die compatibel zijn met HomeKit, en een verwarde kleurtemperatuur\nVoor de adapter is nu node.js >= 22.19.0 nodig\nafhankelijkheden voor updates: `@iobroker /testing` (6.2.1)\nheeft de nu verouderde npm-overschrijvingen verwijderd voor de subafhankelijkheden `diff` en `serialize-javascript`\nafhankelijkheden bijwerken",
+        "fr": "ajouter des états de teinte et de saturation compatibles HomeKit et une température de couleur\nAdapter nécessite node.js >= 22.19.0\ndépendances de mise à jour : @iobroker /testing (6.2.1)\nsupprimé les remplacements npm obsolètes pour les sous-dépendances de « mocha », « diff» et « serialize-javascript »\nmettre à jour les dépendances",
+        "it": "aggiungere tonalità e saturazione compatibili con HomeKit e temperatura del colore\nAdapter richiede node.js >= 22.19.0 ora\naggiorna dipendenze: `@iobroker /test` (6.2.1)\nrimosso gli ormai obsoleti npm override per le sottodipendenze mocha diff e serialize-javascript\naggiorna dipendenze",
+        "es": "añadir estados de tono y saturación compatibles con HomeKit y un estado de temperatura de color opaco\nEl adaptador ahora necesita node.js >= 22.19.0\nactualizar dependencias: `@iobroker /testing` (6.2.1)\neliminó las ahora obsoletas anulaciones de npm para las subdependencias de «mocha», «diff» y «serialize-javascript»\nactualizar dependencias",
+        "pl": "dodaj stany odcienia i nasycenia zgodne z HomeKit oraz stan temperatury barwowej\nAdapter wymaga teraz node.js >= 22.19.0\nzależności aktualizacji: `@iobroker /testing` (6.2.1)\nusunięto przestarzałe nadpisania npm dla podzależności `mocha` `diff` i `serialize-javascript`\naktualizuj zależności",
+        "uk": "додати сумісні з HomeKit стани відтінку та насиченості, а також запеклий стан колірної температури\nАдаптер вимагає node.js >= 22.19.0 зараз\nзалежності оновлення: `@iobroker /тестування` (6.2.1)\nвидалено застарілі перевизначення npm для субзалежностей `mocha` `diff` та `serialize-javascript`\nоновлення залежностей",
+        "zh-cn": "添加与 HomeKit 兼容的色调和饱和度状态以及深色色温状态\n适配器现在需要 node.js >= 22.19.0\n更新依赖关系：@iobroker /testing (6.2.1)\n删除了 `mocha` 子依赖项 `diff` 和 `serialize-javascript`的现已过时的 npm 替代\n更新依赖关系"
+      },
       "0.4.7": {
         "en": "update dependencies\nmaintenance refactoring",
         "de": "aktualisierung der abhängigkeiten\nwartung refactoring",
@@ -80,19 +93,6 @@
         "pl": "aktualizacji zależności\nnaprawić nazwę urządzenia / identyfikator modelu w obiektach",
         "uk": "оновлення залежності\nвиправити назву пристрою / ідентифікатор моделі в об'єктах",
         "zh-cn": "更新依赖关系\n对象中的固定设备名称/ 模型标识符"
-      },
-      "0.4.1": {
-        "en": "fix logging\nfix connection state",
-        "de": "fehlerbehebung\nbefestigungszustand",
-        "ru": "фиксировать лесозаготовки\nфиксировать состояние соединения",
-        "pt": "corrigir o registo\ncorrigir o estado da ligação",
-        "nl": "loggen herstellen\nfix verbindingstoestand",
-        "fr": "correction de l'enregistrement\nfixer l'état de connexion",
-        "it": "correggere la registrazione\ncorrezione dello stato di connessione",
-        "es": "corrección de registro\nestado de conexión",
-        "pl": "naprawić logowanie\nstan połączenia",
-        "uk": "фіксувати забір\nфіксувати стан з'єднання",
-        "zh-cn": "固定记录\n固定连接状态"
       }
     },
     "titleLang": {

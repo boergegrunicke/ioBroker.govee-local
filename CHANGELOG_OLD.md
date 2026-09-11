@@ -1,4 +1,10 @@
 # Older changes
+## 0.4.3 (2025-11-11)
+
+- fix responsive design in the settings
+- revert forbidden characters checking
+- update dependencies
+
 ## 0.4.2 (2025-11-08)
 
 - update dependencies

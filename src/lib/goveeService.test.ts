@@ -46,17 +46,29 @@ describe('GoveeService scanMode logic', () => {
         sinon.assert.calledOnce(sendScanSpy);
     });
 
-    it('should start scan interval if scanMode is interval', done => {
+    it('should start scan interval if scanMode is interval', () => {
         options.scanMode = 'interval';
-        options.searchInterval = 0.01; // very short for test
+        // Distinct from deviceStatusRefreshInterval (60s) so the scan timer can be identified below
+        options.searchInterval = 5;
+        // Inject a controllable setInterval instead of waiting on the real clock: the registered
+        // callback is driven by hand, so the test cannot flake when the machine is under load.
+        const timers: { callback: () => void; ms: number }[] = [];
+        options.setInterval = (callback: () => void, ms: number) => {
+            timers.push({ callback, ms });
+            return timers.length;
+        };
+        options.clearInterval = () => {};
         service = new GoveeService(options);
         const sendScanSpy = sinon.spy(service, 'sendScan');
         GoveeServiceTestHelper.stubSocketMethods(service);
         service.start();
-        setTimeout(() => {
-            expect(sendScanSpy.callCount).to.be.greaterThan(1);
-            done();
-        }, 30);
+
+        const scanTimer = timers.find(timer => timer.ms === 5000);
+        expect(scanTimer, 'a scan interval should be registered for searchInterval').to.not.be.undefined;
+        // Every tick of that interval must trigger another scan
+        scanTimer!.callback();
+        scanTimer!.callback();
+        expect(sendScanSpy.callCount).to.equal(2);
     });
 });
 

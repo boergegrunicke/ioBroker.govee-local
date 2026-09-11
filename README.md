@@ -28,6 +28,9 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 ### **WORK IN PROGRESS**
 
 - add HomeKit-compatible hue and saturation states, and a mired color temperature state
+- Adapter requires node.js >= 22.19.0 now
+- update dependencies: `@iobroker/testing` (6.2.1)
+    - removed the now obsolete npm overrides for `mocha` subdependencies `diff` and `serialize-javascript`
 - update dependencies
 
 ### 0.4.7 (2026-06-02)

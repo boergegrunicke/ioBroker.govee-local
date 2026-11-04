@@ -19,6 +19,11 @@ export class GoveeLocal extends utils.Adapter {
      * the device's own brightness command.
      */
     private static readonly FULL_COLOR_VALUE = 100;
+    /**
+     * How long a user command (ack = false) is protected against being overwritten by a differing
+     * device status. Such a status was most likely requested before the command was applied.
+     */
+    private static readonly COMMAND_CONFIRMATION_TIMEOUT_MS = 2000;
     /** Instance of GoveeService for device communication */
     private goveeService!: GoveeService;
     /**
@@ -203,7 +208,11 @@ export class GoveeLocal extends utils.Adapter {
     }
 
     /**
-     * Updates a state only if the value has changed.
+     * Updates a state only if its value or acknowledgement has changed.
+     * Comparing the ack flag as well ensures a user command (ack = false) gets acknowledged
+     * once the device confirms it, even though the value itself stays the same.
+     * A recent user command is not overwritten by a differing value, so a stale device status
+     * cannot make the state jump back before the device has applied the command.
      *
      * @param fullName Full object path
      * @param state New value
@@ -211,12 +220,20 @@ export class GoveeLocal extends utils.Adapter {
      */
     private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
         const currentState = await this.getStateAsync(fullName);
-        if (currentState?.val !== state) {
-            void this.setState(fullName, {
-                val: state,
-                ack: acknowledged,
-            });
+        if (currentState) {
+            if (currentState.val === state && currentState.ack === acknowledged) {
+                return;
+            }
+            const awaitingConfirmation =
+                !currentState.ack && Date.now() - currentState.ts < GoveeLocal.COMMAND_CONFIRMATION_TIMEOUT_MS;
+            if (awaitingConfirmation && currentState.val !== state) {
+                return;
+            }
         }
+        await this.setState(fullName, {
+            val: state,
+            ack: acknowledged,
+        });
     }
 
     /**

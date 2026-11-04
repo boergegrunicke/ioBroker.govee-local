@@ -400,6 +400,103 @@ describe('GoveeLocal Integration Tests', () => {
         expect(sendColorCommandSpy.called).to.be.false;
     });
 
+    describe('updateStateAsync', () => {
+        let setStateStub: sinon.SinonStub;
+
+        beforeEach(() => {
+            setStateStub = sinon.stub().resolves();
+            (adapter as any).setState = setStateStub;
+        });
+
+        it('should acknowledge a pending user command once the device confirms the same value', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: false, ts: Date.now() });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', true);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.onOff', { val: true, ack: true })).to.be.true;
+        });
+
+        it('should not overwrite a recent user command with a differing device value', async () => {
+            // The device status was most likely requested before the command was applied
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: false, ts: Date.now() });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', false);
+
+            expect(setStateStub.called).to.be.false;
+        });
+
+        it('should accept a differing device value once the confirmation timeout has passed', async () => {
+            // The device did not apply the command, so its real state must show up again
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: false, ts: Date.now() - 2000 });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', false);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.onOff', { val: false, ack: true })).to.be.true;
+        });
+
+        it('should not write an already acknowledged, unchanged value', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: true, ts: Date.now() });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', true);
+
+            expect(setStateStub.called).to.be.false;
+        });
+
+        it('should write a changed device value', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: true, ts: Date.now() });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', false);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.onOff', { val: false, ack: true })).to.be.true;
+        });
+
+        it('should write a value for a state that does not exist yet', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves(null);
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.brightness', 50);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.brightness', { val: 50, ack: true })).to.be.true;
+        });
+    });
+
+    it('should not let a status processed while a user command arrives make the state jump back', async () => {
+        // In-memory state store, so reads during status processing see the user's write
+        const states: Record<string, ioBroker.State> = {
+            'TestLamp.devStatus.onOff': { val: false, ack: true, ts: Date.now() - 60000 } as ioBroker.State,
+        };
+        (adapter as any).getStateAsync = (id: string) => Promise.resolve(states[id] ?? null);
+        (adapter as any).setState = (id: string, state: { val: unknown; ack: boolean }) => {
+            states[id] = { ...state, ts: Date.now() } as ioBroker.State;
+            return Promise.resolve();
+        };
+        // Pause status processing at its first object operation
+        let resumeStatusProcessing!: () => void;
+        const paused = new Promise<void>(resolve => (resumeStatusProcessing = resolve));
+        (adapter as any).setObjectNotExistsAsync = sinon.stub().resolves().onFirstCall().returns(paused);
+
+        const status = { onOff: false, brightness: 80, color: '#FF0000', colorTemInKelvin: 0 };
+        const staleUpdate = (adapter as any).handleDeviceStatusUpdate({
+            deviceName: 'TestLamp',
+            ip: '192.168.1.100',
+            status,
+        });
+        // The user switches the lamp on while the stale "off" status is being processed
+        states['TestLamp.devStatus.onOff'] = { val: true, ack: false, ts: Date.now() } as ioBroker.State;
+        resumeStatusProcessing();
+        await staleUpdate;
+
+        expect(states['TestLamp.devStatus.onOff']).to.include({ val: true, ack: false });
+
+        // Once the device reports the new state, the command is acknowledged
+        await (adapter as any).handleDeviceStatusUpdate({
+            deviceName: 'TestLamp',
+            ip: '192.168.1.100',
+            status: { ...status, onOff: true },
+        });
+
+        expect(states['TestLamp.devStatus.onOff']).to.include({ val: true, ack: true });
+    });
+
     it('should clean up service on unload', () => {
         // Initialize service
         (adapter as any).goveeService = {

@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "news": {
+      "0.5.1": {
+        "en": "update dependencies: `@iobroker/testing` (6.3.0)\nfix states briefly jumping back to the old value after a command, until the device confirms it (#327)\nacknowledge commanded states once the device confirms them, even if the value did not change",
+        "de": "Updates: `@iobroker /testing` (6.3.0)\nFix: Status springen nach einem Befehl kurz auf den alten Wert zurück, bis das Gerät ihn bestätigt (#327)\nBestätigen Sie Befehle, wenn das Gerät sie bestätigt, auch wenn sich der Wert nicht ändert",
+        "ru": "обновления зависимостей: `@iobroker /testing` (6.3.0)\nисправление состояний, ненадолго возвращающихся к старому значению после выполнения команды, пока устройство не подтвердит это (#327)\nподтвердите командные состояния, как только устройство подтвердит их, даже если значение не изменилось",
+        "pt": "atualizar dependências: `@iobroker /testing` (6.3.0)\nfixa estados que retornam ao valor antigo após um comando, até que o dispositivo o confirme (#327)\nconfirme os estados de comando quando o dispositivo os confirma, mesmo que o valor não mude",
+        "nl": "afhankelijkheden voor updates: `@iobroker /testing` (6.3.0)\nstatussen corrigeren waarbij kort wordt teruggesprongen naar de oude waarde na een opdracht, totdat het apparaat de opdracht bevestigt (#327)\nerken de commandostaten zodra het apparaat ze bevestigt, zelfs als de waarde niet is gewijzigd",
+        "fr": "dépendances de mise à jour : @iobroker /testing (6.3.0)\nfix indique de revenir brièvement à l'ancienne valeur après une commande, jusqu'à confirmation (#327)\naccepter les états des commandes une fois que l'appareil les confirme, même si la valeur n'a pas changé",
+        "it": "aggiorna dipendenze: `@iobroker /test` (6.3.0)\nfix torna brevemente al vecchio valore dopo un comando, finché il dispositivo non lo conferma (#327)\nconferma gli stati comandati dal dispositivo, anche se il valore non è cambiato",
+        "es": "actualizar dependencias: `@iobroker /testing` (6.3.0)\ncorregir estados que vuelven brevemente al valor anterior tras un comando, hasta que el dispositivo lo confirme (#327)\nreconocer los estados del comando una vez que el dispositivo los confirme, aunque el valor no cambie",
+        "pl": "zależności aktualizacji: `@iobroker /testing` (6.3.0)\nstany poprawiające krótko przeskakujące z powrotem do starej wartości po poleceniu, aż urządzenie to potwierdzi (#327)\npotwierdzić polecone stany, gdy urządzenie je potwierdzi, nawet jeśli wartość nie uległa zmianie",
+        "uk": "залежності оновлення: `@iobroker /тестування` (6.3.0)\nвиправлення станів короткочасного переходу до старого значення після команди, поки пристрій не підтвердить це (#327)\nпідтвердити командні стани, коли пристрій підтвердить їх, навіть якщо значення не змінилося",
+        "zh-cn": "更新依赖关系：`@iobroker /testing` (6.3.0)\n修复在设备确认命令后短暂跳回旧值的状态 (#327)\n一旦设备确认命令状态，即使值没有改变，也要确认这些状态"
+      },
       "0.5.0": {
         "en": "add HomeKit-compatible hue and saturation states, and a mired color temperature state\nAdapter requires node.js >= 22.19.0 now\nupdate dependencies: `@iobroker/testing` (6.2.1)\nremoved the now obsolete npm overrides for `mocha` subdependencies `diff` and `serialize-javascript`\nupdate dependencies",
         "de": "HomeKit-kompatiblen Farbton, Sättigung und Farbtemperatur hinzufügen\nAdapter benötigt jetzt node.js >= 22.19.0\nUpdates: `@iobroker /testing` (6.2.1)\nentfernte die veralteten NPM-Überschreibungen für Mocha, Diff und Serialize-Javascript\nAbhängigkeiten updaten",
@@ -80,19 +93,6 @@
         "pl": "naprawić reagujący projekt w ustawieniach\nrevert zabronione sprawdzanie znaków\naktualizacji zależności",
         "uk": "виправити адаптивний дизайн в налаштуваннях\nперевернути заборонені символи перевірки\nоновлення залежності",
         "zh-cn": "在设置中固定响应性设计\n返回禁用字符检查\n更新依赖关系"
-      },
-      "0.4.2": {
-        "en": "update dependencies\nfix device name / model identifier in the objects",
-        "de": "aktualisierung der abhängigkeiten\ngerätename / modellkennung in den objekten fixieren",
-        "ru": "обновление зависимостей\nфиксировать имя устройства / идентификатор модели в объектах",
-        "pt": "atualizar dependências\ncorrigir o nome do dispositivo / identificador do modelo nos objetos",
-        "nl": "afhankelijkheden bijwerken\nfix apparaatnaam / modelidentificatie in de objecten",
-        "fr": "mettre à jour les dépendances\ncorrection du nom du périphérique / de l'identificateur du modèle dans les objets",
-        "it": "aggiornamento dipendenze\nfix nome del dispositivo / modello identificatore negli oggetti",
-        "es": "dependencias de actualización\nfijar el nombre del dispositivo / identificador modelo en los objetos",
-        "pl": "aktualizacji zależności\nnaprawić nazwę urządzenia / identyfikator modelu w obiektach",
-        "uk": "оновлення залежності\nвиправити назву пристрою / ідентифікатор моделі в об'єктах",
-        "zh-cn": "更新依赖关系\n对象中的固定设备名称/ 模型标识符"
       }
     },
     "titleLang": {

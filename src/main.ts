@@ -289,7 +289,8 @@ export class GoveeLocal extends utils.Adapter {
 
     /**
      * Handles device status update event from GoveeService.
-     * Creates and updates all relevant states for the device.
+     * Creates all relevant states for the device and updates those present in the status;
+     * fields still awaiting confirmation of a command are omitted by the service.
      *
      * @param event The device status update event data.
      */
@@ -308,7 +309,9 @@ export class GoveeLocal extends utils.Adapter {
             },
             native: {},
         });
-        await this.updateStateAsync(`${deviceName}.devStatus.onOff`, status.onOff);
+        if (status.onOff !== undefined) {
+            await this.updateStateAsync(`${deviceName}.devStatus.onOff`, status.onOff);
+        }
 
         // Create and update brightness state
         await this.setObjectNotExistsAsync(`${deviceName}.devStatus.brightness`, {
@@ -322,7 +325,9 @@ export class GoveeLocal extends utils.Adapter {
             },
             native: {},
         });
-        await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
+        if (status.brightness !== undefined) {
+            await this.updateStateAsync(`${deviceName}.devStatus.brightness`, status.brightness);
+        }
 
         // Create and update color state
         await this.setObjectNotExistsAsync(`${deviceName}.devStatus.color`, {
@@ -336,7 +341,9 @@ export class GoveeLocal extends utils.Adapter {
             },
             native: {},
         });
-        await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
+        if (status.color !== undefined) {
+            await this.updateStateAsync(`${deviceName}.devStatus.color`, status.color);
+        }
 
         // Create and update hue state (HomeKit compatible)
         await this.setObjectNotExistsAsync(`${deviceName}.devStatus.hue`, {
@@ -370,9 +377,11 @@ export class GoveeLocal extends utils.Adapter {
             native: {},
         });
 
-        const { hue, saturation } = rgbToHsv(hexToRgb(status.color));
-        await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
-        await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
+        if (status.color !== undefined) {
+            const { hue, saturation } = rgbToHsv(hexToRgb(status.color));
+            await this.updateStateAsync(`${deviceName}.devStatus.hue`, hue);
+            await this.updateStateAsync(`${deviceName}.devStatus.saturation`, saturation);
+        }
 
         // Create and update color temperature state
         await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemInKelvin`, {
@@ -386,7 +395,9 @@ export class GoveeLocal extends utils.Adapter {
             },
             native: {},
         });
-        await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
+        if (status.colorTemInKelvin !== undefined) {
+            await this.updateStateAsync(`${deviceName}.devStatus.colorTemInKelvin`, status.colorTemInKelvin);
+        }
 
         // Create and update color temperature in mired (HomeKit compatible)
         await this.setObjectNotExistsAsync(`${deviceName}.devStatus.colorTemperature`, {
@@ -403,7 +414,7 @@ export class GoveeLocal extends utils.Adapter {
         });
         // Govee devices report colorTemInKelvin as 0 while in RGB color mode; a mired value
         // is only meaningful while the lamp is actually in white/temperature mode.
-        if (status.colorTemInKelvin > 0) {
+        if (status.colorTemInKelvin !== undefined && status.colorTemInKelvin > 0) {
             await this.updateStateAsync(
                 `${deviceName}.devStatus.colorTemperature`,
                 kelvinToMired(status.colorTemInKelvin),

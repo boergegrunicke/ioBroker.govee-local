@@ -6,8 +6,9 @@
 import * as dgram from 'node:dgram';
 import { EventEmitter } from 'node:events';
 import type { GoveeServiceOptions } from './goveeServiceOptions';
+import { PendingCommands } from './pendingCommands';
 import { miredToKelvin } from './tools/colorConversion';
-import { componentToHex, hexToRgb } from './tools/hexTool';
+import { hexToRgb, rgbToHex } from './tools/hexTool';
 import { isValidIpAddress } from './tools/ipValidation';
 
 /**
@@ -23,6 +24,20 @@ export interface DeviceDiscoveryEvent {
 }
 
 /**
+ * Status values reported by a device.
+ */
+export interface DeviceStatus {
+    /** Current on/off state. */
+    onOff: boolean;
+    /** Current brightness level. */
+    brightness: number;
+    /** Current color as hex string. */
+    color: string;
+    /** Current color temperature in Kelvin. */
+    colorTemInKelvin: number;
+}
+
+/**
  * Device status update event data.
  */
 export interface DeviceStatusEvent {
@@ -30,17 +45,8 @@ export interface DeviceStatusEvent {
     deviceName: string;
     /** The IP address of the device. */
     ip: string;
-    /** The current status of the device. */
-    status: {
-        /** Current on/off state. */
-        onOff: boolean;
-        /** Current brightness level. */
-        brightness: number;
-        /** Current color as hex string. */
-        color: string;
-        /** Current color temperature in Kelvin. */
-        colorTemInKelvin: number;
-    };
+    /** The current status of the device; fields of commands still awaiting confirmation are omitted. */
+    status: Partial<DeviceStatus>;
 }
 
 /**
@@ -73,12 +79,16 @@ export class GoveeService extends EventEmitter {
     static readonly SEND_SCAN_PORT = 4001;
     static readonly CONTROL_PORT = 4003;
     static readonly M_CAST = '239.255.255.250';
+    /** How long a reported value contradicting a just sent command is treated as stale. */
+    static readonly COMMAND_CONFIRMATION_TIMEOUT_MS = 2000;
     static readonly scanMessage = {
         msg: { cmd: 'scan', data: { account_topic: 'reserved' } },
     };
     static readonly requestStatusMessage = {
         msg: { cmd: 'devStatus', data: {} },
     };
+
+    private readonly pendingCommands = new PendingCommands<DeviceStatus>(GoveeService.COMMAND_CONFIRMATION_TIMEOUT_MS);
 
     /**
      * Create a new GoveeService instance.
@@ -349,6 +359,7 @@ export class GoveeService extends EventEmitter {
         };
         const turnMessageBuffer = Buffer.from(JSON.stringify(turnMessage));
         this.socket.send(turnMessageBuffer, 0, turnMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+        this.pendingCommands.expect(receiver, 'onOff', value);
     }
 
     /**
@@ -367,6 +378,7 @@ export class GoveeService extends EventEmitter {
             GoveeService.CONTROL_PORT,
             receiver,
         );
+        this.pendingCommands.expect(receiver, 'brightness', value);
     }
 
     /**
@@ -385,6 +397,7 @@ export class GoveeService extends EventEmitter {
             }),
         );
         this.socket.send(colorTempMessageBuffer, 0, colorTempMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+        this.pendingCommands.expect(receiver, 'colorTemInKelvin', kelvin);
     }
 
     /**
@@ -398,6 +411,7 @@ export class GoveeService extends EventEmitter {
         const colorMessage = { msg: { cmd: 'colorwc', data: { color: rgb } } };
         const colorMessageBuffer = Buffer.from(JSON.stringify(colorMessage));
         this.socket.send(colorMessageBuffer, 0, colorMessageBuffer.length, GoveeService.CONTROL_PORT, receiver);
+        this.pendingCommands.expect(receiver, 'color', rgbToHex(rgb));
     }
 
     /**
@@ -415,17 +429,17 @@ export class GoveeService extends EventEmitter {
             const r = typeof deviceData.color.r === 'number' ? deviceData.color.r : 0;
             const g = typeof deviceData.color.g === 'number' ? deviceData.color.g : 0;
             const b = typeof deviceData.color.b === 'number' ? deviceData.color.b : 0;
-            colorString = `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
+            colorString = rgbToHex({ r, g, b });
         }
         this.emit('deviceStatusUpdate', {
             deviceName: deviceName,
             ip: ip,
-            status: {
+            status: this.pendingCommands.filter(ip, {
                 onOff: deviceData.onOff === 1,
                 brightness: deviceData.brightness,
                 color: colorString,
                 colorTemInKelvin: deviceData.colorTemInKelvin,
-            },
+            }),
         });
     }
 }

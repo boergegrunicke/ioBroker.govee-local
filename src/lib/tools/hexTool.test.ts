@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { componentToHex, hexToRgb } from './hexTool';
+import { componentToHex, hexToRgb, rgbToHex } from './hexTool';
 
 describe('componentToHex', () => {
     it('should return two-digit uppercase hex for 0-255', () => {
@@ -37,5 +37,16 @@ describe('hexToRgb', () => {
     it('should return 0 for invalid hex', () => {
         expect(hexToRgb('')).to.deep.equal({ r: 0, g: 0, b: 0 });
         expect(hexToRgb('zzzzzz')).to.deep.equal({ r: 0, g: 0, b: 0 });
+    });
+});
+
+describe('rgbToHex', () => {
+    it('should convert RGB to an uppercase 6-digit hex string', () => {
+        expect(rgbToHex({ r: 255, g: 170, b: 187 })).to.equal('#FFAABB');
+        expect(rgbToHex({ r: 0, g: 10, b: 0 })).to.equal('#000A00');
+    });
+
+    it('should round trip with hexToRgb', () => {
+        expect(rgbToHex(hexToRgb('#fab'))).to.equal('#FFAABB');
     });
 });

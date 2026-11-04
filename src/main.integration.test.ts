@@ -148,6 +148,31 @@ describe('GoveeLocal Integration Tests', () => {
         expect(updateStateStub.calledWith('TestLamp.devStatus.colorTemperature')).to.be.false;
     });
 
+    it('should only update states for fields present in the status update', async () => {
+        const setObjectStub = sinon.stub();
+        const updateStateStub = sinon.stub();
+        (adapter as any).setObjectNotExistsAsync = setObjectStub;
+        (adapter as any).updateStateAsync = updateStateStub;
+
+        // onOff and color are omitted by the service while their commands await confirmation
+        await (adapter as any).handleDeviceStatusUpdate({
+            deviceName: 'TestLamp',
+            ip: '192.168.1.100',
+            status: { brightness: 80, colorTemInKelvin: 3000 },
+        });
+
+        // All objects are still created ...
+        expect(setObjectStub.calledWith('TestLamp.devStatus.onOff')).to.be.true;
+        expect(setObjectStub.calledWith('TestLamp.devStatus.color')).to.be.true;
+        // ... but the omitted fields and the values derived from them are left untouched
+        expect(updateStateStub.calledWith('TestLamp.devStatus.onOff')).to.be.false;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.color')).to.be.false;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.hue')).to.be.false;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.saturation')).to.be.false;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.brightness', 80)).to.be.true;
+        expect(updateStateStub.calledWith('TestLamp.devStatus.colorTemInKelvin', 3000)).to.be.true;
+    });
+
     it('should handle state changes and forward to service', async () => {
         // Mock adapter methods
         (adapter as any).setObjectNotExists = sinon.stub();

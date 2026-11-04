@@ -24,6 +24,9 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 	Placeholder for the next version (at the beginning of the line):
 	### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- update dependencies: `node-forge` (1.4.3) and `follow-redirects` (1.16.2) to fix security vulnerabilities
+
 ### 0.5.1 (2026-11-04)
 - update dependencies: `@iobroker/testing` (6.3.0)
 - fix states briefly jumping back to the old value after a command, until the device confirms it (#327)

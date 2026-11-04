@@ -203,7 +203,9 @@ export class GoveeLocal extends utils.Adapter {
     }
 
     /**
-     * Updates a state only if the value has changed.
+     * Updates a state only if its value or acknowledgement has changed.
+     * Comparing the ack flag as well ensures a user command (ack = false) gets acknowledged
+     * once the device confirms it, even though the value itself stays the same.
      *
      * @param fullName Full object path
      * @param state New value
@@ -211,8 +213,8 @@ export class GoveeLocal extends utils.Adapter {
      */
     private async updateStateAsync(fullName: string, state: any, acknowledged = true): Promise<void> {
         const currentState = await this.getStateAsync(fullName);
-        if (currentState?.val !== state) {
-            void this.setState(fullName, {
+        if (!currentState || currentState.val !== state || currentState.ack !== acknowledged) {
+            await this.setState(fullName, {
                 val: state,
                 ack: acknowledged,
             });

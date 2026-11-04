@@ -400,6 +400,47 @@ describe('GoveeLocal Integration Tests', () => {
         expect(sendColorCommandSpy.called).to.be.false;
     });
 
+    describe('updateStateAsync', () => {
+        let setStateStub: sinon.SinonStub;
+
+        beforeEach(() => {
+            setStateStub = sinon.stub().resolves();
+            (adapter as any).setState = setStateStub;
+        });
+
+        it('should acknowledge a pending user command once the device confirms the same value', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: false });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', true);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.onOff', { val: true, ack: true })).to.be.true;
+        });
+
+        it('should not write an already acknowledged, unchanged value', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: true });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', true);
+
+            expect(setStateStub.called).to.be.false;
+        });
+
+        it('should write a changed value', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves({ val: true, ack: true });
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.onOff', false);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.onOff', { val: false, ack: true })).to.be.true;
+        });
+
+        it('should write a value for a state that does not exist yet', async () => {
+            (adapter as any).getStateAsync = sinon.stub().resolves(null);
+
+            await (adapter as any).updateStateAsync('TestLamp.devStatus.brightness', 50);
+
+            expect(setStateStub.calledOnceWith('TestLamp.devStatus.brightness', { val: 50, ack: true })).to.be.true;
+        });
+    });
+
     it('should clean up service on unload', () => {
         // Initialize service
         (adapter as any).goveeService = {

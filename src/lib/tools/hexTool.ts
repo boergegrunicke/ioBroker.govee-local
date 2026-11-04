@@ -10,19 +10,6 @@ export function componentToHex(c: number): string {
 }
 
 /**
- * Converts an RGB object to an uppercase hex color string.
- *
- * @param rgb The RGB color to convert.
- * @param rgb.r Red component (0-255).
- * @param rgb.g Green component (0-255).
- * @param rgb.b Blue component (0-255).
- * @returns Hex string (e.g. '#FFAABB').
- */
-export function rgbToHex(rgb: { r: number; g: number; b: number }): string {
-    return `#${componentToHex(rgb.r)}${componentToHex(rgb.g)}${componentToHex(rgb.b)}`;
-}
-
-/**
  * Converts a hex color string (e.g. '#FFAABB') to an RGB object.
  *
  * @param hex The hex color string.

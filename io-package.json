@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "govee-local",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "news": {
+      "0.5.2": {
+        "en": "update dependencies: `node-forge` (1.4.3) and `follow-redirects` (1.16.2) to fix security vulnerabilities",
+        "de": "Abhängigkeiten aktualisieren: `Node-Forge` (1.4.3) und `Follow-Redirects` (1.16.2), um Sicherheitslücken zu schließen",
+        "ru": "обновите зависимости: `nodeforge` (1.4.3) и `follow-redirects` (1.16.2) для устранения уязвимостей безопасности",
+        "pt": "atualize as dependências: `node-forge` (1.4.3) e `follow-redirects` (1.16.2) para corrigir falhas",
+        "nl": "update-afhankelijkheden: `node-forge` (1.4.3) en `follow-redirects` (1.16.2) om beveiligingsproblemen te verhelpen",
+        "fr": "dépendances de mise à jour : « node-forge » (1.4.3) et « follow-redirections » (1.16.2) pour corriger les failles de sécurité",
+        "it": "aggiornare le dipendenze: `node-forge` (1.4.3) e `follow-redirects` (1.16.2) per correggere falle",
+        "es": "actualizar dependencias: `node-forge` (1.4.3) y `follow-redirects` (1.16.2) para corregir vulnerabilidades de seguridad",
+        "pl": "aktualizacja zależności: `node-forge` (1.4.3) i `follow-redirects` (1.16.2) w celu naprawienia luk w zabezpieczeniach",
+        "uk": "оновлення залежностей: `node-forge` (1.4.3) та `follow-redirects` (1.16.2) для виправлення вразливостей безпеки",
+        "zh-cn": "更新依赖关系：`node-forge` (1.4.3) 和 `follow-redirects` (1.16.2) 以修复安全漏洞"
+      },
       "0.5.1": {
         "en": "update dependencies: `@iobroker/testing` (6.3.0)\nfix states briefly jumping back to the old value after a command, until the device confirms it (#327)\nacknowledge commanded states once the device confirms them, even if the value did not change",
         "de": "Updates: `@iobroker /testing` (6.3.0)\nFix: Status springen nach einem Befehl kurz auf den alten Wert zurück, bis das Gerät ihn bestätigt (#327)\nBestätigen Sie Befehle, wenn das Gerät sie bestätigt, auch wenn sich der Wert nicht ändert",
@@ -80,19 +93,6 @@
         "pl": "dodaj opcję, aby uruchomić automatyczne wykrywanie raz na starcie, w przedziale lub całkowicie go wyłączyć",
         "uk": "додати можливість запустити автовідкриття один раз на запуску, в інтервалі або комплетувати його",
         "zh-cn": "添加在启动、间隔或完全禁用时运行自动发现的选项"
-      },
-      "0.4.3": {
-        "en": "fix responsive design in the settings\nrevert forbidden characters checking\nupdate dependencies",
-        "de": "reagierendes design in den einstellungen beheben\nzurücksetzen verbotene zeichen überprüfen\naktualisierung der abhängigkeiten",
-        "ru": "исправить отзывчивый дизайн в настройках\nпроверка запрещенных персонажей\nобновление зависимостей",
-        "pt": "corrigir o design responsivo nas configurações\nreverter a verificação de caracteres proibidos\natualizar dependências",
-        "nl": "repareren responsief ontwerp in de instellingen\n_verboden tekens controleren\nafhankelijkheden bijwerken",
-        "fr": "fixer la conception réactive dans les paramètres\nretourner la vérification des caractères interdits\nmettre à jour les dépendances",
-        "it": "fissare il design reattivo nelle impostazioni\nrevert i caratteri vietati controllando\naggiornamento dipendenze",
-        "es": "fijar diseño sensible en la configuración\nrevertir caracteres prohibidos\ndependencias de actualización",
-        "pl": "naprawić reagujący projekt w ustawieniach\nrevert zabronione sprawdzanie znaków\naktualizacji zależności",
-        "uk": "виправити адаптивний дизайн в налаштуваннях\nперевернути заборонені символи перевірки\nоновлення залежності",
-        "zh-cn": "在设置中固定响应性设计\n返回禁用字符检查\n更新依赖关系"
       }
     },
     "titleLang": {

@@ -1,8 +1,13 @@
 # Older changes
+## 0.4.5 (2025-11-16)
+
+- fix scan mode inconsistency
+  enhance log output behavior
+
+
 ## 0.4.4 (2025-11-13)
 
 - add option to run auto discovery once on startup, in interval or completly disable it
-
 
 ## 0.4.3 (2025-11-11)
 

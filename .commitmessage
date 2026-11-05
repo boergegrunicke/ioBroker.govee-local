@@ -1,0 +1,5 @@
+chore: release v0.5.1
+
+- update dependencies: `@iobroker/testing` (6.3.0)
+- fix states briefly jumping back to the old value after a command, until the device confirms it (#327)
+- acknowledge commanded states once the device confirms them, even if the value did not change

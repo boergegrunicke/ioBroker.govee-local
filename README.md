@@ -26,8 +26,6 @@ For **Windows** Users: Please go to the settings and make sure you choose the co
 -->
 ### 0.5.2 (2026-11-05)
 - update dependencies: `node-forge` (1.4.3) and `follow-redirects` (1.16.2) to fix security vulnerabilities
-
-### 0.5.1 (2026-11-04)
 - update dependencies: `@iobroker/testing` (6.3.0)
 - fix states briefly jumping back to the old value after a command, until the device confirms it (#327)
 - acknowledge commanded states once the device confirms them, even if the value did not change

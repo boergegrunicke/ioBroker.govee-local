@@ -1,4 +1,6 @@
 {
+    "Logging": "Logowanie",
+    "Network": "Sieć",
     "_deviceStatusRefreshInterval": "interwał odświeżania stanu urządzenia",
     "_discoveredDevices": "Odkryte urządzenia",
     "_discoveredDevicesHint": "Wszystkie wykryte urządzenia (automatyczne i ręczne) można znaleźć w Obiekty → govee-local.0 → info → discoveredDevices",

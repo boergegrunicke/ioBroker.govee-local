@@ -1,4 +1,6 @@
 {
+    "Logging": "Registrazione",
+    "Network": "Rete",
     "_deviceStatusRefreshInterval": "intervallo di aggiornamento dello stato del dispositivo",
     "_discoveredDevices": "Dispositivi rilevati",
     "_discoveredDevicesHint": "Tutti i dispositivi rilevati (auto e manuale) possono essere trovati in Oggetti → govee-local.0 → informazioni → discoveredDevices",

@@ -1,4 +1,6 @@
 {
+    "Logging": "Loggen",
+    "Network": "Netwerk",
     "_deviceStatusRefreshInterval": "vernieuwingsinterval apparaatstatus",
     "_discoveredDevices": "Ontdekte apparaten",
     "_discoveredDevicesHint": "Alle ontdekte apparaten (automatisch en handmatig) zijn te vinden in Objecten → govee-local.0 → info → ontdekte apparaten",

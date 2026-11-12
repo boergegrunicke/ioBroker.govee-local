@@ -1,4 +1,6 @@
 {
+    "Logging": "Protokollierung",
+    "Network": "Netzwerk",
     "_deviceStatusRefreshInterval": "Aktualisierungsintervall für den Gerätestatus",
     "_discoveredDevices": "Gefundene Geräte",
     "_discoveredDevicesHint": "Alle gefundenen Geräte (automatisch und manuell) werden unten angezeigt:",

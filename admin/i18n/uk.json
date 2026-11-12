@@ -1,4 +1,6 @@
 {
+    "Logging": "Журналювання",
+    "Network": "Мережа",
     "_deviceStatusRefreshInterval": "інтервал оновлення стану пристрою",
     "_discoveredDevices": "Виявлені пристрої",
     "_discoveredDevicesHint": "Усі виявлені пристрої (автоматичні та ручні) можна знайти в Objects → govee-local.0 → info → discoveredDevices",

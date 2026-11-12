@@ -1,4 +1,6 @@
 {
+    "Logging": "Logging",
+    "Network": "Network",
     "_deviceStatusRefreshInterval": "device status refresh interval",
     "_discoveredDevices": "Discovered Devices",
     "_discoveredDevicesHint": "All discovered devices (auto and manual) are shown below:",

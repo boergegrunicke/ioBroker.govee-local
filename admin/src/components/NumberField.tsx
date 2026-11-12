@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 import { I18n } from '@iobroker/adapter-react-v5';
 
 interface NumberFieldProps {
@@ -9,6 +9,8 @@ interface NumberFieldProps {
     value: number | undefined;
     min: number;
     max: number;
+    /** unit shown at the end of the input, e.g. "s" */
+    unit?: string;
     onChange: (attr: string, value: number) => void;
     /** Reports a validation error (translation key) or null if valid. */
     onError: (attr: string, error: string | null) => void;
@@ -72,7 +74,12 @@ export default function NumberField(props: NumberFieldProps): React.JSX.Element 
             value={text}
             error={!!error}
             helperText={error ? I18n.t(error) : undefined}
-            slotProps={{ htmlInput: { min, max } }}
+            slotProps={{
+                htmlInput: { min, max },
+                input: props.unit
+                    ? { endAdornment: <InputAdornment position="end">{props.unit}</InputAdornment> }
+                    : undefined,
+            }}
             onChange={e => {
                 const newText = e.target.value;
                 setText(newText);

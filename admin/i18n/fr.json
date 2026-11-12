@@ -1,4 +1,6 @@
 {
+    "Logging": "Enregistrement",
+    "Network": "Réseau",
     "_deviceStatusRefreshInterval": "intervalle d'actualisation de l'état de l'appareil",
     "_discoveredDevices": "Appareils découverts",
     "_discoveredDevicesHint": "Tous les appareils découverts (auto et manuels) peuvent être trouvés dans Objets → govee-local.0 → info → discoveredDevices",

@@ -91,6 +91,7 @@ export default function Settings(props: SettingsProps): React.JSX.Element {
                         value={native.searchInterval}
                         min={1}
                         max={1000}
+                        unit="s"
                         onChange={onNumberChange}
                         onError={onError}
                     />
@@ -103,6 +104,7 @@ export default function Settings(props: SettingsProps): React.JSX.Element {
                     value={native.deviceStatusRefreshInterval}
                     min={1}
                     max={1000}
+                    unit="s"
                     onChange={onNumberChange}
                     onError={onError}
                 />

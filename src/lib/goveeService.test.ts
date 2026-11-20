@@ -315,14 +315,38 @@ describe('GoveeService', () => {
     });
 
     describe('Error Handling', () => {
-        it('should handle malformed JSON in UDP messages', () => {
+        it('should log but not throw on malformed JSON in UDP messages', () => {
             const malformedMessage = Buffer.from('invalid json');
             expect(() => {
                 (service as any).onUdpMessage(malformedMessage, {
                     address: '1.2.3.4',
                     port: 1234,
                 });
-            }).to.throw();
+            }).to.not.throw();
+            expect(options.logger.error.calledWithMatch('Malformed UDP message')).to.be.true;
+        });
+
+        it('should ignore valid JSON without msg.cmd shape', () => {
+            const buf = Buffer.from(JSON.stringify({ foo: 1 }));
+            expect(() => {
+                (service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
+            }).to.not.throw();
+            expect(service.getDevices()).to.deep.equal({});
+        });
+
+        it('should allow stop() to be called multiple times', () => {
+            service.stop();
+            expect(() => service.stop()).to.not.throw();
+        });
+
+        it('should emit serviceError and log on socket error', done => {
+            service.start();
+            service.on('serviceError', error => {
+                expect(error.message).to.equal('fatal socket error');
+                expect(options.logger.error.calledWithMatch('fatal socket error')).to.be.true;
+                done();
+            });
+            (service as any).socket.emit('error', new Error('fatal socket error'));
         });
 
         it('should ignore devStatus from unknown devices', () => {

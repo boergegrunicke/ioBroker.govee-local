@@ -115,6 +115,11 @@ export class GoveeLocal extends utils.Adapter {
             void this.setState('info.connection', { val: true, ack: true });
         });
 
+        // On fatal socket/multicast errors the service no longer receives anything
+        this.goveeService.on('serviceError', () => {
+            void this.setState('info.connection', { val: false, ack: true });
+        });
+
         // Start device discovery and status polling
         this.goveeService.start();
 
@@ -189,22 +194,20 @@ export class GoveeLocal extends utils.Adapter {
      * @param callback Callback function after unload process.
      */
     private onUnload(callback: () => void): void {
-        try {
-            if (this.goveeService) {
-                this.goveeService.removeAllListeners();
-                this.goveeService.stop();
+        void (async () => {
+            try {
+                if (this.goveeService) {
+                    this.goveeService.removeAllListeners();
+                    this.goveeService.stop();
+                }
+                // Await the write so it is not lost when js-controller tears down the DB connection
+                await this.setState('info.connection', { val: false, ack: true });
+            } catch (e: unknown) {
+                this.log.error(e instanceof Error ? e.message : String(e));
+            } finally {
+                callback();
             }
-            // Set connection state to false
-            void this.updateStateAsync('info.connection', false).catch((err: unknown) => {
-                this.log.error(
-                    `Failed to update connection state during unload: ${err instanceof Error ? err.message : String(err)}`,
-                );
-            });
-            callback();
-        } catch (e: unknown) {
-            this.log.error(e instanceof Error ? e.message : String(e));
-            callback();
-        }
+        })();
     }
 
     /**

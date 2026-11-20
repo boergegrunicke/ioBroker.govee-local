@@ -50,6 +50,8 @@ export interface DeviceStatusEvent {
  * Events:
  *   - 'deviceDiscovered': Emitted when a new device is found
  *   - 'deviceStatusUpdate': Emitted when device status is updated
+ *   - 'serviceStarted': Emitted once the UDP socket is bound and discovery is running
+ *   - 'serviceError': Emitted on fatal socket/multicast errors (the service is no longer receiving)
  *
  * Usage:
  *   const service = new GoveeService(options);
@@ -68,6 +70,7 @@ export class GoveeService extends EventEmitter {
     private searchInterval?: unknown;
     private refreshInterval?: unknown;
     private scanMode: 'interval' | 'once' | 'never' = 'interval';
+    private stopped = false;
 
     static readonly LOCAL_PORT = 4002;
     static readonly SEND_SCAN_PORT = 4001;
@@ -105,7 +108,10 @@ export class GoveeService extends EventEmitter {
     public start(): void {
         this.socket.on('message', this.onUdpMessage.bind(this));
         this.socket.on('error', error => {
-            this.options.logger?.error(`server bind error : ${error.message}`);
+            this.options.logger?.error(`UDP socket error: ${error.message}`);
+            // A socket 'error' before/during bind is fatal for the service: the socket
+            // is closed by Node and no messages will ever be received.
+            this.emit('serviceError', error);
         });
         this.socket.bind(
             { address: this.options.interface, port: GoveeService.LOCAL_PORT },
@@ -114,10 +120,19 @@ export class GoveeService extends EventEmitter {
     }
 
     private serverBound(): void {
-        this.socket.setBroadcast(true);
-        this.socket.setMulticastTTL(128);
-        this.socket.setMulticastInterface(this.options.interface);
-        this.socket.addMembership(GoveeService.M_CAST);
+        try {
+            this.socket.setBroadcast(true);
+            this.socket.setMulticastTTL(128);
+            this.socket.setMulticastInterface(this.options.interface);
+            this.socket.addMembership(GoveeService.M_CAST);
+        } catch (err) {
+            // e.g. interface disappeared between bind and multicast setup
+            const error = err instanceof Error ? err : new Error(String(err));
+            this.options.logger?.error(`Failed to set up multicast on ${this.options.interface}: ${error.message}`);
+            this.emit('serviceError', error);
+            this.stop();
+            return;
+        }
 
         // Add manual IP addresses if provided
         if (this.options.manualIpAddresses && this.options.manualIpAddresses.length > 0) {
@@ -155,10 +170,18 @@ export class GoveeService extends EventEmitter {
         try {
             messageObject = JSON.parse(message.toString());
         } catch (err) {
+            // Never throw here: an exception inside the dgram 'message' handler would
+            // crash the whole process on a single bad packet from the network.
             this.options.logger?.error(
                 `Malformed UDP message from ${remote.address}:${remote.port}: ${err instanceof Error ? err.message : String(err)}`,
             );
-            throw err;
+            return;
+        }
+        if (typeof messageObject?.msg?.cmd !== 'string') {
+            this.options.logger?.debug(
+                `Ignoring UDP message without msg.cmd from ${remote.address}:${remote.port} - ${message.toString()}`,
+            );
+            return;
         }
         switch (messageObject.msg.cmd) {
             case 'scan': {
@@ -280,19 +303,30 @@ export class GoveeService extends EventEmitter {
     }
 
     /**
-     * Stop all intervals and close the socket.
+     * Stop all intervals and close the socket. Safe to call multiple times and
+     * also when the socket was never bound or already errored.
      */
     public stop(): void {
+        if (this.stopped) {
+            return;
+        }
+        this.stopped = true;
         this.options.logger?.debug('Stopping GoveeService and closing UDP socket.');
         const clearIntervalFn = this.options.clearInterval ?? (clearInterval as (t: unknown) => void);
 
         if (this.searchInterval) {
             clearIntervalFn(this.searchInterval);
+            this.searchInterval = undefined;
         }
         if (this.refreshInterval) {
             clearIntervalFn(this.refreshInterval);
+            this.refreshInterval = undefined;
         }
-        this.socket.close();
+        try {
+            this.socket.close();
+        } catch {
+            // socket already closed (e.g. after a bind error) - nothing to clean up
+        }
     }
 
     /**

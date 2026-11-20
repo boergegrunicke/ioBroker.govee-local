@@ -51,7 +51,7 @@ export interface DeviceStatusEvent {
  *   - 'deviceDiscovered': Emitted when a new device is found
  *   - 'deviceStatusUpdate': Emitted when device status is updated
  *   - 'serviceStarted': Emitted once the UDP socket is bound and discovery is running
- *   - 'serviceError': Emitted on fatal socket/multicast errors (the service is no longer receiving)
+ *   - 'serviceError': Emitted on fatal startup errors (bind/multicast failed, the service never receives)
  *
  * Usage:
  *   const service = new GoveeService(options);
@@ -71,6 +71,7 @@ export class GoveeService extends EventEmitter {
     private refreshInterval?: unknown;
     private scanMode: 'interval' | 'once' | 'never' = 'interval';
     private stopped = false;
+    private started = false;
 
     static readonly LOCAL_PORT = 4002;
     static readonly SEND_SCAN_PORT = 4001;
@@ -109,9 +110,13 @@ export class GoveeService extends EventEmitter {
         this.socket.on('message', this.onUdpMessage.bind(this));
         this.socket.on('error', error => {
             this.options.logger?.error(`UDP socket error: ${error.message}`);
-            // A socket 'error' before/during bind is fatal for the service: the socket
-            // is closed by Node and no messages will ever be received.
-            this.emit('serviceError', error);
+            // A socket 'error' before successful startup (bind phase) is fatal: the socket
+            // is closed by Node and no messages will ever be received. After startup,
+            // socket errors are transient async send failures (e.g. EHOSTUNREACH during a
+            // network blip) that do NOT close the socket, so the service keeps working.
+            if (!this.started) {
+                this.emit('serviceError', error);
+            }
         });
         this.socket.bind(
             { address: this.options.interface, port: GoveeService.LOCAL_PORT },
@@ -156,6 +161,7 @@ export class GoveeService extends EventEmitter {
         );
 
         // Emit serviceStarted event after successful startup
+        this.started = true;
         this.emit('serviceStarted');
     }
 

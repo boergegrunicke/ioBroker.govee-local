@@ -349,6 +349,20 @@ describe('GoveeService', () => {
             (service as any).socket.emit('error', new Error('fatal socket error'));
         });
 
+        it('should not emit serviceError for socket errors after successful startup', done => {
+            GoveeServiceTestHelper.stubSocketMethods(service);
+            let serviceErrorEmitted = false;
+            service.on('serviceError', () => (serviceErrorEmitted = true));
+            service.on('serviceStarted', () => {
+                // transient send failure after startup: socket stays open, service keeps working
+                (service as any).socket.emit('error', new Error('send EHOSTUNREACH'));
+                expect(serviceErrorEmitted).to.be.false;
+                expect(options.logger.error.calledWithMatch('send EHOSTUNREACH')).to.be.true;
+                done();
+            });
+            service.start();
+        });
+
         it('should ignore devStatus from unknown devices', () => {
             const msg = {
                 msg: {

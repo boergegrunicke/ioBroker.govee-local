@@ -407,6 +407,124 @@ describe('GoveeService', () => {
 
     // Service Lifecycle tests removed - service does not expose status tracking
 
+    describe('Device Reachability', () => {
+        const limit = GoveeService.OFFLINE_AFTER_UNANSWERED_REQUESTS;
+        const scanMessage = { msg: { cmd: 'scan', data: { device: 'Lamp', sku: 'H6008' } } };
+        const statusMessage = {
+            msg: {
+                cmd: 'devStatus',
+                data: { onOff: 1, brightness: 50, color: { r: 0, g: 0, b: 0 }, colorTemInKelvin: 0 },
+            },
+        };
+        let onlineEvents: { deviceName: string; ip: string; online: boolean }[];
+
+        beforeEach(() => {
+            sinon.stub(service, 'requestDeviceStatus');
+            onlineEvents = [];
+            service.on('deviceOnlineChange', data => onlineEvents.push(data));
+        });
+
+        /**
+         * Runs a number of refresh cycles without any device answering.
+         *
+         * @param count How many refresh cycles to run.
+         */
+        const missRefreshes = (count: number): void => {
+            for (let i = 0; i < count; i++) {
+                service.refreshAllDevices();
+            }
+        };
+
+        it('should report a device online once it answers a scan', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            expect(onlineEvents).to.deep.equal([{ deviceName: 'Lamp', ip: '1.2.3.4', online: true }]);
+        });
+
+        it('should emit deviceDiscovered before the first deviceOnlineChange', () => {
+            const order: string[] = [];
+            service.on('deviceDiscovered', () => order.push('discovered'));
+            service.on('deviceOnlineChange', () => order.push('online'));
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            expect(order).to.deep.equal(['discovered', 'online']);
+        });
+
+        it('should not emit again while the device stays online', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            for (let i = 0; i < 5; i++) {
+                service.refreshAllDevices();
+                GoveeServiceTestHelper.simulateUdpMessage(service, statusMessage);
+            }
+            expect(onlineEvents).to.have.lengthOf(1);
+        });
+
+        it('should stay online while fewer requests than the limit went unanswered', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            // The check runs at the start of each refresh, so the limit is only exceeded one cycle later
+            missRefreshes(limit);
+            expect(onlineEvents.map(e => e.online)).to.deep.equal([true]);
+        });
+
+        it('should report a device offline once the limit of unanswered requests is reached', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            missRefreshes(limit + 1);
+            expect(onlineEvents.map(e => e.online)).to.deep.equal([true, false]);
+            // ...and only once, even if it stays silent
+            missRefreshes(5);
+            expect(onlineEvents).to.have.lengthOf(2);
+        });
+
+        it('should restart counting after any answer', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            missRefreshes(limit);
+            GoveeServiceTestHelper.simulateUdpMessage(service, statusMessage);
+            missRefreshes(limit);
+            expect(onlineEvents.map(e => e.online)).to.deep.equal([true]);
+        });
+
+        it('should report a device online again once it answers', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage);
+            missRefreshes(limit + 1);
+            GoveeServiceTestHelper.simulateUdpMessage(service, statusMessage);
+            expect(onlineEvents.map(e => e.online)).to.deep.equal([true, false, true]);
+        });
+
+        it('should report an unreachable manual device offline', () => {
+            service.addManualDevices(['192.168.1.50']);
+            expect(onlineEvents).to.be.empty;
+            missRefreshes(limit + 1);
+            expect(onlineEvents).to.deep.equal([
+                { deviceName: 'Manual_192_168_1_50', ip: '192.168.1.50', online: false },
+            ]);
+        });
+
+        it('should report a manual device online once it answers a status request', () => {
+            service.addManualDevices(['192.168.1.50']);
+            GoveeServiceTestHelper.simulateUdpMessage(service, statusMessage, '192.168.1.50');
+            expect(onlineEvents).to.deep.equal([
+                { deviceName: 'Manual_192_168_1_50', ip: '192.168.1.50', online: true },
+            ]);
+        });
+
+        it('should track devices independently', () => {
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage, '1.2.3.4');
+            GoveeServiceTestHelper.simulateUdpMessage(service, scanMessage, '1.2.3.5');
+            for (let i = 0; i <= limit; i++) {
+                service.refreshAllDevices();
+                GoveeServiceTestHelper.simulateUdpMessage(service, statusMessage, '1.2.3.5');
+            }
+            expect(onlineEvents.filter(e => !e.online)).to.deep.equal([
+                { deviceName: 'Lamp', ip: '1.2.3.4', online: false },
+            ]);
+        });
+    });
+
+    it('should not start after it was stopped', () => {
+        const bindSpy = sinon.spy((service as any).socket, 'bind');
+        service.stop();
+        service.start();
+        sinon.assert.notCalled(bindSpy);
+    });
+
     describe('Manual IP Configuration', () => {
         it('should add manual devices on initialization', done => {
             const manualIps = ['192.168.1.50', '192.168.1.51'];

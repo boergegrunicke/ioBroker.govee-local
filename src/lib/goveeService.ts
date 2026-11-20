@@ -44,12 +44,25 @@ export interface DeviceStatusEvent {
 }
 
 /**
+ * Device reachability change event data.
+ */
+export interface DeviceOnlineEvent {
+    /** The sanitized device name. */
+    deviceName: string;
+    /** The IP address of the device. */
+    ip: string;
+    /** Whether the device currently answers status requests. */
+    online: boolean;
+}
+
+/**
  * GoveeService handles all business logic for device discovery, status updates, and UDP communication.
  * This class is independent from ioBroker.Adapter and can be tested separately.
  *
  * Events:
  *   - 'deviceDiscovered': Emitted when a new device is found
  *   - 'deviceStatusUpdate': Emitted when device status is updated
+ *   - 'deviceOnlineChange': Emitted when a device becomes reachable or stops answering
  *   - 'serviceStarted': Emitted once the UDP socket is bound and discovery is running
  *   - 'serviceError': Emitted on fatal startup errors (bind/multicast failed, the service never receives)
  *
@@ -67,12 +80,21 @@ export class GoveeService extends EventEmitter {
     private devices: { [ip: string]: string } = {};
     private loggedDevices: string[] = [];
     private lastStatusLog: { [ip: string]: string } = {};
+    /** Status requests sent by the refresh interval that the device has not answered yet. */
+    private unansweredRequests: { [ip: string]: number } = {};
+    /** Last reported reachability per device; undefined until it is known. */
+    private online: { [ip: string]: boolean } = {};
     private searchInterval?: unknown;
     private refreshInterval?: unknown;
     private scanMode: 'interval' | 'once' | 'never' = 'interval';
     private stopped = false;
     private started = false;
 
+    /**
+     * A device is reported offline once this many consecutive status requests went unanswered.
+     * UDP may drop single packets, so one missed answer must not flip the state.
+     */
+    static readonly OFFLINE_AFTER_UNANSWERED_REQUESTS = 3;
     static readonly LOCAL_PORT = 4002;
     static readonly SEND_SCAN_PORT = 4001;
     static readonly CONTROL_PORT = 4003;
@@ -107,6 +129,10 @@ export class GoveeService extends EventEmitter {
      * Bind UDP socket and start device search/refresh intervals.
      */
     public start(): void {
+        if (this.stopped) {
+            // stop() was called before start(), e.g. the adapter unloaded during startup
+            return;
+        }
         this.socket.on('message', this.onUdpMessage.bind(this));
         this.socket.on('error', error => {
             this.options.logger?.error(`UDP socket error: ${error.message}`);
@@ -208,6 +234,7 @@ export class GoveeService extends EventEmitter {
                         deviceName: deviceName,
                         deviceModel: messageObject.msg.data.sku,
                     });
+                    this.markDeviceSeen(remote.address);
                 }
                 break;
             }
@@ -221,6 +248,7 @@ export class GoveeService extends EventEmitter {
                             this.lastStatusLog[remote.address] = statusString;
                         }
                     }
+                    this.markDeviceSeen(remote.address);
                     this.emitDeviceStatusUpdate(sendingDevice, remote.address, messageObject);
                 }
                 break;
@@ -236,8 +264,39 @@ export class GoveeService extends EventEmitter {
      */
     public refreshAllDevices(): void {
         for (const ip in this.devices) {
+            const unanswered = this.unansweredRequests[ip] ?? 0;
+            if (unanswered >= GoveeService.OFFLINE_AFTER_UNANSWERED_REQUESTS) {
+                this.setDeviceOnline(ip, false);
+            }
+            this.unansweredRequests[ip] = unanswered + 1;
             this.requestDeviceStatus(ip);
         }
+    }
+
+    /**
+     * Record that a device answered, which makes it reachable.
+     *
+     * @param ip The IP address of the device.
+     */
+    private markDeviceSeen(ip: string): void {
+        this.unansweredRequests[ip] = 0;
+        this.setDeviceOnline(ip, true);
+    }
+
+    /**
+     * Store the reachability of a device and emit 'deviceOnlineChange' if it changed.
+     *
+     * @param ip The IP address of the device.
+     * @param online Whether the device is reachable.
+     */
+    private setDeviceOnline(ip: string, online: boolean): void {
+        const deviceName = this.devices[ip];
+        if (!deviceName || this.online[ip] === online) {
+            return;
+        }
+        this.online[ip] = online;
+        this.options.logger?.debug(`Device ${deviceName} at ${ip} is ${online ? 'online' : 'offline'}`);
+        this.emit('deviceOnlineChange', { deviceName, ip, online } satisfies DeviceOnlineEvent);
     }
 
     /**

@@ -58,10 +58,14 @@ describe('GoveeLocal Integration Tests', () => {
         // Mock adapter methods
         const setObjectStub = sinon.stub();
         const updateStateStub = sinon.stub();
+        const extendObjectStub = sinon.stub().resolves();
         (adapter as any).setObjectNotExistsAsync = setObjectStub;
+        (adapter as any).extendObjectAsync = extendObjectStub;
         (adapter as any).updateStateAsync = updateStateStub;
         (adapter as any).setObjectNotExists = sinon.stub();
         (adapter as any).subscribeStates = sinon.stub();
+        (adapter as any).getStatesAsync = sinon.stub().resolves({});
+        (adapter as any).namespace = 'govee-local.0';
 
         // Initialize service
         await (adapter as any).onReady();
@@ -80,6 +84,58 @@ describe('GoveeLocal Integration Tests', () => {
         expect(setObjectStub.calledWith('TestLamp.deviceInfo.ip')).to.be.true;
         expect(setObjectStub.calledWith('TestLamp.devStatus')).to.be.true;
         expect(updateStateStub.calledWith('TestLamp.deviceInfo.ip', '192.168.1.100')).to.be.true;
+
+        // The device object links its online state so the admin can show it
+        const onlineId = 'govee-local.0.TestLamp.deviceInfo.online';
+        expect(setObjectStub.firstCall.args[1].common.statusStates).to.deep.equal({ onlineId });
+        // Existing device objects from older versions get the link added, but only once per run
+        await (adapter as any).handleDeviceDiscovered(discoveryEvent);
+        expect(extendObjectStub.calledOnceWith('TestLamp', { common: { statusStates: { onlineId } } })).to.be.true;
+    });
+
+    it('should create and update the online state on reachability changes', async () => {
+        const setObjectStub = sinon.stub().resolves();
+        const updateStateStub = sinon.stub().resolves();
+        (adapter as any).setObjectNotExistsAsync = setObjectStub;
+        (adapter as any).updateStateAsync = updateStateStub;
+
+        await (adapter as any).handleDeviceOnlineChange({ deviceName: 'TestLamp', ip: '192.168.1.100', online: true });
+        await (adapter as any).handleDeviceOnlineChange({ deviceName: 'TestLamp', ip: '192.168.1.100', online: false });
+
+        expect(setObjectStub.calledWith('TestLamp.deviceInfo.online')).to.be.true;
+        expect(setObjectStub.firstCall.args[1].common).to.include({
+            type: 'boolean',
+            role: 'indicator.reachable',
+            write: false,
+        });
+        expect(updateStateStub.firstCall.args).to.deep.equal(['TestLamp.deviceInfo.online', true]);
+        expect(updateStateStub.secondCall.args).to.deep.equal(['TestLamp.deviceInfo.online', false]);
+    });
+
+    it('should reset stale online states before starting the service', async () => {
+        const calls: string[] = [];
+        (adapter as any).setObjectNotExists = sinon.stub();
+        (adapter as any).subscribeStates = sinon.stub();
+        (adapter as any).getStatesAsync = sinon.stub().resolves({
+            'govee-local.0.LampA.deviceInfo.online': { val: true, ack: true },
+            'govee-local.0.LampB.deviceInfo.online': { val: false, ack: true },
+        });
+        (adapter as any).setState = sinon.stub().callsFake((id: string) => {
+            calls.push(`setState ${id}`);
+            return Promise.resolve();
+        });
+        const startStub = sinon.stub(GoveeService.prototype, 'start').callsFake(() => {
+            calls.push('start');
+        });
+
+        try {
+            await (adapter as any).onReady();
+        } finally {
+            startStub.restore();
+        }
+
+        // Only the stale "true" is rewritten, and before the service can report fresh values
+        expect(calls).to.deep.equal(['setState govee-local.0.LampA.deviceInfo.online', 'start']);
     });
 
     it('should handle device status update events', async () => {
@@ -505,6 +561,9 @@ describe('GoveeLocal Integration Tests', () => {
         };
         const setStateStub = sinon.stub().resolves();
         (adapter as any).setState = setStateStub;
+        (adapter as any).getStatesAsync = sinon.stub().resolves({
+            'govee-local.0.TestLamp.deviceInfo.online': { val: true, ack: true },
+        });
 
         const callback = sinon.spy();
         (adapter as any).onUnload(callback);
@@ -514,6 +573,8 @@ describe('GoveeLocal Integration Tests', () => {
         expect((adapter as any).goveeService.removeAllListeners.calledOnce).to.be.true;
         expect((adapter as any).goveeService.stop.calledOnce).to.be.true;
         expect(setStateStub.calledWith('info.connection', { val: false, ack: true })).to.be.true;
+        expect(setStateStub.calledWith('govee-local.0.TestLamp.deviceInfo.online', { val: false, ack: true })).to.be
+            .true;
         expect(callback.calledOnce).to.be.true;
     });
 });

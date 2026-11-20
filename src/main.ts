@@ -3,7 +3,12 @@
  */
 
 import * as utils from '@iobroker/adapter-core';
-import { GoveeService, type DeviceDiscoveryEvent, type DeviceStatusEvent } from './lib/goveeService';
+import {
+    GoveeService,
+    type DeviceDiscoveryEvent,
+    type DeviceOnlineEvent,
+    type DeviceStatusEvent,
+} from './lib/goveeService';
 import { hsvToRgb, kelvinToMired, rgbToHsv } from './lib/tools/colorConversion';
 import { componentToHex, hexToRgb } from './lib/tools/hexTool';
 
@@ -26,6 +31,8 @@ export class GoveeLocal extends utils.Adapter {
     private static readonly COMMAND_CONFIRMATION_TIMEOUT_MS = 2000;
     /** Instance of GoveeService for device communication */
     private goveeService!: GoveeService;
+    /** Devices whose object already links its online state via common.statusStates in this run */
+    private readonly devicesWithStatusStates = new Set<string>();
     /**
      * Adapter constructor. Registers lifecycle event handlers.
      *
@@ -49,7 +56,7 @@ export class GoveeLocal extends utils.Adapter {
      * Called when databases are connected and adapter received configuration.
      * Initializes GoveeService and sets up event listeners for device events.
      */
-    private onReady(): void {
+    private async onReady(): Promise<void> {
         // Create connection indicator state if it doesn't exist
         void this.setObjectNotExists('info.connection', {
             type: 'state',
@@ -110,6 +117,14 @@ export class GoveeLocal extends utils.Adapter {
             });
         });
 
+        this.goveeService.on('deviceOnlineChange', data => {
+            this.handleDeviceOnlineChange(data).catch((err: unknown) => {
+                this.log.error(
+                    `Error handling device online change: ${err instanceof Error ? err.message : String(err)}`,
+                );
+            });
+        });
+
         // Listen for serviceStarted event to set connection state to true
         this.goveeService.on('serviceStarted', () => {
             void this.setState('info.connection', { val: true, ack: true });
@@ -119,6 +134,14 @@ export class GoveeLocal extends utils.Adapter {
         this.goveeService.on('serviceError', () => {
             void this.setState('info.connection', { val: false, ack: true });
         });
+
+        // Online states from the previous run are stale: a device only counts as online again once
+        // it answers. Reset them before starting, so a fresh "online" cannot be overwritten.
+        try {
+            await this.setAllDevicesOffline();
+        } catch (err: unknown) {
+            this.log.error(`Error resetting device online states: ${err instanceof Error ? err.message : String(err)}`);
+        }
 
         // Start device discovery and status polling
         this.goveeService.start();
@@ -200,8 +223,9 @@ export class GoveeLocal extends utils.Adapter {
                     this.goveeService.removeAllListeners();
                     this.goveeService.stop();
                 }
-                // Await the write so it is not lost when js-controller tears down the DB connection
+                // Await the writes so they are not lost when js-controller tears down the DB connection
                 await this.setState('info.connection', { val: false, ack: true });
+                await this.setAllDevicesOffline();
             } catch (e: unknown) {
                 this.log.error(e instanceof Error ? e.message : String(e));
             } finally {
@@ -254,9 +278,17 @@ export class GoveeLocal extends utils.Adapter {
             common: {
                 name: deviceModel,
                 role: 'group',
+                statusStates: { onlineId: this.getOnlineStateId(deviceName) },
             },
             native: {},
         });
+        // Devices created by older versions lack the link to their online state; add it once per run
+        if (!this.devicesWithStatusStates.has(deviceName)) {
+            await this.extendObjectAsync(deviceName, {
+                common: { statusStates: { onlineId: this.getOnlineStateId(deviceName) } },
+            });
+            this.devicesWithStatusStates.add(deviceName);
+        }
 
         // Create deviceInfo folder
         await this.setObjectNotExistsAsync(`${deviceName}.deviceInfo`, {
@@ -292,6 +324,50 @@ export class GoveeLocal extends utils.Adapter {
 
         // Update the list of discovered devices
         await this.updateDiscoveredDevicesList();
+    }
+
+    /**
+     * Full ID of the online state of a device, as referenced by common.statusStates.
+     *
+     * @param deviceName The sanitized device name.
+     */
+    private getOnlineStateId(deviceName: string): string {
+        return `${this.namespace}.${deviceName}.deviceInfo.online`;
+    }
+
+    /**
+     * Handles a reachability change reported by GoveeService.
+     *
+     * @param event The device online event data.
+     */
+    private async handleDeviceOnlineChange(event: DeviceOnlineEvent): Promise<void> {
+        const { deviceName, online } = event;
+        // The event can arrive before handleDeviceDiscovered finished, so make sure the object exists
+        await this.setObjectNotExistsAsync(`${deviceName}.deviceInfo.online`, {
+            type: 'state',
+            common: {
+                name: 'Device is reachable',
+                type: 'boolean',
+                role: 'indicator.reachable',
+                read: true,
+                write: false,
+                desc: `false once the device did not answer ${GoveeService.OFFLINE_AFTER_UNANSWERED_REQUESTS} status requests in a row`,
+            },
+            native: {},
+        });
+        await this.updateStateAsync(`${deviceName}.deviceInfo.online`, online);
+    }
+
+    /**
+     * Sets the online state of all known devices to false.
+     */
+    private async setAllDevicesOffline(): Promise<void> {
+        const states = await this.getStatesAsync('*.deviceInfo.online');
+        for (const [id, state] of Object.entries(states ?? {})) {
+            if (state?.val !== false || !state.ack) {
+                await this.setState(id, { val: false, ack: true });
+            }
+        }
     }
 
     /**

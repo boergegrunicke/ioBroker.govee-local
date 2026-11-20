@@ -315,14 +315,52 @@ describe('GoveeService', () => {
     });
 
     describe('Error Handling', () => {
-        it('should handle malformed JSON in UDP messages', () => {
+        it('should log but not throw on malformed JSON in UDP messages', () => {
             const malformedMessage = Buffer.from('invalid json');
             expect(() => {
                 (service as any).onUdpMessage(malformedMessage, {
                     address: '1.2.3.4',
                     port: 1234,
                 });
-            }).to.throw();
+            }).to.not.throw();
+            expect(options.logger.error.calledWithMatch('Malformed UDP message')).to.be.true;
+        });
+
+        it('should ignore valid JSON without msg.cmd shape', () => {
+            const buf = Buffer.from(JSON.stringify({ foo: 1 }));
+            expect(() => {
+                (service as any).onUdpMessage(buf, { address: '1.2.3.4', port: 1234 });
+            }).to.not.throw();
+            expect(service.getDevices()).to.deep.equal({});
+        });
+
+        it('should allow stop() to be called multiple times', () => {
+            service.stop();
+            expect(() => service.stop()).to.not.throw();
+        });
+
+        it('should emit serviceError and log on socket error', done => {
+            service.start();
+            service.on('serviceError', error => {
+                expect(error.message).to.equal('fatal socket error');
+                expect(options.logger.error.calledWithMatch('fatal socket error')).to.be.true;
+                done();
+            });
+            (service as any).socket.emit('error', new Error('fatal socket error'));
+        });
+
+        it('should not emit serviceError for socket errors after successful startup', done => {
+            GoveeServiceTestHelper.stubSocketMethods(service);
+            let serviceErrorEmitted = false;
+            service.on('serviceError', () => (serviceErrorEmitted = true));
+            service.on('serviceStarted', () => {
+                // transient send failure after startup: socket stays open, service keeps working
+                (service as any).socket.emit('error', new Error('send EHOSTUNREACH'));
+                expect(serviceErrorEmitted).to.be.false;
+                expect(options.logger.error.calledWithMatch('send EHOSTUNREACH')).to.be.true;
+                done();
+            });
+            service.start();
         });
 
         it('should ignore devStatus from unknown devices', () => {

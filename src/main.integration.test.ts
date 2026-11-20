@@ -497,19 +497,23 @@ describe('GoveeLocal Integration Tests', () => {
         expect(states['TestLamp.devStatus.onOff']).to.include({ val: true, ack: true });
     });
 
-    it('should clean up service on unload', () => {
+    it('should clean up service on unload', async () => {
         // Initialize service
         (adapter as any).goveeService = {
             removeAllListeners: sinon.spy(),
             stop: sinon.spy(),
         };
-        (adapter as any).updateStateAsync = sinon.stub();
+        const setStateStub = sinon.stub().resolves();
+        (adapter as any).setState = setStateStub;
 
         const callback = sinon.spy();
         (adapter as any).onUnload(callback);
+        // onUnload awaits the final info.connection write before signalling completion
+        await new Promise(resolve => setImmediate(resolve));
 
         expect((adapter as any).goveeService.removeAllListeners.calledOnce).to.be.true;
         expect((adapter as any).goveeService.stop.calledOnce).to.be.true;
+        expect(setStateStub.calledWith('info.connection', { val: false, ack: true })).to.be.true;
         expect(callback.calledOnce).to.be.true;
     });
 });

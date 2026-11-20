@@ -1,0 +1,19 @@
+// tsconfig for the React admin UI (admin/src). Only used for type checking,
+// the bundle itself is built by `build-adapter react` (esbuild).
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "lib": ["DOM", "DOM.Iterable", "ES2022"],
+        "types": ["@iobroker/types"],
+        "strict": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "noEmit": true
+    },
+    // adapter-config.d.ts provides the typed native config (ioBroker.AdapterConfig)
+    "include": ["src/**/*.ts", "src/**/*.tsx", "../src/lib/adapter-config.d.ts"]
+}

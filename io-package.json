@@ -134,7 +134,7 @@
     "connectionType": "local",
     "dataSource": "poll",
     "adminUI": {
-      "config": "json"
+      "config": "materialize"
     },
     "dependencies": [
       {
@@ -152,7 +152,8 @@
     "searchInterval": 10,
     "deviceStatusRefreshInterval": 1,
     "extendedLogging": false,
-    "interface": "0.0.0.0"
+    "interface": "0.0.0.0",
+    "manualIpTable": []
   },
   "objects": [],
   "instanceObjects": []
